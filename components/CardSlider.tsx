@@ -7,6 +7,7 @@ interface Card {
   id: number;
   title?: string;
   video?: string;
+  poster?: string;
 }
 
 interface CardSliderProps {
@@ -14,7 +15,7 @@ interface CardSliderProps {
 }
 
 const defaultCards: Card[] = [
-  { id: 1, title: 'Project 1', video: '/project1.mp4' },
+  { id: 1, title: 'Project 1', video: '/project1.mp4', poster: '/posters/project1.png' },
   { id: 2, title: 'Project 2' },
   { id: 3, title: 'Project 3' },
   { id: 4, title: 'Project 4' },
@@ -88,6 +89,7 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
                   <video 
                     className={styles.cardVideo}
                     src={card.video}
+                    poster={card.poster}
                     autoPlay
                     loop
                     muted
