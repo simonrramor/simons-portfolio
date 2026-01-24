@@ -8,6 +8,8 @@ interface Card {
   title?: string;
   video?: string;
   poster?: string;
+  image?: string;
+  label?: string;
 }
 
 interface CardSliderProps {
@@ -15,8 +17,8 @@ interface CardSliderProps {
 }
 
 const defaultCards: Card[] = [
-  { id: 1, title: 'Project 1', video: '/project1.mp4', poster: '/posters/project1.png' },
-  { id: 2, title: 'Project 2' },
+  { id: 1, title: 'Project 1', video: '/project1.mp4', poster: '/posters/project1.png', label: '咲く花_001' },
+  { id: 2, title: 'Project 2', image: '/images/project2.png', label: 'Sling_001' },
   { id: 3, title: 'Project 3' },
   { id: 4, title: 'Project 4' },
   { id: 5, title: 'Project 5' },
@@ -96,7 +98,16 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
                     playsInline
                   />
                   <div className={styles.grainOverlay} style={grainStyle} />
-                  <span className={styles.cardLabel}>咲く花_001</span>
+                  {card.label && <span className={styles.cardLabel}>{card.label}</span>}
+                </>
+              ) : card.image ? (
+                <>
+                  <img 
+                    className={styles.cardImage}
+                    src={card.image}
+                    alt={card.title || ''}
+                  />
+                  {card.label && <span className={styles.cardLabel}>{card.label}</span>}
                 </>
               ) : (
                 <span className={styles.cardNumber}>{card.id}</span>
