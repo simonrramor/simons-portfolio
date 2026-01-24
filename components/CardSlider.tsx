@@ -3,12 +3,18 @@
 import { useEffect, useRef } from 'react';
 import styles from './CardSlider.module.css';
 
-interface CardSliderProps {
-  cards?: { id: number; title?: string }[];
+interface Card {
+  id: number;
+  title?: string;
+  video?: string;
 }
 
-const defaultCards = [
-  { id: 1, title: 'Project 1' },
+interface CardSliderProps {
+  cards?: Card[];
+}
+
+const defaultCards: Card[] = [
+  { id: 1, title: 'Project 1', video: '/project1.mp4' },
   { id: 2, title: 'Project 2' },
   { id: 3, title: 'Project 3' },
   { id: 4, title: 'Project 4' },
@@ -68,7 +74,18 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
         >
           {duplicatedCards.map((card, index) => (
             <div key={`${card.id}-${index}`} className={styles.card}>
-              <span className={styles.cardNumber}>{card.id}</span>
+              {card.video ? (
+                <video 
+                  className={styles.cardVideo}
+                  src={card.video}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+              ) : (
+                <span className={styles.cardNumber}>{card.id}</span>
+              )}
             </div>
           ))}
         </div>
