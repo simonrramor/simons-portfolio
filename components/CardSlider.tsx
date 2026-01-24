@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import styles from './CardSlider.module.css';
-import GrainControls, { defaultGrainSettings } from './GrainControls';
 
 interface Card {
   id: number;
@@ -30,21 +29,17 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
   const cardsRef = useRef<HTMLDivElement>(null);
   const translateXRef = useRef(0);
   const singleSetWidthRef = useRef(0);
-  const [grainSettings, setGrainSettings] = useState(defaultGrainSettings);
 
   // Create duplicated cards for infinite scroll effect
   const duplicatedCards = [...cards, ...cards, ...cards];
 
-  const getGrainStyle = () => {
-    const svgNoise = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='${grainSettings.baseFrequency}' numOctaves='${grainSettings.numOctaves}' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`;
-    
-    return {
-      opacity: grainSettings.opacity,
-      backgroundImage: svgNoise,
-      mixBlendMode: grainSettings.blendMode as React.CSSProperties['mixBlendMode'],
-      filter: `brightness(${grainSettings.brightness}) contrast(${grainSettings.contrast})`,
-      animation: grainSettings.animated ? `grain ${1 / grainSettings.speed}s steps(${grainSettings.speed}) infinite` : 'none',
-    };
+  // Saved grain settings
+  const grainStyle = {
+    opacity: 1.0,
+    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.65' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+    mixBlendMode: 'overlay' as React.CSSProperties['mixBlendMode'],
+    filter: 'brightness(0.1) contrast(1.45)',
+    animation: 'grain 0.033s steps(30) infinite',
   };
 
   useEffect(() => {
@@ -80,37 +75,34 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
   }, []);
 
   return (
-    <>
-      <GrainControls settings={grainSettings} onChange={setGrainSettings} />
-      <div className={styles.scrollContainer}>
-        <div className={styles.cardsWrapper}>
-          <div 
-            className={styles.cardsInner}
-            ref={cardsRef}
-          >
-            {duplicatedCards.map((card, index) => (
-              <div key={`${card.id}-${index}`} className={styles.card}>
-                {card.video ? (
-                  <>
-                    <video 
-                      className={styles.cardVideo}
-                      src={card.video}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                    />
-                    <div className={styles.grainOverlay} style={getGrainStyle()} />
-                    <span className={styles.cardLabel}>flower_01</span>
-                  </>
-                ) : (
-                  <span className={styles.cardNumber}>{card.id}</span>
-                )}
-              </div>
-            ))}
-          </div>
+    <div className={styles.scrollContainer}>
+      <div className={styles.cardsWrapper}>
+        <div 
+          className={styles.cardsInner}
+          ref={cardsRef}
+        >
+          {duplicatedCards.map((card, index) => (
+            <div key={`${card.id}-${index}`} className={styles.card}>
+              {card.video ? (
+                <>
+                  <video 
+                    className={styles.cardVideo}
+                    src={card.video}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                  />
+                  <div className={styles.grainOverlay} style={grainStyle} />
+                  <span className={styles.cardLabel}>flower_01</span>
+                </>
+              ) : (
+                <span className={styles.cardNumber}>{card.id}</span>
+              )}
+            </div>
+          ))}
         </div>
       </div>
-    </>
+    </div>
   );
 }
