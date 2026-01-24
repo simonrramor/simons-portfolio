@@ -52,13 +52,38 @@
   border-radius: 44px;
 }
 
+.grainOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 44px;
+  pointer-events: none;
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-2%, -2%); }
+  20% { transform: translate(2%, 2%); }
+  30% { transform: translate(-1%, 1%); }
+  40% { transform: translate(1%, -1%); }
+  50% { transform: translate(-2%, 2%); }
+  60% { transform: translate(2%, -2%); }
+  70% { transform: translate(-1%, -1%); }
+  80% { transform: translate(1%, 1%); }
+  90% { transform: translate(-2%, -1%); }
+}
+
 .cardLabel {
   position: absolute;
   top: 24px;
-  right: 24px;
+  left: 24px;
   color: white;
   font-size: 0.875rem;
   font-weight: 500;
+  font-family: var(--font-roboto-mono), monospace;
+  text-transform: uppercase;
 }
 
 /* Responsive adjustments */

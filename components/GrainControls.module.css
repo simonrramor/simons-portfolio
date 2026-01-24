@@ -1,0 +1,53 @@
+.controls {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 12px 24px;
+  backdrop-filter: blur(10px);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+}
+
+.controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: white;
+  font-size: 0.75rem;
+  font-family: var(--font-roboto-mono), monospace;
+  text-transform: uppercase;
+}
+
+.controls input[type="range"] {
+  width: 120px;
+  cursor: pointer;
+}
+
+.controls select {
+  background: #333;
+  color: white;
+  border: 1px solid #555;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.checkbox {
+  flex-direction: row !important;
+  align-items: center;
+}
+
+.checkbox input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
