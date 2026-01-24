@@ -40,6 +40,16 @@
   font-weight: 700;
 }
 
+.bioLink {
+  color: var(--color-text);
+  text-decoration: underline;
+  transition: opacity 0.2s ease;
+}
+
+.bioLink:hover {
+  opacity: 0.7;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .header {
