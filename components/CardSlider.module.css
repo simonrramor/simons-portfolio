@@ -38,6 +38,12 @@
   opacity: 0;
 }
 
+.cardNumber {
+  color: #ccc;
+  font-size: 3rem;
+  font-weight: 600;
+}
+
 /* Responsive adjustments */
 @media (max-width: 1024px) {
   .card {

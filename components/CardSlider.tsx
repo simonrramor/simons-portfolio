@@ -22,6 +22,10 @@ const defaultCards = [
 export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
   const cardsRef = useRef<HTMLDivElement>(null);
   const [translateX, setTranslateX] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(true);
+
+  // Create duplicated cards for infinite scroll effect
+  const duplicatedCards = [...cards, ...cards, ...cards];
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
@@ -30,14 +34,26 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
       e.preventDefault();
       
       const cardsContainer = cardsRef.current;
-      const cardsWidth = cardsContainer.scrollWidth;
-      const viewportWidth = window.innerWidth;
-      const maxTranslate = Math.max(0, cardsWidth - viewportWidth + 80);
+      const singleSetWidth = cardsContainer.scrollWidth / 3;
       
-      // Use deltaY (vertical scroll) to control horizontal movement
       setTranslateX(prev => {
-        const newValue = prev + e.deltaY;
-        return Math.min(maxTranslate, Math.max(0, newValue));
+        let newValue = prev + e.deltaY * 0.5;
+        
+        // If we've scrolled past the second set, jump back to first set
+        if (newValue >= singleSetWidth * 2) {
+          setIsTransitioning(false);
+          setTimeout(() => setIsTransitioning(true), 50);
+          return newValue - singleSetWidth;
+        }
+        
+        // If we've scrolled before the first set, jump to second set
+        if (newValue < 0) {
+          setIsTransitioning(false);
+          setTimeout(() => setIsTransitioning(true), 50);
+          return newValue + singleSetWidth;
+        }
+        
+        return newValue;
       });
     };
 
@@ -46,19 +62,28 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
     return () => window.removeEventListener('wheel', handleWheel);
   }, []);
 
+  // Start from the middle set
+  useEffect(() => {
+    if (cardsRef.current) {
+      const singleSetWidth = cardsRef.current.scrollWidth / 3;
+      setTranslateX(singleSetWidth);
+    }
+  }, []);
+
   return (
     <div className={styles.scrollContainer}>
       <div className={styles.cardsWrapper}>
         <div 
           className={styles.cardsInner}
           ref={cardsRef}
-          style={{ transform: `translateX(-${translateX}px)` }}
+          style={{ 
+            transform: `translateX(-${translateX}px)`,
+            transition: isTransitioning ? 'transform 0.15s ease-out' : 'none'
+          }}
         >
-          {cards.map((card) => (
-            <div key={card.id} className={styles.card}>
-              {card.title && (
-                <span className={styles.cardTitle}>{card.title}</span>
-              )}
+          {duplicatedCards.map((card, index) => (
+            <div key={`${card.id}-${index}`} className={styles.card}>
+              <span className={styles.cardNumber}>{card.id}</span>
             </div>
           ))}
         </div>
