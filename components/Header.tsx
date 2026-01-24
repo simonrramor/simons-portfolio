@@ -13,7 +13,7 @@ export default function Header() {
           <a href="https://slingmoney.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
             Sling Money
           </a>
-          . I was previously building at{' '}
+          . Previously building at{' '}
           <a href="https://spotify.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
             Spotify
           </a>

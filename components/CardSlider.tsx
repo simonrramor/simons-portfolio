@@ -96,7 +96,7 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
                     playsInline
                   />
                   <div className={styles.grainOverlay} style={grainStyle} />
-                  <span className={styles.cardLabel}>flower_01</span>
+                  <span className={styles.cardLabel}>咲く花_001</span>
                 </>
               ) : (
                 <span className={styles.cardNumber}>{card.id}</span>
