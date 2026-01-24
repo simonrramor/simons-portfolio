@@ -75,14 +75,17 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
           {duplicatedCards.map((card, index) => (
             <div key={`${card.id}-${index}`} className={styles.card}>
               {card.video ? (
-                <video 
-                  className={styles.cardVideo}
-                  src={card.video}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
+                <>
+                  <video 
+                    className={styles.cardVideo}
+                    src={card.video}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                  />
+                  <span className={styles.cardLabel}>flower_01</span>
+                </>
               ) : (
                 <span className={styles.cardNumber}>{card.id}</span>
               )}

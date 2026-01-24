@@ -19,6 +19,7 @@
 }
 
 .card {
+  position: relative;
   flex-shrink: 0;
   height: calc(100vh - var(--header-height, 200px) - 80px);
   width: calc((100vh - var(--header-height, 200px) - 80px) * (9 / 19.5) + 100px);
@@ -28,6 +29,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  overflow: hidden;
 }
 
 .cardTitle {
@@ -48,6 +50,15 @@
   height: 100%;
   object-fit: cover;
   border-radius: 44px;
+}
+
+.cardLabel {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 /* Responsive adjustments */
