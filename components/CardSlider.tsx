@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import styles from './CardSlider.module.css';
 
 interface CardSliderProps {
@@ -21,53 +21,42 @@ const defaultCards = [
 
 export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
   const cardsRef = useRef<HTMLDivElement>(null);
-  const [translateX, setTranslateX] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(true);
+  const translateXRef = useRef(0);
+  const singleSetWidthRef = useRef(0);
 
   // Create duplicated cards for infinite scroll effect
   const duplicatedCards = [...cards, ...cards, ...cards];
 
   useEffect(() => {
+    if (!cardsRef.current) return;
+    
+    // Calculate single set width and start from middle
+    singleSetWidthRef.current = cardsRef.current.scrollWidth / 3;
+    translateXRef.current = singleSetWidthRef.current;
+    cardsRef.current.style.transform = `translateX(-${translateXRef.current}px)`;
+
     const handleWheel = (e: WheelEvent) => {
       if (!cardsRef.current) return;
       
       e.preventDefault();
       
-      const cardsContainer = cardsRef.current;
-      const singleSetWidth = cardsContainer.scrollWidth / 3;
+      const singleSetWidth = singleSetWidthRef.current;
+      let newValue = translateXRef.current + e.deltaY * 0.5;
       
-      setTranslateX(prev => {
-        let newValue = prev + e.deltaY * 0.5;
-        
-        // If we've scrolled past the second set, jump back to first set
-        if (newValue >= singleSetWidth * 2) {
-          setIsTransitioning(false);
-          setTimeout(() => setIsTransitioning(true), 50);
-          return newValue - singleSetWidth;
-        }
-        
-        // If we've scrolled before the first set, jump to second set
-        if (newValue < 0) {
-          setIsTransitioning(false);
-          setTimeout(() => setIsTransitioning(true), 50);
-          return newValue + singleSetWidth;
-        }
-        
-        return newValue;
-      });
+      // Wrap around seamlessly
+      if (newValue >= singleSetWidth * 2) {
+        newValue = newValue - singleSetWidth;
+      } else if (newValue < singleSetWidth * 0) {
+        newValue = newValue + singleSetWidth;
+      }
+      
+      translateXRef.current = newValue;
+      cardsRef.current.style.transform = `translateX(-${newValue}px)`;
     };
 
     window.addEventListener('wheel', handleWheel, { passive: false });
 
     return () => window.removeEventListener('wheel', handleWheel);
-  }, []);
-
-  // Start from the middle set
-  useEffect(() => {
-    if (cardsRef.current) {
-      const singleSetWidth = cardsRef.current.scrollWidth / 3;
-      setTranslateX(singleSetWidth);
-    }
   }, []);
 
   return (
@@ -76,10 +65,6 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
         <div 
           className={styles.cardsInner}
           ref={cardsRef}
-          style={{ 
-            transform: `translateX(-${translateX}px)`,
-            transition: isTransitioning ? 'transform 0.15s ease-out' : 'none'
-          }}
         >
           {duplicatedCards.map((card, index) => (
             <div key={`${card.id}-${index}`} className={styles.card}>

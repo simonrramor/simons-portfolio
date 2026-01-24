@@ -16,7 +16,6 @@
   display: flex;
   gap: 16px;
   will-change: transform;
-  transition: transform 0.15s ease-out;
 }
 
 .card {
