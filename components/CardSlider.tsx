@@ -68,21 +68,13 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
     translateXRef.current = singleSetWidthRef.current;
     cardsRef.current.style.transform = `translateX(-${translateXRef.current}px)`;
 
-    const baseSpeed = 0.5; // Base auto-scroll speed (pixels per frame)
-    let scrollBoost = 0; // Additional speed from user scrolling
-    let animationId: number;
-
-    const animate = () => {
+    const handleWheel = (e: WheelEvent) => {
       if (!cardsRef.current) return;
       
+      e.preventDefault();
+      
       const singleSetWidth = singleSetWidthRef.current;
-      
-      // Gradually reduce scroll boost
-      scrollBoost *= 0.98;
-      if (Math.abs(scrollBoost) < 0.01) scrollBoost = 0;
-      
-      // Calculate new position with base speed + boost
-      let newValue = translateXRef.current + baseSpeed + scrollBoost;
+      let newValue = translateXRef.current + e.deltaY * 0.5;
       
       // Wrap around seamlessly
       if (newValue >= singleSetWidth * 2) {
@@ -93,23 +85,11 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
       
       translateXRef.current = newValue;
       cardsRef.current.style.transform = `translateX(-${newValue}px)`;
-      
-      animationId = requestAnimationFrame(animate);
     };
 
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      // Add to scroll boost when user scrolls
-      scrollBoost += e.deltaY * 0.3;
-    };
-
-    animationId = requestAnimationFrame(animate);
     window.addEventListener('wheel', handleWheel, { passive: false });
 
-    return () => {
-      cancelAnimationFrame(animationId);
-      window.removeEventListener('wheel', handleWheel);
-    };
+    return () => window.removeEventListener('wheel', handleWheel);
   }, []);
 
   return (
