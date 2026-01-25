@@ -93,6 +93,17 @@
   text-transform: uppercase;
 }
 
+.cardNumberLabel {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: var(--font-roboto-mono), monospace;
+  text-transform: uppercase;
+}
+
 /* Responsive adjustments */
 @media (max-width: 1024px) {
   .card {

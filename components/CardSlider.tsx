@@ -10,6 +10,7 @@ interface Card {
   poster?: string;
   image?: string;
   label?: string;
+  number?: string;
 }
 
 interface CardSliderProps {
@@ -17,15 +18,15 @@ interface CardSliderProps {
 }
 
 const defaultCards: Card[] = [
-  { id: 1, title: 'Project 1', video: '/project1.mp4', poster: '/posters/project1.png', label: '咲く花_001' },
-  { id: 2, title: 'Project 2', image: '/images/project2.png', label: 'Sling_001' },
-  { id: 3, title: 'Project 3' },
-  { id: 4, title: 'Project 4' },
-  { id: 5, title: 'Project 5' },
-  { id: 6, title: 'Project 6' },
-  { id: 7, title: 'Project 7' },
-  { id: 8, title: 'Project 8' },
-  { id: 9, title: 'Project 9' },
+  { id: 1, title: 'Project 1', video: '/project1.mp4', poster: '/posters/project1.png', label: '咲く花', number: '_001' },
+  { id: 2, title: 'Project 2', image: '/images/project2.png', label: 'Sling', number: '_002' },
+  { id: 3, title: 'Project 3', number: '_003' },
+  { id: 4, title: 'Project 4', number: '_004' },
+  { id: 5, title: 'Project 5', number: '_005' },
+  { id: 6, title: 'Project 6', number: '_006' },
+  { id: 7, title: 'Project 7', number: '_007' },
+  { id: 8, title: 'Project 8', number: '_008' },
+  { id: 9, title: 'Project 9', number: '_009' },
 ];
 
 export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
@@ -99,6 +100,7 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
                   />
                   <div className={styles.grainOverlay} style={grainStyle} />
                   {card.label && <span className={styles.cardLabel}>{card.label}</span>}
+                  {card.number && <span className={styles.cardNumberLabel}>{card.number}</span>}
                 </>
               ) : card.image ? (
                 <>
@@ -108,9 +110,13 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
                     alt={card.title || ''}
                   />
                   {card.label && <span className={styles.cardLabel}>{card.label}</span>}
+                  {card.number && <span className={styles.cardNumberLabel}>{card.number}</span>}
                 </>
               ) : (
-                <span className={styles.cardNumber}>{card.id}</span>
+                <>
+                  <span className={styles.cardNumber}>{card.id}</span>
+                  {card.number && <span className={styles.cardNumberLabel}>{card.number}</span>}
+                </>
               )}
             </div>
           ))}
