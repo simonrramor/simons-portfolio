@@ -12,9 +12,9 @@
 }
 
 .logo {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--color-text-muted);
+  font-size: 16px;
+  font-weight: 400;
+  color: #000000;
   text-transform: uppercase;
   font-family: var(--font-roboto-mono), monospace;
   line-height: 1.3;
