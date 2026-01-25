@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './CardSlider.module.css';
 
 interface Card {
@@ -33,9 +33,23 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
   const cardsRef = useRef<HTMLDivElement>(null);
   const translateXRef = useRef(0);
   const singleSetWidthRef = useRef(0);
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const [isOverCard, setIsOverCard] = useState(false);
 
   // Create duplicated cards for infinite scroll effect
   const duplicatedCards = [...cards, ...cards, ...cards];
+
+  // Track mouse position globally
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setCursorPos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  const handleCardMouseEnter = () => setIsOverCard(true);
+  const handleCardMouseLeave = () => setIsOverCard(false);
 
   // Saved grain settings for card 1
   const grainStyle = {
@@ -54,39 +68,68 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
     translateXRef.current = singleSetWidthRef.current;
     cardsRef.current.style.transform = `translateX(-${translateXRef.current}px)`;
 
-    const handleWheel = (e: WheelEvent) => {
+    const baseSpeed = 0.5; // Base auto-scroll speed (pixels per frame)
+    let scrollBoost = 0; // Additional speed from user scrolling
+    let animationId: number;
+
+    const animate = () => {
       if (!cardsRef.current) return;
       
-      e.preventDefault();
-      
       const singleSetWidth = singleSetWidthRef.current;
-      let newValue = translateXRef.current + e.deltaY * 0.5;
+      
+      // Gradually reduce scroll boost
+      scrollBoost *= 0.98;
+      if (Math.abs(scrollBoost) < 0.01) scrollBoost = 0;
+      
+      // Calculate new position with base speed + boost
+      let newValue = translateXRef.current + baseSpeed + scrollBoost;
       
       // Wrap around seamlessly
       if (newValue >= singleSetWidth * 2) {
         newValue = newValue - singleSetWidth;
-      } else if (newValue < singleSetWidth * 0) {
+      } else if (newValue < 0) {
         newValue = newValue + singleSetWidth;
       }
       
       translateXRef.current = newValue;
       cardsRef.current.style.transform = `translateX(-${newValue}px)`;
+      
+      animationId = requestAnimationFrame(animate);
     };
 
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      // Add to scroll boost when user scrolls
+      scrollBoost += e.deltaY * 0.3;
+    };
+
+    animationId = requestAnimationFrame(animate);
     window.addEventListener('wheel', handleWheel, { passive: false });
 
-    return () => window.removeEventListener('wheel', handleWheel);
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('wheel', handleWheel);
+    };
   }, []);
 
   return (
     <div className={styles.scrollContainer}>
+      <div 
+        className={`${styles.customCursor} ${isOverCard ? styles.customCursorLarge : ''}`}
+        style={{ left: cursorPos.x, top: cursorPos.y }}
+      />
       <div className={styles.cardsWrapper}>
         <div 
           className={styles.cardsInner}
           ref={cardsRef}
         >
           {duplicatedCards.map((card, index) => (
-            <div key={`${card.id}-${index}`} className={styles.card}>
+            <div 
+              key={`${card.id}-${index}`} 
+              className={styles.card}
+              onMouseEnter={handleCardMouseEnter}
+              onMouseLeave={handleCardMouseLeave}
+            >
               {card.video ? (
                 <>
                   <video 

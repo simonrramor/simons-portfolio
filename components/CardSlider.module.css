@@ -7,6 +7,26 @@
   margin-top: var(--header-height, 200px);
 }
 
+.customCursor {
+  position: fixed;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #000000;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  transition: width 0.2s ease-out, height 0.2s ease-out, background 0.2s ease-out, backdrop-filter 0.2s ease-out;
+}
+
+.customCursorLarge {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
 .cardsWrapper {
   width: 100%;
   overflow: visible;
@@ -28,7 +48,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  cursor: none;
   overflow: hidden;
 }
 

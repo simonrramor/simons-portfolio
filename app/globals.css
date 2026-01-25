@@ -25,6 +25,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: #ffffff;
   color: #171717;
+  cursor: none;
 }
 
 img,
