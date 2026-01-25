@@ -20,7 +20,7 @@ interface CardSliderProps {
 const defaultCards: Card[] = [
   { id: 1, title: 'Project 1', video: '/project1.mp4', poster: '/posters/project1.png', label: '咲く花', number: '_001' },
   { id: 2, title: 'Project 2', image: '/images/project2.png', label: 'Sling', number: '_002' },
-  { id: 3, title: 'Project 3', number: '_003' },
+  { id: 3, title: 'Project 3', image: '/images/project3.png', label: 'Project 3', number: '_003' },
   { id: 4, title: 'Project 4', number: '_004' },
   { id: 5, title: 'Project 5', number: '_005' },
   { id: 6, title: 'Project 6', number: '_006' },
@@ -37,7 +37,7 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
   // Create duplicated cards for infinite scroll effect
   const duplicatedCards = [...cards, ...cards, ...cards];
 
-  // Saved grain settings
+  // Saved grain settings for card 1
   const grainStyle = {
     opacity: 1.0,
     backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.65' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
