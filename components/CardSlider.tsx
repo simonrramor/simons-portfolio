@@ -21,7 +21,7 @@ const defaultCards: Card[] = [
   { id: 1, title: 'Project 1', video: '/project1.mp4', poster: '/posters/project1.png', label: '咲く花', number: '_001' },
   { id: 2, title: 'Project 2', image: '/images/project2.png', label: 'Sling', number: '_002' },
   { id: 3, title: 'Project 3', image: '/images/project3.png', label: 'Oil on canvas', number: '_003' },
-  { id: 4, title: 'Project 4', number: '_004' },
+  { id: 4, title: 'Project 4', image: '/images/project4.png', label: 'Project 4', number: '_004' },
   { id: 5, title: 'Project 5', number: '_005' },
   { id: 6, title: 'Project 6', number: '_006' },
   { id: 7, title: 'Project 7', number: '_007' },
