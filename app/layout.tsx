@@ -25,6 +25,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preload" href="/images/project2.png" as="image" />
+        <link rel="preload" href="/images/project3.png" as="image" />
+        <link rel="preload" href="/images/project4.png" as="image" />
+        <link rel="preload" href="/posters/project1.png" as="image" />
+      </head>
       <body className={`${inter.className} ${robotoMono.variable}`}>
         {children}
       </body>

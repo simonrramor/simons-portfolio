@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import styles from './CardSlider.module.css';
 
 interface Card {
@@ -11,6 +12,7 @@ interface Card {
   image?: string;
   label?: string;
   number?: string;
+  imagePosition?: string;
 }
 
 interface CardSliderProps {
@@ -22,7 +24,7 @@ const defaultCards: Card[] = [
   { id: 2, title: 'Project 2', image: '/images/project2.png', label: 'Sling', number: '_002' },
   { id: 3, title: 'Project 3', image: '/images/project3.png', label: 'Oil on canvas', number: '_003' },
   { id: 4, title: 'Project 4', image: '/images/project4.png', label: 'Group Sessions', number: '_004' },
-  { id: 5, title: 'Project 5', number: '_005' },
+  { id: 5, title: 'Project 5', image: '/images/project5.png', label: 'Shared tabs', number: '_005', imagePosition: 'left' },
   { id: 6, title: 'Project 6', number: '_006' },
   { id: 7, title: 'Project 7', number: '_007' },
   { id: 8, title: 'Project 8', number: '_008' },
@@ -127,10 +129,14 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
                 </>
               ) : card.image ? (
                 <>
-                  <img 
+                  <Image 
                     className={styles.cardImage}
                     src={card.image}
                     alt={card.title || ''}
+                    fill
+                    sizes="(max-width: 768px) 50vw, 33vw"
+                    priority={card.id <= 4}
+                    style={card.imagePosition ? { objectPosition: card.imagePosition } : undefined}
                   />
                   {card.label && <span className={styles.cardLabel}>{card.label}</span>}
                   {card.number && <span className={styles.cardNumberLabel}>{card.number}</span>}
