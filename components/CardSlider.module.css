@@ -135,6 +135,7 @@
   width: auto;
   height: 32px;
   object-fit: contain;
+  opacity: 0.8;
 }
 
 /* Responsive adjustments */
