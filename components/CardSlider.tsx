@@ -65,6 +65,8 @@ interface Card {
   label?: string;
   number?: string;
   imagePosition?: string;
+  logo?: string;
+  logoHeight?: number;
 }
 
 interface CardSliderProps {
@@ -72,12 +74,12 @@ interface CardSliderProps {
 }
 
 const defaultCards: Card[] = [
-  { id: 1, title: 'Project 1', video: '/project1.mp4', poster: '/posters/project1.png', label: '咲く花', number: '_001' },
-  { id: 2, title: 'Project 2', image: '/images/project2.png', label: 'Sling', number: '_002' },
-  { id: 3, title: 'Project 3', image: '/images/project3.png', label: 'Oil on canvas', number: '_003' },
-  { id: 4, title: 'Project 4', image: '/images/project4.png', label: 'Group Sessions', number: '_004' },
-  { id: 5, title: 'Project 5', image: '/images/project5.png', label: 'Shared tabs', number: '_005', imagePosition: 'left' },
-  { id: 6, title: 'Project 6', image: '/images/project6.png', label: 'Enhance', number: '_006', imagePosition: 'top' },
+  { id: 1, title: 'Project 1', video: '/project1.mp4', poster: '/posters/project1.png', label: '咲く花', number: '_001', logo: '/images/stars-icon.svg' },
+  { id: 2, title: 'Project 2', image: '/images/project2.png', label: 'Sling', number: '_002', logo: '/images/sling-logo.png' },
+  { id: 3, title: 'Project 3', image: '/images/project3.png', label: 'Oil on canvas', number: '_003', logo: '/images/palette-icon.svg' },
+  { id: 4, title: 'Project 4', image: '/images/project4.png', label: 'Group Sessions', number: '_004', logo: '/images/spotify-logo.png' },
+  { id: 5, title: 'Project 5', image: '/images/project5.png', label: 'Shared tabs', number: '_005', imagePosition: 'left', logo: '/images/monzo-logo.png', logoHeight: 24 },
+  { id: 6, title: 'Project 6', image: '/images/project6.png', label: 'Enhance', number: '_006', imagePosition: 'top', logo: '/images/spotify-logo.png' },
 ];
 
 
@@ -180,6 +182,16 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
                   <div className={styles.grainOverlay} style={grainStyle} />
                   {card.label && <span className={styles.cardLabel}>{card.label}</span>}
                   {card.number && <span className={styles.cardNumberLabel}>{card.number}</span>}
+                  {card.logo && (
+                    <Image
+                      className={styles.cardLogo}
+                      src={card.logo}
+                      alt="Logo"
+                      width={120}
+                      height={card.logoHeight || 32}
+                      style={{ height: card.logoHeight || 32, width: 'auto' }}
+                    />
+                  )}
                 </>
               ) : card.image ? (
                 <>
@@ -191,6 +203,16 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
                   />
                   {card.label && <span className={styles.cardLabel}>{card.label}</span>}
                   {card.number && <span className={styles.cardNumberLabel}>{card.number}</span>}
+                  {card.logo && (
+                    <Image
+                      className={styles.cardLogo}
+                      src={card.logo}
+                      alt="Logo"
+                      width={120}
+                      height={card.logoHeight || 32}
+                      style={{ height: card.logoHeight || 32, width: 'auto' }}
+                    />
+                  )}
                 </>
               ) : (
                 <>

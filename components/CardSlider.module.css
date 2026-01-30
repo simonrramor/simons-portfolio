@@ -128,6 +128,15 @@
   text-transform: uppercase;
 }
 
+.cardLogo {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  width: auto;
+  height: 32px;
+  object-fit: contain;
+}
+
 /* Responsive adjustments */
 @media (max-width: 1024px) {
   .card {
