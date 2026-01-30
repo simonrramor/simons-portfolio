@@ -77,7 +77,7 @@ const defaultCards: Card[] = [
   { id: 3, title: 'Project 3', image: '/images/project3.png', label: 'Oil on canvas', number: '_003' },
   { id: 4, title: 'Project 4', image: '/images/project4.png', label: 'Group Sessions', number: '_004' },
   { id: 5, title: 'Project 5', image: '/images/project5.png', label: 'Shared tabs', number: '_005', imagePosition: 'left' },
-  { id: 6, title: 'Project 6', image: '/images/project6.png', label: 'Project 6', number: '_006', imagePosition: 'top' },
+  { id: 6, title: 'Project 6', image: '/images/project6.png', label: 'Enhance', number: '_006', imagePosition: 'top' },
 ];
 
 
