@@ -67,6 +67,7 @@ interface Card {
   imagePosition?: string;
   logo?: string;
   logoHeight?: number;
+  grainOnly?: boolean;
 }
 
 interface CardSliderProps {
@@ -76,10 +77,11 @@ interface CardSliderProps {
 const defaultCards: Card[] = [
   { id: 1, title: 'Project 1', video: '/project1.mp4', poster: '/posters/project1.png', label: '咲く花', number: '_001', logo: '/images/stars-icon.svg' },
   { id: 2, title: 'Project 2', image: '/images/project2.png', label: 'Sling', number: '_002', logo: '/images/sling-logo.png' },
-  { id: 3, title: 'Project 3', image: '/images/project3.png', label: 'Oil on canvas', number: '_003', logo: '/images/palette-icon.svg' },
-  { id: 4, title: 'Project 4', image: '/images/project4.png', label: 'Group Sessions', number: '_004', logo: '/images/spotify-logo.png' },
-  { id: 5, title: 'Project 5', image: '/images/project5.png', label: 'Shared tabs', number: '_005', imagePosition: 'left', logo: '/images/monzo-logo.png', logoHeight: 24 },
-  { id: 6, title: 'Project 6', image: '/images/project6.png', label: 'Enhance', number: '_006', imagePosition: 'top', logo: '/images/spotify-logo.png' },
+  { id: 3, title: 'Project 3', video: '/project7.webm', label: 'Face tracking', number: '_003', grainOnly: true, logo: '/images/qr-code-icon.svg' },
+  { id: 4, title: 'Project 4', image: '/images/project3.png', label: 'Oil on canvas', number: '_004', logo: '/images/palette-icon.svg' },
+  { id: 5, title: 'Project 5', image: '/images/project4.png', label: 'Group Sessions', number: '_005', logo: '/images/spotify-logo.png' },
+  { id: 6, title: 'Project 6', image: '/images/project5.png', label: 'Shared tabs', number: '_006', imagePosition: 'left', logo: '/images/monzo-logo.png', logoHeight: 24 },
+  { id: 7, title: 'Project 7', image: '/images/project6.png', label: 'Enhance', number: '_007', imagePosition: 'top', logo: '/images/spotify-logo.png' },
 ];
 
 
@@ -109,12 +111,20 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
   const handleCardMouseEnter = () => setIsOverCard(true);
   const handleCardMouseLeave = () => setIsOverCard(false);
 
-  // Saved grain settings for card 1
+  // Grain settings with overlay filter (for project 1)
   const grainStyle = {
     opacity: 1.0,
     backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.65' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
     mixBlendMode: 'overlay' as React.CSSProperties['mixBlendMode'],
     filter: 'brightness(0.1) contrast(1.45)',
+    animation: 'grain 0.033s steps(30) infinite',
+  };
+
+  // Grain only (no overlay filter)
+  const grainOnlyStyle = {
+    opacity: 0.3,
+    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.65' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+    mixBlendMode: 'overlay' as React.CSSProperties['mixBlendMode'],
     animation: 'grain 0.033s steps(30) infinite',
   };
 
@@ -179,7 +189,7 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
                     muted
                     playsInline
                   />
-                  <div className={styles.grainOverlay} style={grainStyle} />
+                  <div className={styles.grainOverlay} style={card.grainOnly ? grainOnlyStyle : grainStyle} />
                   {card.label && <span className={styles.cardLabel}>{card.label}</span>}
                   {card.number && <span className={styles.cardNumberLabel}>{card.number}</span>}
                   {card.logo && (
