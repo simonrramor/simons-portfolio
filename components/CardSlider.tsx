@@ -1,8 +1,60 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import styles from './CardSlider.module.css';
+
+// Progressive image component - loads low-res first, then full-res
+function ProgressiveImage({ 
+  src, 
+  alt, 
+  objectPosition,
+  priority = false 
+}: { 
+  src: string; 
+  alt: string; 
+  objectPosition?: string;
+  priority?: boolean;
+}) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const handleLoad = useCallback(() => {
+    setIsLoaded(true);
+  }, []);
+
+  return (
+    <>
+      {/* Low-res blurred version - loads fast */}
+      <Image
+        className={`${styles.cardImage} ${styles.cardImageLowRes}`}
+        src={src}
+        alt={alt}
+        fill
+        sizes="50px"
+        quality={1}
+        style={{ 
+          objectPosition,
+          opacity: isLoaded ? 0 : 1,
+        }}
+      />
+      {/* Full-res version - fades in when loaded */}
+      <Image
+        className={styles.cardImage}
+        src={src}
+        alt={alt}
+        fill
+        sizes="(max-width: 768px) 50vw, 33vw"
+        priority={priority}
+        quality={85}
+        onLoad={handleLoad}
+        style={{ 
+          objectPosition,
+          opacity: isLoaded ? 1 : 0,
+        }}
+      />
+    </>
+  );
+}
 
 interface Card {
   id: number;
@@ -25,17 +77,18 @@ const defaultCards: Card[] = [
   { id: 3, title: 'Project 3', image: '/images/project3.png', label: 'Oil on canvas', number: '_003' },
   { id: 4, title: 'Project 4', image: '/images/project4.png', label: 'Group Sessions', number: '_004' },
   { id: 5, title: 'Project 5', image: '/images/project5.png', label: 'Shared tabs', number: '_005', imagePosition: 'left' },
-  { id: 6, title: 'Project 6', number: '_006' },
+  { id: 6, title: 'Project 6', image: '/images/project6.png', label: 'Project 6', number: '_006', imagePosition: 'top' },
   { id: 7, title: 'Project 7', number: '_007' },
   { id: 8, title: 'Project 8', number: '_008' },
   { id: 9, title: 'Project 9', number: '_009' },
 ];
 
+
 export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
   const cardsRef = useRef<HTMLDivElement>(null);
+  const cursorRef = useRef<HTMLDivElement>(null);
   const translateXRef = useRef(0);
   const singleSetWidthRef = useRef(0);
-  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [isOverCard, setIsOverCard] = useState(false);
 
   // Create duplicated cards for infinite scroll effect
@@ -44,8 +97,12 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
   // Track mouse position globally
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setCursorPos({ x: e.clientX, y: e.clientY });
+      if (cursorRef.current) {
+        cursorRef.current.style.left = `${e.clientX}px`;
+        cursorRef.current.style.top = `${e.clientY}px`;
+      }
     };
+
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
@@ -97,8 +154,8 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
   return (
     <div className={styles.scrollContainer}>
       <div 
+        ref={cursorRef}
         className={`${styles.customCursor} ${isOverCard ? styles.customCursorLarge : ''}`}
-        style={{ left: cursorPos.x, top: cursorPos.y }}
       />
       <div className={styles.cardsWrapper}>
         <div 
@@ -129,14 +186,11 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
                 </>
               ) : card.image ? (
                 <>
-                  <Image 
-                    className={styles.cardImage}
+                  <ProgressiveImage
                     src={card.image}
                     alt={card.title || ''}
-                    fill
-                    sizes="(max-width: 768px) 50vw, 33vw"
+                    objectPosition={card.imagePosition}
                     priority={card.id <= 4}
-                    style={card.imagePosition ? { objectPosition: card.imagePosition } : undefined}
                   />
                   {card.label && <span className={styles.cardLabel}>{card.label}</span>}
                   {card.number && <span className={styles.cardNumberLabel}>{card.number}</span>}

@@ -75,6 +75,12 @@
 .cardImage {
   object-fit: cover;
   border-radius: 32px;
+  transition: opacity 0.3s ease-out;
+}
+
+.cardImageLowRes {
+  filter: blur(20px);
+  transform: scale(1.1);
 }
 
 .grainOverlay {
