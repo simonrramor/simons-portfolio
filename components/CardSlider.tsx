@@ -83,7 +83,7 @@ const defaultCards: Card[] = [
   { id: 3, title: 'Project 3', video: '/project7.webm', label: 'Face tracking', number: '_003', grainOnly: true, logo: '/images/qr-code-icon.svg' },
   { id: 4, title: 'Project 4', image: '/images/project4.png', label: 'Group Sessions', number: '_004', logo: '/images/spotify-logo.png' },
   { id: 5, title: 'Project 5', image: '/images/project6.png', label: 'Enhance', number: '_005', imagePosition: 'top', logo: '/images/spotify-logo.png' },
-  { id: 6, title: 'Project 6', video: '/project8.mp4', label: 'Neome', number: '_006', showControls: true },
+  { id: 6, title: 'Project 6', video: '/project8.mp4', poster: '/posters/project8.png', label: 'Neome', number: '_006', showControls: true },
   { id: 7, title: 'Project 7', image: '/images/project5.png', label: 'Shared tabs', number: '_007', imagePosition: 'left', logo: '/images/monzo-logo.png', logoHeight: 24 },
 ];
 
@@ -242,6 +242,7 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
                     className={styles.cardVideo}
                     src={card.video}
                     poster={card.poster}
+                    preload="auto"
                     autoPlay
                     loop
                     muted
