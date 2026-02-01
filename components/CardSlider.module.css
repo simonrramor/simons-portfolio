@@ -1,3 +1,26 @@
+.loader {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--header-height, 200px);
+}
+
+.loaderSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f0f0f0;
+  border-top-color: #333;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .scrollContainer {
   flex: 1;
   display: flex;
@@ -36,6 +59,8 @@
   display: flex;
   gap: 16px;
   will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .card {

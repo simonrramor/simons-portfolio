@@ -92,8 +92,18 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
   const cardsRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const translateXRef = useRef(0);
+  const targetXRef = useRef(0);
   const singleSetWidthRef = useRef(0);
   const [isOverCard, setIsOverCard] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Hide loader after initial render
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
   
   // Fixed video effects for card 8
   const videoEffects = {
@@ -139,37 +149,69 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
     animation: 'grain 0.033s steps(30) infinite',
   };
 
+  // Initialize positions and set up wheel handler
   useEffect(() => {
     if (!cardsRef.current) return;
     
     // Calculate single set width and start from middle
     singleSetWidthRef.current = cardsRef.current.scrollWidth / 3;
     translateXRef.current = singleSetWidthRef.current;
-    cardsRef.current.style.transform = `translateX(-${translateXRef.current}px)`;
+    targetXRef.current = singleSetWidthRef.current;
+    cardsRef.current.style.transform = `translate3d(-${translateXRef.current}px, 0, 0)`;
 
     const handleWheel = (e: WheelEvent) => {
-      if (!cardsRef.current) return;
-      
       e.preventDefault();
       
       const singleSetWidth = singleSetWidthRef.current;
-      let newValue = translateXRef.current + e.deltaY * 0.5;
+      // Normalize and cap deltaY to prevent huge jumps from fast scrolling
+      const maxDelta = 100;
+      const delta = Math.max(-maxDelta, Math.min(maxDelta, e.deltaY)) * 0.8;
+      let newTarget = targetXRef.current + delta;
       
-      // Wrap around seamlessly
-      if (newValue >= singleSetWidth * 2) {
-        newValue = newValue - singleSetWidth;
-      } else if (newValue < 0) {
-        newValue = newValue + singleSetWidth;
+      // Wrap around seamlessly for target
+      if (newTarget >= singleSetWidth * 2) {
+        newTarget = newTarget - singleSetWidth;
+        // Also adjust current position to prevent animation across the wrap
+        translateXRef.current = translateXRef.current - singleSetWidth;
+      } else if (newTarget < 0) {
+        newTarget = newTarget + singleSetWidth;
+        translateXRef.current = translateXRef.current + singleSetWidth;
       }
       
-      translateXRef.current = newValue;
-      cardsRef.current.style.transform = `translateX(-${newValue}px)`;
+      targetXRef.current = newTarget;
     };
 
     window.addEventListener('wheel', handleWheel, { passive: false });
 
     return () => window.removeEventListener('wheel', handleWheel);
-  }, []);
+  }, [isLoading]);
+
+  // Smooth animation loop with lerp
+  useEffect(() => {
+    if (isLoading || !cardsRef.current) return;
+    
+    let animationId: number;
+    
+    const animate = () => {
+      if (!cardsRef.current) return;
+      
+      const current = translateXRef.current;
+      const target = targetXRef.current;
+      const diff = target - current;
+      
+      // Lerp factor (higher = more responsive)
+      translateXRef.current += diff * 0.15;
+      
+      // Apply transform with translate3d for GPU acceleration
+      cardsRef.current.style.transform = `translate3d(-${translateXRef.current}px, 0, 0)`;
+      
+      animationId = requestAnimationFrame(animate);
+    };
+    
+    animationId = requestAnimationFrame(animate);
+    
+    return () => cancelAnimationFrame(animationId);
+  }, [isLoading]);
 
   // Video filter style for card 8
   const videoFilterStyle = {
@@ -183,6 +225,14 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
     mixBlendMode: 'overlay' as React.CSSProperties['mixBlendMode'],
     animation: 'grain 0.033s steps(30) infinite',
   };
+
+  if (isLoading) {
+    return (
+      <div className={styles.loader}>
+        <div className={styles.loaderSpinner} />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.scrollContainer}>
