@@ -68,6 +68,9 @@ interface Card {
   logo?: string;
   logoHeight?: number;
   grainOnly?: boolean;
+  showControls?: boolean;
+  hasBorder?: boolean;
+  darkText?: boolean;
 }
 
 interface CardSliderProps {
@@ -82,6 +85,7 @@ const defaultCards: Card[] = [
   { id: 5, title: 'Project 5', image: '/images/project4.png', label: 'Group Sessions', number: '_005', logo: '/images/spotify-logo.png' },
   { id: 6, title: 'Project 6', image: '/images/project5.png', label: 'Shared tabs', number: '_006', imagePosition: 'left', logo: '/images/monzo-logo.png', logoHeight: 24 },
   { id: 7, title: 'Project 7', image: '/images/project6.png', label: 'Enhance', number: '_007', imagePosition: 'top', logo: '/images/spotify-logo.png' },
+  { id: 8, title: 'Project 8', video: '/project8.mp4', label: 'Neome', number: '_008', showControls: true },
 ];
 
 
@@ -91,6 +95,14 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
   const translateXRef = useRef(0);
   const singleSetWidthRef = useRef(0);
   const [isOverCard, setIsOverCard] = useState(false);
+  
+  // Fixed video effects for card 8
+  const videoEffects = {
+    brightness: 95,
+    contrast: 100,
+    saturation: 150,
+    grain: 100,
+  };
 
   // Create duplicated cards for infinite scroll effect
   const duplicatedCards = [...cards, ...cards, ...cards];
@@ -160,13 +172,26 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
     return () => window.removeEventListener('wheel', handleWheel);
   }, []);
 
+  // Video filter style for card 8
+  const videoFilterStyle = {
+    filter: `brightness(${videoEffects.brightness}%) contrast(${videoEffects.contrast}%) saturate(${videoEffects.saturation}%)`,
+  };
+
+  // Grain style for card 8 based on slider
+  const card8GrainStyle = {
+    opacity: videoEffects.grain / 100,
+    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.65' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+    mixBlendMode: 'overlay' as React.CSSProperties['mixBlendMode'],
+    animation: 'grain 0.033s steps(30) infinite',
+  };
+
   return (
     <div className={styles.scrollContainer}>
-      <div 
-        ref={cursorRef}
-        className={`${styles.customCursor} ${isOverCard ? styles.customCursorLarge : ''}`}
-      />
-      <div className={styles.cardsWrapper}>
+        <div 
+          ref={cursorRef}
+          className={`${styles.customCursor} ${isOverCard ? styles.customCursorLarge : ''}`}
+        />
+        <div className={styles.cardsWrapper}>
         <div 
           className={styles.cardsInner}
           ref={cardsRef}
@@ -174,7 +199,7 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
           {duplicatedCards.map((card, index) => (
             <div 
               key={`${card.id}-${index}`} 
-              className={styles.card}
+              className={`${styles.card} ${card.hasBorder ? styles.cardWithBorder : ''}`}
               onMouseEnter={handleCardMouseEnter}
               onMouseLeave={handleCardMouseLeave}
             >
@@ -188,8 +213,24 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
                     loop
                     muted
                     playsInline
+                    style={card.showControls ? videoFilterStyle : undefined}
+                    onLoadedMetadata={(e) => {
+                      if (card.showControls) {
+                        (e.target as HTMLVideoElement).playbackRate = 0.5;
+                      }
+                    }}
                   />
-                  <div className={styles.grainOverlay} style={card.grainOnly ? grainOnlyStyle : grainStyle} />
+                  {!card.showControls && (
+                    <div className={styles.grainOverlay} style={card.grainOnly ? grainOnlyStyle : grainStyle} />
+                  )}
+                  {card.showControls && (
+                    <>
+                      <div className={styles.topGradientOverlay} />
+                      {videoEffects.grain > 0 && (
+                        <div className={styles.grainOverlay} style={card8GrainStyle} />
+                      )}
+                    </>
+                  )}
                   {card.label && <span className={styles.cardLabel}>{card.label}</span>}
                   {card.number && <span className={styles.cardNumberLabel}>{card.number}</span>}
                   {card.logo && (
