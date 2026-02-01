@@ -253,6 +253,13 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
                         (e.target as HTMLVideoElement).playbackRate = 0.5;
                       }
                     }}
+                    onTimeUpdate={(e) => {
+                      const video = e.target as HTMLVideoElement;
+                      // Seamless loop: seek to start before video ends
+                      if (video.duration - video.currentTime < 0.1) {
+                        video.currentTime = 0;
+                      }
+                    }}
                   />
                   {!card.showControls && (
                     <div className={styles.grainOverlay} style={card.grainOnly ? grainOnlyStyle : grainStyle} />
