@@ -95,15 +95,6 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
   const targetXRef = useRef(0);
   const singleSetWidthRef = useRef(0);
   const [isOverCard, setIsOverCard] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Hide loader after initial render
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 800);
-    return () => clearTimeout(timer);
-  }, []);
   
   // Fixed video effects for card 8
   const videoEffects = {
@@ -184,11 +175,11 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
     window.addEventListener('wheel', handleWheel, { passive: false });
 
     return () => window.removeEventListener('wheel', handleWheel);
-  }, [isLoading]);
+  }, []);
 
   // Smooth animation loop with lerp
   useEffect(() => {
-    if (isLoading || !cardsRef.current) return;
+    if (!cardsRef.current) return;
     
     let animationId: number;
     
@@ -211,7 +202,7 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
     animationId = requestAnimationFrame(animate);
     
     return () => cancelAnimationFrame(animationId);
-  }, [isLoading]);
+  }, []);
 
   // Video filter style for card 8
   const videoFilterStyle = {
@@ -225,14 +216,6 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
     mixBlendMode: 'overlay' as React.CSSProperties['mixBlendMode'],
     animation: 'grain 0.033s steps(30) infinite',
   };
-
-  if (isLoading) {
-    return (
-      <div className={styles.loader}>
-        <div className={styles.loaderSpinner} />
-      </div>
-    );
-  }
 
   return (
     <div className={styles.scrollContainer}>
@@ -248,7 +231,8 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
           {duplicatedCards.map((card, index) => (
             <div 
               key={`${card.id}-${index}`} 
-              className={`${styles.card} ${card.hasBorder ? styles.cardWithBorder : ''}`}
+              className={`${styles.card} ${styles.cardAnimate} ${card.hasBorder ? styles.cardWithBorder : ''}`}
+              style={{ animationDelay: `${(index % cards.length) * 0.1}s` }}
               onMouseEnter={handleCardMouseEnter}
               onMouseLeave={handleCardMouseLeave}
             >
