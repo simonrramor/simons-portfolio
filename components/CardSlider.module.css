@@ -28,6 +28,17 @@
   padding: 40px;
   overflow: hidden;
   margin-top: var(--header-height, 200px);
+  transition: opacity 0.5s ease;
+}
+
+.scrollContainerHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scrollContainerVisible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .customCursor {
@@ -39,7 +50,7 @@
   pointer-events: none;
   transform: translate(-50%, -50%);
   z-index: 1000;
-  transition: width 0.2s ease-out, height 0.2s ease-out, background 0.2s ease-out, backdrop-filter 0.2s ease-out;
+  transition: width 0.2s ease-out, height 0.2s ease-out, background 0.2s ease-out, backdrop-filter 0.2s ease-out, opacity 0.2s ease-out;
 }
 
 .customCursorLarge {
@@ -48,6 +59,12 @@
   background: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+}
+
+.customCursorLink {
+  width: 32px;
+  height: 32px;
+  opacity: 0.5;
 }
 
 .cardsWrapper {
@@ -82,6 +99,8 @@
 }
 
 .cardAnimate {
+  opacity: 0;
+  transform: translateY(100vh);
   animation: slideInFromBottom 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 

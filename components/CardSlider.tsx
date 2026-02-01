@@ -75,6 +75,7 @@ interface Card {
 
 interface CardSliderProps {
   cards?: Card[];
+  showWork?: boolean;
 }
 
 const defaultCards: Card[] = [
@@ -88,13 +89,14 @@ const defaultCards: Card[] = [
 ];
 
 
-export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
+export default function CardSlider({ cards = defaultCards, showWork = true }: CardSliderProps) {
   const cardsRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const translateXRef = useRef(0);
   const targetXRef = useRef(0);
   const singleSetWidthRef = useRef(0);
   const [isOverCard, setIsOverCard] = useState(false);
+  const [isOverLink, setIsOverLink] = useState(false);
   
   // Fixed video effects for card 8
   const videoEffects = {
@@ -119,6 +121,25 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
+
+  // Track link/button hover globally
+  useEffect(() => {
+    const handleLinkEnter = () => setIsOverLink(true);
+    const handleLinkLeave = () => setIsOverLink(false);
+
+    const links = document.querySelectorAll('a, button');
+    links.forEach(link => {
+      link.addEventListener('mouseenter', handleLinkEnter);
+      link.addEventListener('mouseleave', handleLinkLeave);
+    });
+
+    return () => {
+      links.forEach(link => {
+        link.removeEventListener('mouseenter', handleLinkEnter);
+        link.removeEventListener('mouseleave', handleLinkLeave);
+      });
+    };
+  }, [showWork]);
 
   const handleCardMouseEnter = () => setIsOverCard(true);
   const handleCardMouseLeave = () => setIsOverCard(false);
@@ -175,11 +196,11 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
     window.addEventListener('wheel', handleWheel, { passive: false });
 
     return () => window.removeEventListener('wheel', handleWheel);
-  }, []);
+  }, [showWork]);
 
   // Smooth animation loop with lerp
   useEffect(() => {
-    if (!cardsRef.current) return;
+    if (!showWork || !cardsRef.current) return;
     
     let animationId: number;
     
@@ -202,7 +223,7 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
     animationId = requestAnimationFrame(animate);
     
     return () => cancelAnimationFrame(animationId);
-  }, []);
+  }, [showWork]);
 
   // Video filter style for card 8
   const videoFilterStyle = {
@@ -218,11 +239,12 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
   };
 
   return (
-    <div className={styles.scrollContainer}>
-        <div 
-          ref={cursorRef}
-          className={`${styles.customCursor} ${isOverCard ? styles.customCursorLarge : ''}`}
-        />
+    <>
+      <div 
+        ref={cursorRef}
+        className={`${styles.customCursor} ${isOverCard ? styles.customCursorLarge : ''} ${isOverLink ? styles.customCursorLink : ''}`}
+      />
+      <div className={`${styles.scrollContainer} ${showWork ? styles.scrollContainerVisible : styles.scrollContainerHidden}`}>
         <div className={styles.cardsWrapper}>
         <div 
           className={styles.cardsInner}
@@ -231,8 +253,8 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
           {duplicatedCards.map((card, index) => (
             <div 
               key={`${card.id}-${index}`} 
-              className={`${styles.card} ${styles.cardAnimate} ${card.hasBorder ? styles.cardWithBorder : ''}`}
-              style={{ animationDelay: `${(index % cards.length) * 0.1}s` }}
+              className={`${styles.card} ${showWork ? styles.cardAnimate : ''} ${card.hasBorder ? styles.cardWithBorder : ''}`}
+              style={showWork ? { animationDelay: `${(index % cards.length) * 0.1}s` } : undefined}
               onMouseEnter={handleCardMouseEnter}
               onMouseLeave={handleCardMouseLeave}
             >
@@ -317,5 +339,6 @@ export default function CardSlider({ cards = defaultCards }: CardSliderProps) {
         </div>
       </div>
     </div>
+    </>
   );
 }
