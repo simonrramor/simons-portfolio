@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import styles from './CardSlider.module.css';
+import CardLogo from './CardLogo';
 
 // Progressive image component - loads low-res first, then full-res
 function ProgressiveImage({ 
@@ -79,13 +80,13 @@ interface CardSliderProps {
 }
 
 const defaultCards: Card[] = [
-  { id: 1, title: 'Project 1', video: '/project1.mp4', poster: '/posters/project1.png', label: '咲く花', number: '_001', logo: '/images/stars-icon.svg' },
-  { id: 2, title: 'Project 2', image: '/images/project2.jpg', label: 'Sling', number: '_002', logo: '/images/sling-logo.png' },
-  { id: 3, title: 'Project 3', video: '/project7.webm', label: 'Face tracking', number: '_003', grainOnly: true, logo: '/images/qr-code-icon.svg' },
-  { id: 4, title: 'Project 4', image: '/images/project4.jpg', label: 'Group Sessions', number: '_004', logo: '/images/spotify-logo.png' },
-  { id: 5, title: 'Project 5', image: '/images/project6.jpg', label: 'Enhance', number: '_005', imagePosition: 'top', logo: '/images/spotify-logo.png' },
-  { id: 6, title: 'Project 6', video: '/project8.mp4', poster: '/posters/project8.png', label: 'Neome', number: '_006', showControls: true },
-  { id: 7, title: 'Project 7', image: '/images/project5.jpg', label: 'Shared tabs', number: '_007', imagePosition: 'left', logo: '/images/monzo-logo.png', logoHeight: 24 },
+  { id: 1, title: 'Project 1', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_001', logo: '/icons/stars-icon.svg' },
+  { id: 2, title: 'Project 2', image: '/images/card_2_image.jpg', label: 'Sling', number: '_002', logo: '/icons/sling-logo.png' },
+  { id: 3, title: 'Project 3', video: '/videos/card_3_video.webm', label: 'Face tracking', number: '_003', grainOnly: true, logo: '/icons/qr-code-icon.svg' },
+  { id: 4, title: 'Project 4', image: '/images/card_4_image.jpg', label: 'Group Sessions', number: '_004', logo: '/icons/spotify-logo.png' },
+  { id: 5, title: 'Project 5', image: '/images/card_5_image.jpg', label: 'Enhance', number: '_005', imagePosition: 'top', logo: '/icons/spotify-logo.png' },
+  { id: 6, title: 'Project 6', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_006', showControls: true, logo: '/icons/neome-icon.png' },
+  { id: 7, title: 'Project 7', image: '/images/card_7_image.jpg', label: 'Shared tabs', number: '_007', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24 },
 ];
 
 
@@ -297,14 +298,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
                   {card.label && <span className={styles.cardLabel}>{card.label}</span>}
                   {card.number && <span className={styles.cardNumberLabel}>{card.number}</span>}
                   {card.logo && (
-                    <Image
-                      className={styles.cardLogo}
-                      src={card.logo}
-                      alt="Logo"
-                      width={120}
-                      height={card.logoHeight || 32}
-                      style={{ height: card.logoHeight || 32, width: 'auto' }}
-                    />
+                    <CardLogo src={card.logo} height={card.logoHeight} />
                   )}
                 </>
               ) : card.image ? (
@@ -318,14 +312,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
                   {card.label && <span className={styles.cardLabel}>{card.label}</span>}
                   {card.number && <span className={styles.cardNumberLabel}>{card.number}</span>}
                   {card.logo && (
-                    <Image
-                      className={styles.cardLogo}
-                      src={card.logo}
-                      alt="Logo"
-                      width={120}
-                      height={card.logoHeight || 32}
-                      style={{ height: card.logoHeight || 32, width: 'auto' }}
-                    />
+                    <CardLogo src={card.logo} height={card.logoHeight} />
                   )}
                 </>
               ) : (
