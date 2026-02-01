@@ -79,12 +79,12 @@ interface CardSliderProps {
 
 const defaultCards: Card[] = [
   { id: 1, title: 'Project 1', video: '/project1.mp4', poster: '/posters/project1.png', label: '咲く花', number: '_001', logo: '/images/stars-icon.svg' },
-  { id: 2, title: 'Project 2', image: '/images/project2.png', label: 'Sling', number: '_002', logo: '/images/sling-logo.png' },
+  { id: 2, title: 'Project 2', image: '/images/project2.jpg', label: 'Sling', number: '_002', logo: '/images/sling-logo.png' },
   { id: 3, title: 'Project 3', video: '/project7.webm', label: 'Face tracking', number: '_003', grainOnly: true, logo: '/images/qr-code-icon.svg' },
-  { id: 4, title: 'Project 4', image: '/images/project4.png', label: 'Group Sessions', number: '_004', logo: '/images/spotify-logo.png' },
-  { id: 5, title: 'Project 5', image: '/images/project6.png', label: 'Enhance', number: '_005', imagePosition: 'top', logo: '/images/spotify-logo.png' },
+  { id: 4, title: 'Project 4', image: '/images/project4.jpg', label: 'Group Sessions', number: '_004', logo: '/images/spotify-logo.png' },
+  { id: 5, title: 'Project 5', image: '/images/project6.jpg', label: 'Enhance', number: '_005', imagePosition: 'top', logo: '/images/spotify-logo.png' },
   { id: 6, title: 'Project 6', video: '/project8.mp4', poster: '/posters/project8.png', label: 'Neome', number: '_006', showControls: true },
-  { id: 7, title: 'Project 7', image: '/images/project5.png', label: 'Shared tabs', number: '_007', imagePosition: 'left', logo: '/images/monzo-logo.png', logoHeight: 24 },
+  { id: 7, title: 'Project 7', image: '/images/project5.jpg', label: 'Shared tabs', number: '_007', imagePosition: 'left', logo: '/images/monzo-logo.png', logoHeight: 24 },
 ];
 
 
