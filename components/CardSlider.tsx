@@ -104,6 +104,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
   const singleSetWidthRef = useRef(0);
   const [isOverCard, setIsOverCard] = useState(false);
   const [isOverLink, setIsOverLink] = useState(false);
+  const [isMouseDown, setIsMouseDown] = useState(false);
   
   // Fixed video effects for card 8
   const videoEffects = {
@@ -147,6 +148,25 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
       });
     };
   }, [showWork]);
+
+  // Track mouse down/up for cursor shrink
+  useEffect(() => {
+    const handleMouseDown = (e: MouseEvent) => {
+      const target = e.target as Element;
+      if (!target.closest('a, button, [role="button"]')) {
+        setIsMouseDown(true);
+      }
+    };
+    const handleMouseUp = () => setIsMouseDown(false);
+
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, []);
 
   const handleCardMouseEnter = () => setIsOverCard(true);
   const handleCardMouseLeave = () => setIsOverCard(false);
@@ -249,7 +269,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
     <>
       <div 
         ref={cursorRef}
-        className={`${styles.customCursor} ${isOverCard ? styles.customCursorLarge : ''} ${isOverLink ? styles.customCursorLink : ''}`}
+        className={`${styles.customCursor} ${isOverCard ? styles.customCursorLarge : ''} ${isOverLink || isMouseDown ? styles.customCursorLink : ''}`}
       />
       <div className={`${styles.scrollContainer} ${showWork ? styles.scrollContainerVisible : styles.scrollContainerHidden}`}>
         <div className={styles.cardsWrapper}>
