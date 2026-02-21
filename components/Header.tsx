@@ -39,7 +39,7 @@ export default function Header({ showWork, onViewWork }: HeaderProps) {
             <a href="https://google.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
               Google
             </a>
-            {' '}and more.
+            {' '}and more. This isn&apos;t a portfolio. It&apos;s a personal playground. A space to test ideas and build without an outcome in mind.
           </p>
         </div>
       </div>

@@ -14,8 +14,8 @@ const robotoMono = Roboto_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Simon's Portfolio",
-  description: "A portfolio website showcasing my work",
+  title: "Simon Amor",
+  description: "A personal playground to test ideas and build without an outcome in mind",
 };
 
 export default function RootLayout({

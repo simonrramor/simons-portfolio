@@ -41,6 +41,9 @@
 
 .bio {
   max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .bioTitle {
@@ -64,7 +67,7 @@
 }
 
 .bioLink {
-  color: var(--color-text);
+  color: inherit;
   text-decoration: underline;
   transition: opacity 0.2s ease;
   cursor: none;
