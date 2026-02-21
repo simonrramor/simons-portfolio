@@ -10,11 +10,13 @@ function ProgressiveImage({
   src, 
   alt, 
   objectPosition,
+  scale = 1,
   priority = false 
 }: { 
   src: string; 
   alt: string; 
   objectPosition?: string;
+  scale?: number;
   priority?: boolean;
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -36,6 +38,7 @@ function ProgressiveImage({
         style={{ 
           objectPosition,
           opacity: isLoaded ? 0 : 1,
+          transform: scale !== 1 ? `scale(${scale})` : undefined,
         }}
       />
       {/* Full-res version - fades in when loaded */}
@@ -51,6 +54,7 @@ function ProgressiveImage({
         style={{ 
           objectPosition,
           opacity: isLoaded ? 1 : 0,
+          transform: scale !== 1 ? `scale(${scale})` : undefined,
         }}
       />
     </>
@@ -66,6 +70,7 @@ interface Card {
   label?: string;
   number?: string;
   imagePosition?: string;
+  imageScale?: number;
   logo?: string;
   logoHeight?: number;
   grainOnly?: boolean;
@@ -87,6 +92,7 @@ const defaultCards: Card[] = [
   { id: 5, title: 'Project 5', image: '/images/card_5_image.jpg', label: 'Enhance', number: '_005', imagePosition: 'top', logo: '/icons/spotify-logo.png' },
   { id: 6, title: 'Project 6', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_006', showControls: true, logo: '/icons/neome-icon.png' },
   { id: 7, title: 'Project 7', image: '/images/card_7_image.jpg', label: 'Shared tabs', number: '_007', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24 },
+  { id: 8, title: 'Project 8', image: '/images/card_8_image.png', label: 'Golden Tickets', number: '_008', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24 },
 ];
 
 
@@ -307,6 +313,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
                     src={card.image}
                     alt={card.title || ''}
                     objectPosition={card.imagePosition}
+                    scale={card.imageScale}
                     priority={card.id <= 4}
                   />
                   {card.label && <span className={styles.cardLabel}>{card.label}</span>}

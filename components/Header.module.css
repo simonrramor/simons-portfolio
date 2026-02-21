@@ -35,7 +35,7 @@
   font-weight: 400;
   color: #000000;
   text-transform: uppercase;
-  font-family: var(--font-roboto-mono), monospace;
+  font-family: "SF Mono", SFMono-Regular, ui-monospace, monospace;
   line-height: 1.3;
 }
 
@@ -55,7 +55,7 @@
   line-height: 1.3;
   color: var(--color-text-muted);
   text-transform: uppercase;
-  font-family: var(--font-roboto-mono), monospace;
+  font-family: "SF Mono", SFMono-Regular, ui-monospace, monospace;
 }
 
 .bioText strong {
@@ -82,7 +82,7 @@
   font-weight: 400;
   color: var(--color-text-muted);
   text-transform: uppercase;
-  font-family: var(--font-roboto-mono), monospace;
+  font-family: "SF Mono", SFMono-Regular, ui-monospace, monospace;
   cursor: none;
   transition: color 0.2s ease;
 }
