@@ -6,11 +6,11 @@ import styles from './DrawingCanvas.module.css';
 interface Point {
   x: number;
   y: number;
+  time: number;
 }
 
 interface Stroke {
   points: Point[];
-  createdAt: number;
 }
 
 export default function DrawingCanvas() {
@@ -47,10 +47,10 @@ export default function DrawingCanvas() {
     }
   }, []);
 
-  const getOpacity = useCallback((createdAt: number, now: number): number => {
-    const age = now - createdAt;
-    const visibleDuration = 10000;
-    const fadeDuration = 5000;
+  const getPointOpacity = useCallback((pointTime: number, now: number): number => {
+    const age = now - pointTime;
+    const visibleDuration = 5000;
+    const fadeDuration = 1000;
 
     if (age < visibleDuration) {
       return 1;
@@ -60,6 +60,66 @@ export default function DrawingCanvas() {
     }
     return 0;
   }, []);
+
+  const drawStroke = useCallback((ctx: CanvasRenderingContext2D, points: Point[], now: number) => {
+    if (points.length === 0) return;
+
+    if (points.length === 1) {
+      const opacity = getPointOpacity(points[0].time, now);
+      if (opacity <= 0) return;
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(0, 0, 0, ${opacity})`;
+      ctx.arc(points[0].x, points[0].y, 4, 0, Math.PI * 2);
+      ctx.fill();
+      return;
+    }
+
+    // Group points by opacity buckets (0.1 increments) and draw as continuous paths
+    let currentOpacityBucket = -1;
+    let pathStartIndex = 0;
+
+    for (let i = 0; i < points.length; i++) {
+      const opacity = getPointOpacity(points[i].time, now);
+      const opacityBucket = Math.floor(opacity * 10);
+
+      if (opacityBucket !== currentOpacityBucket) {
+        // Draw previous batch if exists
+        if (i > pathStartIndex && currentOpacityBucket > 0) {
+          const batchOpacity = (currentOpacityBucket + 0.5) / 10;
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(0, 0, 0, ${batchOpacity})`;
+          ctx.lineWidth = 8;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          
+          ctx.moveTo(points[pathStartIndex].x, points[pathStartIndex].y);
+          for (let j = pathStartIndex + 1; j <= i; j++) {
+            ctx.lineTo(points[j].x, points[j].y);
+          }
+          ctx.stroke();
+        }
+        
+        currentOpacityBucket = opacityBucket;
+        pathStartIndex = i;
+      }
+    }
+
+    // Draw final batch
+    if (pathStartIndex < points.length - 1 && currentOpacityBucket > 0) {
+      const batchOpacity = (currentOpacityBucket + 0.5) / 10;
+      ctx.beginPath();
+      ctx.strokeStyle = `rgba(0, 0, 0, ${batchOpacity})`;
+      ctx.lineWidth = 8;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      
+      ctx.moveTo(points[pathStartIndex].x, points[pathStartIndex].y);
+      for (let j = pathStartIndex + 1; j < points.length; j++) {
+        ctx.lineTo(points[j].x, points[j].y);
+      }
+      ctx.stroke();
+    }
+  }, [getPointOpacity]);
 
   const renderStrokes = useCallback(() => {
     const canvas = canvasRef.current;
@@ -75,58 +135,25 @@ export default function DrawingCanvas() {
 
     const now = Date.now();
 
+    // Filter out fully faded strokes
     strokesRef.current = strokesRef.current.filter(stroke => {
-      const age = now - stroke.createdAt;
-      return age < 15000;
+      if (stroke.points.length === 0) return false;
+      const lastPointTime = stroke.points[stroke.points.length - 1].time;
+      return now - lastPointTime < 6000;
     });
 
+    // Draw completed strokes
     for (const stroke of strokesRef.current) {
-      const opacity = getOpacity(stroke.createdAt, now);
-      if (opacity <= 0 || stroke.points.length < 1) continue;
-
-      if (stroke.points.length === 1) {
-        ctx.beginPath();
-        ctx.fillStyle = `rgba(0, 0, 0, ${opacity})`;
-        ctx.arc(stroke.points[0].x, stroke.points[0].y, 4, 0, Math.PI * 2);
-        ctx.fill();
-      } else {
-        ctx.beginPath();
-        ctx.strokeStyle = `rgba(0, 0, 0, ${opacity})`;
-        ctx.lineWidth = 8;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-
-        ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
-        for (let i = 1; i < stroke.points.length; i++) {
-          ctx.lineTo(stroke.points[i].x, stroke.points[i].y);
-        }
-        ctx.stroke();
-      }
+      drawStroke(ctx, stroke.points, now);
     }
 
+    // Draw current stroke
     if (currentStrokeRef.current.length >= 1) {
-      if (currentStrokeRef.current.length === 1) {
-        ctx.beginPath();
-        ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-        ctx.arc(currentStrokeRef.current[0].x, currentStrokeRef.current[0].y, 4, 0, Math.PI * 2);
-        ctx.fill();
-      } else {
-        ctx.beginPath();
-        ctx.strokeStyle = 'rgba(0, 0, 0, 1)';
-        ctx.lineWidth = 8;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-
-        ctx.moveTo(currentStrokeRef.current[0].x, currentStrokeRef.current[0].y);
-        for (let i = 1; i < currentStrokeRef.current.length; i++) {
-          ctx.lineTo(currentStrokeRef.current[i].x, currentStrokeRef.current[i].y);
-        }
-        ctx.stroke();
-      }
+      drawStroke(ctx, currentStrokeRef.current, now);
     }
 
     animationIdRef.current = requestAnimationFrame(renderStrokes);
-  }, [getOpacity]);
+  }, [drawStroke]);
 
   useEffect(() => {
     resizeCanvas();
@@ -137,12 +164,12 @@ export default function DrawingCanvas() {
     const handleMouseDown = (e: MouseEvent) => {
       if (isOverInteractive(e.target)) return;
       isDrawingRef.current = true;
-      currentStrokeRef.current = [{ x: e.clientX, y: e.clientY }];
+      currentStrokeRef.current = [{ x: e.clientX, y: e.clientY, time: Date.now() }];
     };
 
     const handleMouseMove = (e: MouseEvent) => {
       if (!isDrawingRef.current) return;
-      currentStrokeRef.current.push({ x: e.clientX, y: e.clientY });
+      currentStrokeRef.current.push({ x: e.clientX, y: e.clientY, time: Date.now() });
     };
 
     const handleMouseUp = () => {
@@ -152,7 +179,6 @@ export default function DrawingCanvas() {
       if (currentStrokeRef.current.length >= 1) {
         strokesRef.current.push({
           points: [...currentStrokeRef.current],
-          createdAt: Date.now(),
         });
       }
       currentStrokeRef.current = [];
