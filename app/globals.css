@@ -25,6 +25,8 @@ body {
   background: #ffffff;
   color: #171717;
   cursor: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 img,
