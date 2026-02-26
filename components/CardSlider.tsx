@@ -6,16 +6,18 @@ import styles from './CardSlider.module.css';
 import CardLogo from './CardLogo';
 
 // Progressive image component - loads low-res first, then full-res
-function ProgressiveImage({ 
-  src, 
-  alt, 
+function ProgressiveImage({
+  src,
+  alt,
   objectPosition,
+  objectFit = 'cover',
   scale = 1,
-  priority = false 
-}: { 
-  src: string; 
-  alt: string; 
+  priority = false
+}: {
+  src: string;
+  alt: string;
   objectPosition?: string;
+  objectFit?: 'cover' | 'contain';
   scale?: number;
   priority?: boolean;
 }) {
@@ -37,6 +39,7 @@ function ProgressiveImage({
         quality={1}
         style={{ 
           objectPosition,
+          objectFit,
           opacity: isLoaded ? 0 : 1,
           transform: scale !== 1 ? `scale(${scale})` : undefined,
         }}
@@ -53,6 +56,7 @@ function ProgressiveImage({
         onLoad={handleLoad}
         style={{ 
           objectPosition,
+          objectFit,
           opacity: isLoaded ? 1 : 0,
           transform: scale !== 1 ? `scale(${scale})` : undefined,
         }}
@@ -71,12 +75,14 @@ interface Card {
   number?: string;
   imagePosition?: string;
   imageScale?: number;
+  imageFit?: 'cover' | 'contain';
   logo?: string;
   logoHeight?: number;
   grainOnly?: boolean;
   showControls?: boolean;
   hasBorder?: boolean;
   darkText?: boolean;
+  backgroundColor?: string;
 }
 
 interface CardSliderProps {
@@ -85,14 +91,15 @@ interface CardSliderProps {
 }
 
 const defaultCards: Card[] = [
-  { id: 1, title: 'Project 1', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_001', logo: '/icons/stars-icon.svg' },
-  { id: 2, title: 'Project 2', image: '/images/card_2_image.jpg', label: 'Sling', number: '_002', logo: '/icons/sling-logo.png' },
-  { id: 3, title: 'Project 3', video: '/videos/card_3_video.webm', label: 'Face tracking', number: '_003', grainOnly: true, logo: '/icons/qr-code-icon.svg' },
-  { id: 4, title: 'Project 4', image: '/images/card_4_image.jpg', label: 'Group Sessions', number: '_004', logo: '/icons/spotify-logo.png' },
-  { id: 5, title: 'Project 5', image: '/images/card_5_image.jpg', label: 'Enhance', number: '_005', imagePosition: 'top', logo: '/icons/spotify-logo.png' },
-  { id: 6, title: 'Project 6', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_006', showControls: true, logo: '/icons/neome-icon.png' },
-  { id: 7, title: 'Project 7', image: '/images/card_7_image.jpg', label: 'Shared tabs', number: '_007', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24 },
-  { id: 8, title: 'Project 8', image: '/images/card_8_image.png', label: 'Golden Tickets', number: '_008', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24 },
+  { id: 0, title: 'Captr', image: '/images/card_0_image.png', label: 'Captr', number: '_001', logo: '/icons/captr-icon.png', backgroundColor: '#E5E5E5', darkText: true, imageFit: 'contain', imagePosition: 'bottom' },
+  { id: 1, title: 'Project 1', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_002', logo: '/icons/stars-icon.svg' },
+  { id: 2, title: 'Project 2', image: '/images/card_2_image.jpg', label: 'Sling', number: '_003', logo: '/icons/sling-logo.png' },
+  { id: 3, title: 'Project 3', video: '/videos/card_3_video.webm', label: 'Face tracking', number: '_004', grainOnly: true, logo: '/icons/qr-code-icon.svg' },
+  { id: 4, title: 'Project 4', image: '/images/card_4_image.jpg', label: 'Group Sessions', number: '_005', logo: '/icons/spotify-logo.png' },
+  { id: 5, title: 'Project 5', image: '/images/card_5_image.jpg', label: 'Enhance', number: '_006', imagePosition: 'top', logo: '/icons/spotify-logo.png' },
+  { id: 6, title: 'Project 6', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_007', showControls: true, logo: '/icons/neome-icon.png' },
+  { id: 7, title: 'Project 7', image: '/images/card_7_image.jpg', label: 'Shared tabs', number: '_008', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24 },
+  { id: 8, title: 'Project 8', image: '/images/card_8_image.png', label: 'Golden Tickets', number: '_009', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24 },
 ];
 
 
@@ -278,10 +285,13 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
           ref={cardsRef}
         >
           {duplicatedCards.map((card, index) => (
-            <div 
-              key={`${card.id}-${index}`} 
+<div
+              key={`${card.id}-${index}`}
               className={`${styles.card} ${showWork ? styles.cardAnimate : ''} ${card.hasBorder ? styles.cardWithBorder : ''}`}
-              style={showWork ? { animationDelay: `${(index % cards.length) * 0.1}s` } : undefined}
+              style={{
+                ...(showWork ? { animationDelay: `${(index % cards.length) * 0.1}s` } : {}),
+                ...(card.backgroundColor ? { backgroundColor: card.backgroundColor } : {}),
+              }}
               onMouseEnter={handleCardMouseEnter}
               onMouseLeave={handleCardMouseLeave}
             >
@@ -333,19 +343,23 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
                     src={card.image}
                     alt={card.title || ''}
                     objectPosition={card.imagePosition}
+                    objectFit={card.imageFit}
                     scale={card.imageScale}
                     priority={card.id <= 4}
                   />
-                  {card.label && <span className={styles.cardLabel}>{card.label}</span>}
-                  {card.number && <span className={styles.cardNumberLabel}>{card.number}</span>}
+                  {card.label && <span className={`${styles.cardLabel} ${card.darkText ? styles.cardLabelDark : ''}`}>{card.label}</span>}
+                  {card.number && <span className={`${styles.cardNumberLabel} ${card.darkText ? styles.cardNumberLabelDark : ''}`}>{card.number}</span>}
                   {card.logo && (
                     <CardLogo src={card.logo} height={card.logoHeight} />
                   )}
                 </>
               ) : (
                 <>
-                  <span className={styles.cardNumber}>{card.id}</span>
-                  {card.number && <span className={styles.cardNumberLabel}>{card.number}</span>}
+                  {card.label && <span className={`${styles.cardLabel} ${card.darkText ? styles.cardLabelDark : ''}`}>{card.label}</span>}
+                  {card.number && <span className={`${styles.cardNumberLabel} ${card.darkText ? styles.cardNumberLabelDark : ''}`}>{card.number}</span>}
+                  {card.logo && (
+                    <CardLogo src={card.logo} height={card.logoHeight} />
+                  )}
                 </>
               )}
             </div>

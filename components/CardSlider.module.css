@@ -206,6 +206,10 @@
   text-transform: uppercase;
 }
 
+.cardNumberLabelDark {
+  color: #999;
+}
+
 .cardLogo {
   position: absolute;
   bottom: 24px;
