@@ -91,7 +91,7 @@ interface CardSliderProps {
 }
 
 const defaultCards: Card[] = [
-  { id: 0, title: 'Captr', image: '/images/card_0_image.png', label: 'Captr', number: '_001', logo: '/icons/captr-icon.png', backgroundColor: '#E5E5E5', darkText: true, imageFit: 'contain', imagePosition: 'bottom' },
+  { id: 0, title: 'Captr', image: '/images/card_0_image.png', label: 'Captr', number: '_001', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom' },
   { id: 1, title: 'Project 1', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_002', logo: '/icons/stars-icon.svg' },
   { id: 2, title: 'Project 2', image: '/images/card_2_image.jpg', label: 'Sling', number: '_003', logo: '/icons/sling-logo.png' },
   { id: 3, title: 'Project 3', video: '/videos/card_3_video.webm', label: 'Face tracking', number: '_004', grainOnly: true, logo: '/icons/qr-code-icon.svg' },
