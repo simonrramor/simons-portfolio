@@ -57,8 +57,9 @@ function PixelGlyph() {
           }
         }
         
-        // If pattern becomes static or dead, reinitialize
-        if (newGrid.every(v => v === 0) || arraysEqual(newGrid, prevGrid)) {
+        // If pattern becomes static, dead, or too sparse, reinitialize
+        const livingCells = newGrid.filter(v => v === 1).length;
+        if (livingCells === 0 || livingCells < 15 || arraysEqual(newGrid, prevGrid)) {
           return generateRandomGrid();
         }
         
