@@ -341,22 +341,9 @@ export default function DrawingCanvas() {
   };
 
   return (
-    <>
-      <div className={styles.colorPicker}>
-        {COLORS.map((color) => (
-          <button
-            key={color}
-            className={`${styles.colorButton} ${selectedColor === color ? styles.colorButtonSelected : ''}`}
-            style={{ backgroundColor: color, '--button-color': color } as React.CSSProperties}
-            onClick={() => handleColorSelect(color)}
-            aria-label={`Select color ${color}`}
-          />
-        ))}
-      </div>
-      <canvas
-        ref={canvasRef}
-        className={styles.canvas}
-      />
-    </>
+    <canvas
+      ref={canvasRef}
+      className={styles.canvas}
+    />
   );
 }
