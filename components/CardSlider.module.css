@@ -312,3 +312,19 @@
     width: 150px;
   }
 }
+
+.pixelGlyph {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 0;
+  width: 80px;
+  height: 80px;
+}
+
+.pixel {
+  background-color: #1a1a1a;
+}

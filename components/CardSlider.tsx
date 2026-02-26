@@ -5,6 +5,83 @@ import Image from 'next/image';
 import styles from './CardSlider.module.css';
 import CardLogo from './CardLogo';
 
+// Helper function to count neighbors for cellular automata
+function countNeighbors(grid: number[], row: number, col: number, size: number): number {
+  let count = 0;
+  for (let i = -1; i <= 1; i++) {
+    for (let j = -1; j <= 1; j++) {
+      if (i === 0 && j === 0) continue;
+      const newRow = (row + i + size) % size;
+      const newCol = (col + j + size) % size;
+      count += grid[newRow * size + newCol];
+    }
+  }
+  return count;
+}
+
+// Helper function to compare arrays
+function arraysEqual(a: number[], b: number[]): boolean {
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
+}
+
+// Generate initial random grid
+function generateRandomGrid(): number[] {
+  return Array(256).fill(0).map(() => Math.random() > 0.6 ? 1 : 0);
+}
+
+function PixelGlyph() {
+  const [grid, setGrid] = useState<number[]>(() => generateRandomGrid());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setGrid(prevGrid => {
+        const newGrid = [...prevGrid];
+        const size = 16;
+        
+        for (let i = 0; i < size; i++) {
+          for (let j = 0; j < size; j++) {
+            const idx = i * size + j;
+            const neighbors = countNeighbors(prevGrid, i, j, size);
+            const alive = prevGrid[idx] === 1;
+            
+            // Game of Life rules
+            if (alive && (neighbors < 2 || neighbors > 3)) {
+              newGrid[idx] = 0;
+            } else if (!alive && neighbors === 3) {
+              newGrid[idx] = 1;
+            }
+          }
+        }
+        
+        // If pattern becomes static or dead, reinitialize
+        if (newGrid.every(v => v === 0) || arraysEqual(newGrid, prevGrid)) {
+          return generateRandomGrid();
+        }
+        
+        return newGrid;
+      });
+    }, 100);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className={styles.pixelGlyph}>
+      {grid.map((pixel, i) => (
+        <div
+          key={i}
+          className={styles.pixel}
+          style={{ opacity: pixel }}
+        />
+      ))}
+    </div>
+  );
+}
+
 // Progressive image component - loads low-res first, then full-res
 function ProgressiveImage({
   src,
@@ -83,6 +160,7 @@ interface Card {
   hasBorder?: boolean;
   darkText?: boolean;
   backgroundColor?: string;
+  showGlyph?: boolean;
 }
 
 interface CardSliderProps {
@@ -92,14 +170,15 @@ interface CardSliderProps {
 
 const defaultCards: Card[] = [
   { id: 0, title: 'Captr', image: '/images/card_0_image.png', label: 'Captr', number: '_001', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom' },
-  { id: 1, title: 'Project 1', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_002', logo: '/icons/stars-icon.svg' },
-  { id: 2, title: 'Project 2', image: '/images/card_2_image.jpg', label: 'Sling', number: '_003', logo: '/icons/sling-logo.png' },
-  { id: 3, title: 'Project 3', video: '/videos/card_3_video.webm', label: 'Face tracking', number: '_004', grainOnly: true, logo: '/icons/qr-code-icon.svg' },
-  { id: 4, title: 'Project 4', image: '/images/card_4_image.jpg', label: 'Group Sessions', number: '_005', logo: '/icons/spotify-logo.png' },
-  { id: 5, title: 'Project 5', image: '/images/card_5_image.jpg', label: 'Enhance', number: '_006', imagePosition: 'top', logo: '/icons/spotify-logo.png' },
-  { id: 6, title: 'Project 6', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_007', showControls: true, logo: '/icons/neome-icon.png' },
-  { id: 7, title: 'Project 7', image: '/images/card_7_image.jpg', label: 'Shared tabs', number: '_008', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24 },
-  { id: 8, title: 'Project 8', image: '/images/card_8_image.png', label: 'Golden Tickets', number: '_009', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24 },
+  { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', number: '_002', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true },
+  { id: 1, title: 'Project 1', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_003', logo: '/icons/stars-icon.svg' },
+  { id: 2, title: 'Project 2', image: '/images/card_2_image.jpg', label: 'Sling', number: '_004', logo: '/icons/sling-logo.png' },
+  { id: 3, title: 'Project 3', video: '/videos/card_3_video.webm', label: 'Face tracking', number: '_005', grainOnly: true, logo: '/icons/qr-code-icon.svg' },
+  { id: 4, title: 'Project 4', image: '/images/card_4_image.jpg', label: 'Group Sessions', number: '_006', logo: '/icons/spotify-logo.png' },
+  { id: 5, title: 'Project 5', image: '/images/card_5_image.jpg', label: 'Enhance', number: '_007', imagePosition: 'top', logo: '/icons/spotify-logo.png' },
+  { id: 6, title: 'Project 6', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_008', showControls: true, logo: '/icons/neome-icon.png' },
+  { id: 7, title: 'Project 7', image: '/images/card_7_image.jpg', label: 'Shared tabs', number: '_009', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24 },
+  { id: 8, title: 'Project 8', image: '/images/card_8_image.png', label: 'Golden Tickets', number: '_010', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24 },
 ];
 
 
@@ -355,6 +434,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
                 </>
               ) : (
                 <>
+                  {card.showGlyph && <PixelGlyph />}
                   {card.label && <span className={`${styles.cardLabel} ${card.darkText ? styles.cardLabelDark : ''}`}>{card.label}</span>}
                   {card.number && <span className={`${styles.cardNumberLabel} ${card.darkText ? styles.cardNumberLabelDark : ''}`}>{card.number}</span>}
                   {card.logo && (
