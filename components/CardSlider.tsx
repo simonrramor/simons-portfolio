@@ -185,13 +185,18 @@ const defaultCards: Card[] = [
 
 export default function CardSlider({ cards = defaultCards, showWork = true }: CardSliderProps) {
   const cardsRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const translateXRef = useRef(0);
   const targetXRef = useRef(0);
   const singleSetWidthRef = useRef(0);
+  const touchLastXRef = useRef(0);
+  const touchVelocityRef = useRef(0);
+  const lastTouchTimeRef = useRef(0);
   const [isOverCard, setIsOverCard] = useState(false);
   const [isOverLink, setIsOverLink] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
   
   // Fixed video effects for card 8
   const videoEffects = {
@@ -255,6 +260,10 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
     };
   }, []);
 
+  useEffect(() => {
+    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+  }, []);
+
   const handleCardMouseEnter = () => setIsOverCard(true);
   const handleCardMouseLeave = () => setIsOverCard(false);
 
@@ -275,9 +284,24 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
     animation: 'grain 0.033s steps(30) infinite',
   };
 
-  // Initialize positions and set up wheel handler
+  // Shared wrap-around helper for infinite scroll
+  const wrapTarget = useCallback((newTarget: number) => {
+    const singleSetWidth = singleSetWidthRef.current;
+    if (newTarget >= singleSetWidth * 2) {
+      newTarget -= singleSetWidth;
+      translateXRef.current -= singleSetWidth;
+    } else if (newTarget < 0) {
+      newTarget += singleSetWidth;
+      translateXRef.current += singleSetWidth;
+    }
+    targetXRef.current = newTarget;
+  }, []);
+
+  // Initialize positions and set up wheel + touch handlers
   useEffect(() => {
     if (!cardsRef.current) return;
+    const container = scrollContainerRef.current;
+    if (!container) return;
     
     // Calculate single set width and start from middle
     singleSetWidthRef.current = cardsRef.current.scrollWidth / 3;
@@ -287,30 +311,46 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      
-      const singleSetWidth = singleSetWidthRef.current;
-      // Normalize and cap deltaY to prevent huge jumps from fast scrolling
       const maxDelta = 100;
       const delta = Math.max(-maxDelta, Math.min(maxDelta, e.deltaY)) * 0.8;
-      let newTarget = targetXRef.current + delta;
-      
-      // Wrap around seamlessly for target
-      if (newTarget >= singleSetWidth * 2) {
-        newTarget = newTarget - singleSetWidth;
-        // Also adjust current position to prevent animation across the wrap
-        translateXRef.current = translateXRef.current - singleSetWidth;
-      } else if (newTarget < 0) {
-        newTarget = newTarget + singleSetWidth;
-        translateXRef.current = translateXRef.current + singleSetWidth;
-      }
-      
-      targetXRef.current = newTarget;
+      wrapTarget(targetXRef.current + delta);
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchLastXRef.current = e.touches[0].clientX;
+      touchVelocityRef.current = 0;
+      lastTouchTimeRef.current = Date.now();
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+      const currentX = e.touches[0].clientX;
+      const delta = touchLastXRef.current - currentX;
+      const now = Date.now();
+      const dt = now - lastTouchTimeRef.current;
+      if (dt > 0) touchVelocityRef.current = delta / dt;
+      lastTouchTimeRef.current = now;
+      touchLastXRef.current = currentX;
+      wrapTarget(targetXRef.current + delta);
+    };
+
+    const handleTouchEnd = () => {
+      const momentum = touchVelocityRef.current * 150;
+      wrapTarget(targetXRef.current + momentum);
     };
 
     window.addEventListener('wheel', handleWheel, { passive: false });
+    container.addEventListener('touchstart', handleTouchStart, { passive: true });
+    container.addEventListener('touchmove', handleTouchMove, { passive: false });
+    container.addEventListener('touchend', handleTouchEnd);
 
-    return () => window.removeEventListener('wheel', handleWheel);
-  }, [showWork]);
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchmove', handleTouchMove);
+      container.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [showWork, wrapTarget]);
 
   // Smooth animation loop with lerp
   useEffect(() => {
@@ -354,11 +394,13 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
 
   return (
     <>
-      <div 
-        ref={cursorRef}
-        className={`${styles.customCursor} ${isOverCard ? styles.customCursorLarge : ''} ${isOverLink || isMouseDown ? styles.customCursorLink : ''}`}
-      />
-      <div className={`${styles.scrollContainer} ${showWork ? styles.scrollContainerVisible : styles.scrollContainerHidden}`}>
+      {!isTouchDevice && (
+        <div 
+          ref={cursorRef}
+          className={`${styles.customCursor} ${isOverCard ? styles.customCursorLarge : ''} ${isOverLink || isMouseDown ? styles.customCursorLink : ''}`}
+        />
+      )}
+      <div ref={scrollContainerRef} className={`${styles.scrollContainer} ${showWork ? styles.scrollContainerVisible : styles.scrollContainerHidden}`}>
         <div className={styles.cardsWrapper}>
         <div 
           className={styles.cardsInner}
