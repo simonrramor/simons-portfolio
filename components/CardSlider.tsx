@@ -83,6 +83,39 @@ function PixelGlyph() {
   );
 }
 
+function RotationData({ dark }: { dark?: boolean }) {
+  const [values, setValues] = useState({ rot: -5.6, z: 13.6, y: 3.7, x: -3.7 });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setValues(prev => ({
+        rot: prev.rot + (Math.random() - 0.5) * 2.4,
+        z: prev.z + (Math.random() - 0.5) * 3.0,
+        y: prev.y + (Math.random() - 0.5) * 1.8,
+        x: prev.x + (Math.random() - 0.5) * 1.8,
+      }));
+    }, 80);
+    return () => clearInterval(interval);
+  }, []);
+
+  const fmt = (v: number) => {
+    const sign = v >= 0 ? '+' : '-';
+    const abs = Math.abs(v).toFixed(1).padStart(4, '0');
+    return `${sign}${abs}`;
+  };
+
+  return (
+    <div className={`${styles.rotationData} ${dark ? styles.rotationDataDark : ''}`}>
+      <div className={styles.rotationLine}>ROT: {fmt(values.rot)} DEG</div>
+      <div className={styles.rotationValues}>
+        <span>Z: {fmt(values.z)}</span>
+        <span>Y: {fmt(values.y)}</span>
+        <span>X: {fmt(values.x)}</span>
+      </div>
+    </div>
+  );
+}
+
 // Progressive image component - loads low-res first, then full-res
 function ProgressiveImage({
   src,
@@ -157,11 +190,14 @@ interface Card {
   logo?: string;
   logoHeight?: number;
   grainOnly?: boolean;
+  noOverlay?: boolean;
+  videoScale?: number;
   showControls?: boolean;
   hasBorder?: boolean;
   darkText?: boolean;
   backgroundColor?: string;
   showGlyph?: boolean;
+  showRotation?: boolean;
 }
 
 interface CardSliderProps {
@@ -170,16 +206,17 @@ interface CardSliderProps {
 }
 
 const defaultCards: Card[] = [
-  { id: 0, title: 'Captr', image: '/images/card_0_image.png', label: 'Captr', number: '_001', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom' },
-  { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', number: '_002', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28 },
-  { id: 1, title: 'Project 1', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_003', logo: '/icons/stars-icon.svg' },
-  { id: 2, title: 'Project 2', image: '/images/card_2_image.jpg', label: 'Sling', number: '_004', logo: '/icons/sling-logo.png' },
-  { id: 3, title: 'Project 3', video: '/videos/card_3_video.webm', label: 'Face tracking', number: '_005', grainOnly: true, logo: '/icons/qr-code-icon.svg' },
-  { id: 4, title: 'Project 4', image: '/images/card_4_image.jpg', label: 'Group Sessions', number: '_006', logo: '/icons/spotify-logo.png' },
-  { id: 5, title: 'Project 5', image: '/images/card_5_image.jpg', label: 'Enhance', number: '_007', imagePosition: 'top', logo: '/icons/spotify-logo.png' },
-  { id: 6, title: 'Project 6', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_008', showControls: true, logo: '/icons/neome-icon.png' },
-  { id: 7, title: 'Project 7', image: '/images/card_7_image.jpg', label: 'Shared tabs', number: '_009', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24 },
-  { id: 8, title: 'Project 8', image: '/images/card_8_image.png', label: 'Golden Tickets', number: '_010', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24 },
+  { id: 9, title: 'Mostly working', video: '/videos/card_9_video.mp4', label: 'Mostly working', number: '_001', noOverlay: true, videoScale: 0.7, showRotation: true, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true },
+  { id: 0, title: 'Captr', image: '/images/card_0_image.png', label: 'Captr', number: '_002', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom' },
+  { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', number: '_003', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28 },
+  { id: 1, title: 'Project 1', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_004', logo: '/icons/stars-icon.svg' },
+  { id: 2, title: 'Project 2', image: '/images/card_2_image.jpg', label: 'Sling', number: '_005', logo: '/icons/sling-logo.png' },
+  { id: 3, title: 'Project 3', video: '/videos/card_3_video.webm', label: 'Face tracking', number: '_006', grainOnly: true, logo: '/icons/qr-code-icon.svg' },
+  { id: 4, title: 'Project 4', image: '/images/card_4_image.jpg', label: 'Group Sessions', number: '_007', logo: '/icons/spotify-logo.png' },
+  { id: 5, title: 'Project 5', image: '/images/card_5_image.jpg', label: 'Enhance', number: '_008', imagePosition: 'top', logo: '/icons/spotify-logo.png' },
+  { id: 6, title: 'Project 6', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_009', showControls: true, logo: '/icons/neome-icon.png' },
+  { id: 7, title: 'Project 7', image: '/images/card_7_image.jpg', label: 'Shared tabs', number: '_010', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24 },
+  { id: 8, title: 'Project 8', image: '/images/card_8_image.png', label: 'Golden Tickets', number: '_011', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24 },
 ];
 
 
@@ -428,7 +465,10 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
                     loop
                     muted
                     playsInline
-                    style={card.showControls ? videoFilterStyle : undefined}
+                    style={{
+                      ...(card.showControls ? videoFilterStyle : {}),
+                      ...(card.videoScale ? { width: `${card.videoScale * 100}%`, height: `${card.videoScale * 100}%`, objectFit: 'contain' as const, margin: 'auto' } : {}),
+                    }}
                     onLoadedMetadata={(e) => {
                       if (card.showControls) {
                         (e.target as HTMLVideoElement).playbackRate = 0.5;
@@ -442,7 +482,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
                       }
                     }}
                   />
-                  {!card.showControls && (
+                  {!card.showControls && !card.noOverlay && (
                     <div className={styles.grainOverlay} style={card.grainOnly ? grainOnlyStyle : grainStyle} />
                   )}
                   {card.showControls && (
@@ -453,8 +493,9 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
                       )}
                     </>
                   )}
-                  {card.label && <span className={styles.cardLabel}>{card.label}</span>}
-                  {card.number && <span className={styles.cardNumberLabel}>{card.number}</span>}
+                  {card.showRotation && <RotationData dark={card.darkText} />}
+                  {card.label && <span className={`${styles.cardLabel} ${card.darkText ? styles.cardLabelDark : ''}`}>{card.label}</span>}
+                  {card.number && <span className={`${styles.cardNumberLabel} ${card.darkText ? styles.cardNumberLabelDark : ''}`}>{card.number}</span>}
                   {card.logo && (
                     <CardLogo src={card.logo} height={card.logoHeight} />
                   )}

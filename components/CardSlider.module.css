@@ -95,7 +95,7 @@
 }
 
 .cardWithBorder {
-  border: 2px solid rgba(200, 200, 200, 0.5);
+  border: 0.5px solid rgba(200, 200, 200, 0.5);
 }
 
 .cardAnimate {
@@ -334,4 +334,33 @@
 
 .pixel {
   background-color: #1a1a1a;
+}
+
+.rotationData {
+  position: absolute;
+  bottom: 60px;
+  right: 24px;
+  font-family: var(--font-roboto-mono), monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  text-align: right;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+}
+
+.rotationDataDark {
+  color: #999;
+}
+
+.rotationLine {
+  white-space: pre;
+}
+
+.rotationValues {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  white-space: pre;
 }
