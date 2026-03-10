@@ -133,12 +133,48 @@
   height: 100%;
   object-fit: cover;
   border-radius: 32px;
+  transition: filter 0.3s ease;
 }
 
 .cardImage {
   object-fit: cover;
   border-radius: 32px;
-  transition: opacity 0.3s ease-out;
+  transition: opacity 0.3s ease-out, filter 0.3s ease;
+}
+
+.card:hover .cardVideo,
+.card:hover .cardImage {
+  filter: blur(8px) !important;
+}
+
+.card:hover .cardHoverOverlay {
+  opacity: 1;
+}
+
+.cardHoverOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 32px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  padding: 32px;
+  z-index: 5;
+}
+
+.cardDescription {
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-roboto-mono), monospace;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.5;
+  max-width: 80%;
 }
 
 .cardImageLowRes {
@@ -330,6 +366,11 @@
   gap: 0;
   width: 80px;
   height: 80px;
+  transition: filter 0.3s ease;
+}
+
+.card:hover .pixelGlyph {
+  filter: blur(8px);
 }
 
 .pixel {

@@ -198,6 +198,7 @@ interface Card {
   backgroundColor?: string;
   showGlyph?: boolean;
   showRotation?: boolean;
+  description?: string;
 }
 
 interface CardSliderProps {
@@ -206,17 +207,17 @@ interface CardSliderProps {
 }
 
 const defaultCards: Card[] = [
-  { id: 9, title: 'Mostly working', video: '/videos/card_9_video.mp4', label: 'Mostly working', number: '_001', noOverlay: true, videoScale: 0.7, showRotation: true, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true },
-  { id: 0, title: 'Captr', image: '/images/card_0_image.png', label: 'Captr', number: '_002', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom' },
-  { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', number: '_003', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28 },
-  { id: 1, title: 'Project 1', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_004', logo: '/icons/stars-icon.svg' },
-  { id: 2, title: 'Project 2', image: '/images/card_2_image.jpg', label: 'Sling', number: '_005', logo: '/icons/sling-logo.png' },
-  { id: 3, title: 'Project 3', video: '/videos/card_3_video.webm', label: 'Face tracking', number: '_006', grainOnly: true, logo: '/icons/qr-code-icon.svg' },
-  { id: 4, title: 'Project 4', image: '/images/card_4_image.jpg', label: 'Group Sessions', number: '_007', logo: '/icons/spotify-logo.png' },
-  { id: 5, title: 'Project 5', image: '/images/card_5_image.jpg', label: 'Enhance', number: '_008', imagePosition: 'top', logo: '/icons/spotify-logo.png' },
-  { id: 6, title: 'Project 6', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_009', showControls: true, logo: '/icons/neome-icon.png' },
-  { id: 7, title: 'Project 7', image: '/images/card_7_image.jpg', label: 'Shared tabs', number: '_010', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24 },
-  { id: 8, title: 'Project 8', image: '/images/card_8_image.png', label: 'Golden Tickets', number: '_011', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24 },
+  { id: 9, title: 'Mostly working', video: '/videos/card_9_video.mp4', label: 'Mostly working', number: '_001', noOverlay: true, videoScale: 0.7, showRotation: true, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true, description: 'Real-time head pose estimation using facial landmarks and rotation matrices.' },
+  { id: 0, title: 'Captr', image: '/images/card_0_image.png', label: 'Captr', number: '_002', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom', description: 'AI-powered screen capture tool with intelligent annotation and sharing.' },
+  { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', number: '_003', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28, description: 'Generative AI identity system built on cellular automata patterns.' },
+  { id: 1, title: 'Project 1', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_004', logo: '/icons/stars-icon.svg', description: 'Procedural animation experiment exploring organic motion and bloom.' },
+  { id: 2, title: 'Project 2', image: '/images/card_2_image.jpg', label: 'Sling', number: '_005', logo: '/icons/sling-logo.png', description: 'Messaging platform designed for fast, async team communication.' },
+  { id: 3, title: 'Project 3', video: '/videos/card_3_video.webm', label: 'Face tracking', number: '_006', grainOnly: true, logo: '/icons/qr-code-icon.svg', description: 'Browser-based face tracking with real-time landmark detection.' },
+  { id: 4, title: 'Project 4', image: '/images/card_4_image.jpg', label: 'Group Sessions', number: '_007', logo: '/icons/spotify-logo.png', description: 'Collaborative listening experience for shared music sessions on Spotify.' },
+  { id: 5, title: 'Project 5', image: '/images/card_5_image.jpg', label: 'Enhance', number: '_008', imagePosition: 'top', logo: '/icons/spotify-logo.png', description: 'Audio enhancement features for improving playback quality on Spotify.' },
+  { id: 6, title: 'Project 6', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_009', showControls: true, logo: '/icons/neome-icon.png', description: 'Meditation and mindfulness app with adaptive ambient soundscapes.' },
+  { id: 7, title: 'Project 7', image: '/images/card_7_image.jpg', label: 'Shared tabs', number: '_010', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Shared financial tabs for splitting expenses with friends on Monzo.' },
+  { id: 8, title: 'Project 8', image: '/images/card_8_image.png', label: 'Golden Tickets', number: '_011', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Gamified referral system with collectible golden ticket rewards on Monzo.' },
 ];
 
 
@@ -525,6 +526,11 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
                     <CardLogo src={card.logo} height={card.logoHeight} />
                   )}
                 </>
+              )}
+              {card.description && (
+                <div className={styles.cardHoverOverlay}>
+                  <p className={styles.cardDescription}>{card.description}</p>
+                </div>
               )}
             </div>
           ))}
