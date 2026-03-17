@@ -15,7 +15,7 @@ const robotoMono = Roboto_Mono({
 
 export const metadata: Metadata = {
   title: "Simon Amor",
-  description: "London based designer and Co-Founder of Sling Money. Previously building at Spotify, Monzo, Google and more.",
+  description: "London-based designer and Co-Founder of Sling Money. Previously building at Spotify, Monzo, Google and more.",
 };
 
 export default function RootLayout({

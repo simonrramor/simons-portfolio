@@ -23,7 +23,7 @@ export default function Header({ showWork, onViewWork }: HeaderProps) {
         
         <div className={styles.bio}>
           <p className={styles.bioText}>
-            London based designer and Co-Founder of{' '}
+            London-based designer and Co-Founder of{' '}
             <a href="https://slingmoney.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
               Sling Money
             </a>
