@@ -225,6 +225,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
   const cardsRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
+  const cursorTrailRef = useRef<HTMLDivElement>(null);
   const translateXRef = useRef(0);
   const targetXRef = useRef(0);
   const singleSetWidthRef = useRef(0);
@@ -253,6 +254,10 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
       if (cursorRef.current) {
         cursorRef.current.style.left = `${e.clientX}px`;
         cursorRef.current.style.top = `${e.clientY}px`;
+      }
+      if (cursorTrailRef.current) {
+        cursorTrailRef.current.style.left = `${e.clientX}px`;
+        cursorTrailRef.current.style.top = `${e.clientY}px`;
       }
     };
 
@@ -433,10 +438,16 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
   return (
     <>
       {!isTouchDevice && (
-        <div 
-          ref={cursorRef}
-          className={`${styles.customCursor} ${isOverCard ? styles.customCursorLarge : ''} ${isOverLink || isMouseDown ? styles.customCursorLink : ''}`}
-        />
+        <>
+          <div 
+            ref={cursorTrailRef}
+            className={`${styles.customCursorTrail} ${isOverCard ? styles.customCursorTrailLarge : ''} ${isOverLink || isMouseDown ? styles.customCursorTrailLink : ''}`}
+          />
+          <div 
+            ref={cursorRef}
+            className={`${styles.customCursor} ${isOverCard ? styles.customCursorLarge : ''} ${isOverLink || isMouseDown ? styles.customCursorLink : ''}`}
+          />
+        </>
       )}
       <div ref={scrollContainerRef} className={`${styles.scrollContainer} ${showWork ? styles.scrollContainerVisible : styles.scrollContainerHidden}`}>
         <div className={styles.cardsWrapper}>
