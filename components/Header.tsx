@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import styles from './Header.module.css';
 
 interface HeaderProps {
@@ -11,9 +12,9 @@ export default function Header({ showWork, onViewWork }: HeaderProps) {
   return (
     <header className={`${styles.header} ${showWork ? styles.headerTop : styles.headerCentered}`}>
       <div className={styles.headerContent}>
-        <div className={styles.logo}>
+        <Link href="/about" className={styles.logo}>
           Simon Amor
-        </div>
+        </Link>
 
         {!showWork && (
           <button className={styles.viewWorkButton} onClick={onViewWork}>

@@ -37,6 +37,8 @@
   text-transform: uppercase;
   font-family: "SF Mono", SFMono-Regular, ui-monospace, monospace;
   line-height: 1.3;
+  text-decoration: none;
+  cursor: none;
 }
 
 .bio {
