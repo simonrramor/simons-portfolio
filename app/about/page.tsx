@@ -38,6 +38,232 @@ function ScrollingTable() {
   );
 }
 
+type ChipColor = 'cyan' | 'green' | 'blue' | 'red' | 'orange' | 'purple' | 'pink';
+type Segment = { text: string; color?: ChipColor };
+type ScriptLine = Segment[];
+
+const SECTION_NAMES = [
+  'VISIONS', 'INFERENCE', 'EMBEDDING', 'DIFFUSION', 'SAMPLING',
+  'DECODING', 'TRANSFORMS', 'GENESIS', 'SYNTHESIS', 'COMPOSITE',
+];
+const STAGE_NAMES = [
+  'INPAINTING', 'OUTPAINTING', 'REFINING', 'STYLIZING', 'BLENDING',
+  'COMPOSITING', 'RENDERING', 'WARMING', 'COOLING',
+];
+const SUBJECTS = ['artwork', 'frame', 'tile', 'patch', 'token', 'batch', 'sample'];
+const MORPHS = ['Blobs', 'Layers', 'Heads', 'Channels', 'Tokens', 'Tiles', 'Patches', 'Frames', 'Cells'];
+const PROMPTS = [
+  'a man reading a book',
+  'sunset over mountains',
+  'a forest in autumn',
+  'morning light through window',
+  'a quiet street at dusk',
+  'children playing in a field',
+  'an empty room with chair',
+  'a boat on the lake',
+  'rainy city at night',
+  'an old garden gate',
+  'two cats on a windowsill',
+  'snow falling on rooftops',
+  'a dog asleep by the fire',
+  'a bridge in the fog',
+];
+
+function pick<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+function randInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function lineCharCount(line: ScriptLine): number {
+  return line.reduce((s, seg) => s + seg.text.length, 0);
+}
+function totalCharCount(lines: ScriptLine[]): number {
+  return lines.reduce((s, l) => s + lineCharCount(l) + 1, 0);
+}
+
+function generateSection(): ScriptLine[] {
+  const name = pick(SECTION_NAMES);
+  const subject = pick(SUBJECTS);
+  const morph = pick(MORPHS);
+  const morphSingular = morph.toLowerCase().replace(/s$/, '');
+  const morphCount = randInt(8, 32);
+  const totalSteps = randInt(50, 200);
+  const stepNum = randInt(1, totalSteps);
+  const w = randInt(800, 2000);
+  const h = randInt(800, 2000);
+  const target = (Math.random() * 2500).toFixed(13);
+  const stage = pick(STAGE_NAMES);
+  const stageCap = stage.charAt(0) + stage.slice(1).toLowerCase();
+  const prompt = pick(PROMPTS);
+  const stateNums = Array.from({ length: morphCount }, (_, i) => i).join(', ');
+  const overlapCount = randInt(2, Math.min(8, morphCount));
+  const overlapStart = randInt(0, Math.max(0, morphCount - overlapCount));
+  const overlapNums = Array.from({ length: overlapCount }, (_, i) => overlapStart + i).join(', ');
+
+  return [
+    [
+      { text: '[[=== ' },
+      { text: `✦ ${name} ✦`, color: 'cyan' },
+      { text: ' ===]]' },
+    ],
+    [
+      { text: `Processing ${subject}:`, color: 'green' },
+      { text: ' ' },
+      { text: `${randInt(100, 999)}`, color: 'red' },
+    ],
+    [
+      { text: 'Target area:', color: 'green' },
+      { text: ' ' },
+      { text: target, color: 'blue' },
+    ],
+    [
+      { text: 'Max steps:', color: 'green' },
+      { text: ` ${totalSteps}` },
+    ],
+    [
+      { text: 'Source size:', color: 'green' },
+      { text: ' (' },
+      { text: `${w}`, color: 'blue' },
+      { text: ', ' },
+      { text: `${h}`, color: 'red' },
+      { text: ')' },
+    ],
+    [],
+    [{ text: 'Loaded data:', color: 'purple' }],
+    [
+      { text: ` - ${morph}:`, color: 'green' },
+      { text: ' ' },
+      { text: `${morphCount}`, color: 'blue' },
+    ],
+    [
+      { text: ' - Transitions:', color: 'green' },
+      { text: ` ${randInt(0, 5)}` },
+    ],
+    [],
+    [{ text: `=== STEP [${stepNum}/${totalSteps}] ===`, color: 'orange' }],
+    [
+      { text: `Expanding ${morphSingular}:`, color: 'green' },
+      { text: ' ' },
+      { text: `${randInt(1, morphCount)}`, color: 'blue' },
+    ],
+    [
+      { text: 'Tail:', color: 'green' },
+      { text: ' []' },
+    ],
+    [
+      { text: 'State:', color: 'green' },
+      { text: ' {' },
+      { text: stateNums, color: 'blue' },
+      { text: '}' },
+    ],
+    [
+      { text: `Overlapping ${morph.toLowerCase()} in state:`, color: 'green' },
+      { text: ' [' },
+      { text: overlapNums, color: 'blue' },
+      { text: ']' },
+    ],
+    [{ text: `=== ${stage} ===`, color: 'pink' }],
+    [
+      { text: `${stageCap} prompt:`, color: 'green' },
+      { text: ' ' },
+      { text: prompt, color: 'pink' },
+    ],
+    [],
+  ];
+}
+
+const TYPER_CPS = 1000;
+const TYPER_MAX_LINES = 60;
+
+function CodeTyper() {
+  const linesRef = useRef<ScriptLine[]>([]);
+  const totalRef = useRef(0);
+  const charsRef = useRef(0);
+  const [, setTick] = useState(0);
+
+  useEffect(() => {
+    linesRef.current = generateSection();
+    totalRef.current = totalCharCount(linesRef.current);
+    charsRef.current = 0;
+
+    let lastTime = performance.now();
+    let raf = 0;
+    const step = () => {
+      const now = performance.now();
+      const dt = now - lastTime;
+      lastTime = now;
+
+      charsRef.current += (dt * TYPER_CPS) / 1000;
+
+      while (charsRef.current >= totalRef.current - 100) {
+        const more = generateSection();
+        linesRef.current = linesRef.current.concat(more);
+        totalRef.current += totalCharCount(more);
+      }
+
+      if (linesRef.current.length > TYPER_MAX_LINES) {
+        const dropCount = linesRef.current.length - TYPER_MAX_LINES;
+        const dropped = linesRef.current.slice(0, dropCount);
+        const droppedChars = totalCharCount(dropped);
+        linesRef.current = linesRef.current.slice(dropCount);
+        totalRef.current -= droppedChars;
+        charsRef.current = Math.max(0, charsRef.current - droppedChars);
+      }
+
+      setTick((t) => (t + 1) & 0xffff);
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  const chars = Math.floor(charsRef.current);
+  const lines = linesRef.current;
+  const rendered: React.ReactNode[] = [];
+  let consumed = 0;
+
+  for (let li = 0; li < lines.length; li++) {
+    const line = lines[li];
+    const lineLen = lineCharCount(line);
+    if (chars < consumed) break;
+
+    const visible = Math.min(chars - consumed, lineLen);
+    const isCurrent = chars < consumed + lineLen + 1;
+
+    const segs: React.ReactNode[] = [];
+    let left = visible;
+    for (let si = 0; si < line.length; si++) {
+      if (left <= 0) break;
+      const seg = line[si];
+      const len = Math.min(seg.text.length, left);
+      segs.push(
+        <span
+          key={si}
+          className={seg.color ? `${styles.codeChip} ${styles[seg.color]}` : undefined}
+        >
+          {seg.text.slice(0, len)}
+        </span>,
+      );
+      left -= len;
+    }
+
+    rendered.push(
+      <div key={li} className={styles.codeLine}>
+        {segs.length > 0 ? segs : ' '}
+        {isCurrent && <span className={styles.typingCursor}>█</span>}
+      </div>,
+    );
+    consumed += lineLen + 1;
+  }
+
+  return (
+    <div className={styles.codeBlock}>
+      <div className={styles.codeContent}>{rendered}</div>
+    </div>
+  );
+}
+
 interface BoxData {
   id: number;
   top: number;
@@ -51,23 +277,36 @@ type TreeNode =
   | { kind: 'leaf'; id: number }
   | { kind: 'branch'; direction: 'V' | 'H'; ratio: number; left: TreeNode; right: TreeNode };
 
-const MIN_SIZE = 80;
+const MIN_W = 400;
+const MIN_H = 300;
 const COUNT = 14;
 
 let leafIdCounter = 0;
 
+function pickRatio(size: number, min: number): number {
+  const minR = Math.min(0.5, min / size);
+  const maxR = 1 - minR;
+  if (maxR <= minR) return 0.5;
+  return minR + Math.random() * (maxR - minR);
+}
+
 function buildTree(width: number, height: number, leafCount: number): TreeNode {
-  if (leafCount <= 1 || (width < MIN_SIZE * 2 && height < MIN_SIZE * 2)) {
+  if (leafCount <= 1) {
     return { kind: 'leaf', id: leafIdCounter++ };
   }
 
-  const canV = width >= MIN_SIZE * 2;
-  const canH = height >= MIN_SIZE * 2;
+  const canV = width >= MIN_W * 2;
+  const canH = height >= MIN_H * 2;
+
+  if (!canV && !canH) {
+    return { kind: 'leaf', id: leafIdCounter++ };
+  }
+
   const direction: 'V' | 'H' = canV && canH
     ? (Math.random() < width / (width + height) ? 'V' : 'H')
     : canV ? 'V' : 'H';
 
-  const ratio = 0.35 + Math.random() * 0.3;
+  const ratio = direction === 'V' ? pickRatio(width, MIN_W) : pickRatio(height, MIN_H);
 
   const leftW = direction === 'V' ? width * ratio : width;
   const leftH = direction === 'H' ? height * ratio : height;
@@ -89,13 +328,21 @@ function buildTree(width: number, height: number, leafCount: number): TreeNode {
   };
 }
 
-function randomizeRatios(node: TreeNode): TreeNode {
+function randomizeRatios(node: TreeNode, width: number, height: number): TreeNode {
   if (node.kind === 'leaf') return node;
+
+  const ratio = node.direction === 'V' ? pickRatio(width, MIN_W) : pickRatio(height, MIN_H);
+
+  const leftW = node.direction === 'V' ? width * ratio : width;
+  const leftH = node.direction === 'H' ? height * ratio : height;
+  const rightW = node.direction === 'V' ? width - leftW : width;
+  const rightH = node.direction === 'H' ? height - leftH : height;
+
   return {
     ...node,
-    ratio: 0.3 + Math.random() * 0.4,
-    left: randomizeRatios(node.left),
-    right: randomizeRatios(node.right),
+    ratio,
+    left: randomizeRatios(node.left, leftW, leftH),
+    right: randomizeRatios(node.right, rightW, rightH),
   };
 }
 
@@ -286,7 +533,7 @@ export default function About() {
   useEffect(() => {
     const id = setInterval(() => {
       if (!treeRef.current) return;
-      treeRef.current = randomizeRatios(treeRef.current);
+      treeRef.current = randomizeRatios(treeRef.current, window.innerWidth, window.innerHeight);
       refresh();
     }, intervalMs);
     return () => clearInterval(id);
@@ -315,6 +562,7 @@ export default function About() {
           }}
         >
           {i === 0 && <ScrollingTable />}
+          {i === 1 && <CodeTyper />}
           <span className={`${styles.corner} ${styles.tl}`} />
           <span className={`${styles.corner} ${styles.tr}`} />
           <span className={`${styles.corner} ${styles.bl}`} />
