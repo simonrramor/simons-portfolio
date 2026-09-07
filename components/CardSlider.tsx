@@ -4,7 +4,9 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import styles from './CardSlider.module.css';
 import CardLogo from './CardLogo';
-import CellsCard, { type CellsPlayback } from './CellsCard';
+import CellsCard from './CellsCard';
+import { CellsPlaybackProvider } from './CellsPlayback';
+import { CELL_STYLES } from './cellsStyles';
 
 // Helper function to count neighbors for cellular automata
 function countNeighbors(grid: number[], row: number, col: number, size: number): number {
@@ -240,15 +242,9 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   
-  const [cellsView, setCellsView] = useState({ index: 0, time: 0 });
-  const cellsPlayback = useRef<CellsPlayback>({ video: null, time: 0 });
-  const getCellsPlayback = useCallback(() => cellsPlayback.current, []);
-  const updateCellsPlayback = useCallback((video: HTMLVideoElement, time: number) => {
-    cellsPlayback.current = { video, time };
-  }, []);
-  const toggleCellsView = useCallback((time: number) => {
-    cellsPlayback.current = { ...cellsPlayback.current, time };
-    setCellsView((current) => ({ index: (current.index + 1) % 2, time }));
+  const [cellsVariant, setCellsVariant] = useState(0);
+  const toggleCellsView = useCallback(() => {
+    setCellsVariant((current) => (current + 1) % CELL_STYLES.length);
   }, []);
 
   // Fixed video effects for card 8
@@ -450,7 +446,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
   };
 
   return (
-    <>
+    <CellsPlaybackProvider>
       {!isTouchDevice && (
         <>
           <div 
@@ -476,10 +472,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
               style={showWork ? { animationDelay: `${(index % cards.length) * 0.1}s` } : {}}
               number={card.number}
               enabled={showWork}
-              variantIndex={cellsView.index}
-              switchTime={cellsView.time}
-              getPlayback={getCellsPlayback}
-              onPlaybackChange={updateCellsPlayback}
+              variantIndex={cellsVariant}
               onToggle={toggleCellsView}
               onMouseEnter={handleCardMouseEnter}
               onMouseLeave={handleCardMouseLeave}
@@ -577,6 +570,6 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
         </div>
       </div>
     </div>
-    </>
+    </CellsPlaybackProvider>
   );
 }
