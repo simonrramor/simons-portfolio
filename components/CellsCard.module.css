@@ -1,0 +1,61 @@
+.cellsCard {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  color: #fff;
+  font: inherit;
+  text-align: left;
+  background: #365b56;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cellsCard:focus-visible {
+  outline: 3px solid #4da6ff;
+  outline-offset: -4px;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.label,
+.number,
+.caption {
+  position: absolute;
+  z-index: 1;
+  font-family: var(--font-roboto-mono), monospace;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  text-transform: uppercase;
+  pointer-events: none;
+  text-shadow: 0 1px 8px rgb(0 0 0 / 35%);
+}
+
+.label { top: 24px; left: 24px; }
+.number { top: 24px; right: 24px; }
+
+.caption {
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hint { opacity: 0.8; }
+
+.heatMap {
+  color: #202425;
+  background: #f8f7f2;
+}
+
+.heatMap .label,
+.heatMap .number,
+.heatMap .caption {
+  text-shadow: 0 1px 8px rgb(255 255 255 / 65%);
+}

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import styles from './CardSlider.module.css';
 import CardLogo from './CardLogo';
+import CellsCard, { type CellsPlayback } from './CellsCard';
 
 // Helper function to count neighbors for cellular automata
 function countNeighbors(grid: number[], row: number, col: number, size: number): number {
@@ -178,6 +179,7 @@ function ProgressiveImage({
 
 interface Card {
   id: number;
+  cells?: boolean;
   title?: string;
   video?: string;
   poster?: string;
@@ -207,17 +209,18 @@ interface CardSliderProps {
 }
 
 const defaultCards: Card[] = [
-  { id: 9, title: 'Mostly working', video: '/videos/card_9_video.mp4', label: 'Mostly working', number: '_001', noOverlay: true, videoScale: 0.7, showRotation: true, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true, description: 'A monthly(ish) AI meetup for London designers to get hands-on with AI tools and unpack what they mean for the future of design.' },
-  { id: 0, title: 'Captr', image: '/images/card_0_image.png', label: 'Captr', number: '_002', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom', description: 'AI-powered screen capture tool with intelligent annotation and sharing.' },
-  { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', number: '_003', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28, description: 'Generative AI identity system built on cellular automata patterns.' },
-  { id: 1, title: 'Project 1', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_004', logo: '/icons/stars-icon.svg', description: 'Procedural animation experiment exploring organic motion and bloom.' },
-  { id: 2, title: 'Project 2', image: '/images/card_2_image.jpg', label: 'Sling', number: '_005', logo: '/icons/sling-logo.png', description: 'Send and receive digital dollars and euros around the world in seconds.' },
-  { id: 3, title: 'Project 3', video: '/videos/card_3_video.webm', label: 'Face tracking', number: '_006', grainOnly: true, logo: '/icons/qr-code-icon.svg', description: 'Browser-based face tracking with real-time landmark detection.' },
-  { id: 4, title: 'Project 4', image: '/images/card_4_image.jpg', label: 'Group Sessions', number: '_007', logo: '/icons/spotify-logo.png', description: 'Collaborative listening experience for shared music sessions on Spotify.' },
-  { id: 5, title: 'Project 5', image: '/images/card_5_image.jpg', label: 'Enhance', number: '_008', imagePosition: 'top', logo: '/icons/spotify-logo.png', description: 'AI tools for providing personalized recommendations that blend with the mood, genre, and style of your existing music.' },
-  { id: 6, title: 'Project 6', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_009', showControls: true, logo: '/icons/neome-icon.png', description: 'Voice-controlled smart speaker designed for the modern home.' },
-  { id: 7, title: 'Project 7', image: '/images/card_7_image.jpg', label: 'Shared tabs', number: '_010', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Shared financial tabs for splitting expenses with friends on Monzo.' },
-  { id: 8, title: 'Project 8', image: '/images/card_8_image.png', label: 'Golden Tickets', number: '_011', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Gamified referral system with collectible golden ticket rewards on Monzo.' },
+  { id: 11, cells: true, title: 'Cells', label: 'Cells', number: '_001' },
+  { id: 9, title: 'Mostly working', video: '/videos/card_9_video.mp4', label: 'Mostly working', number: '_002', noOverlay: true, videoScale: 0.7, showRotation: true, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true, description: 'A monthly(ish) AI meetup for London designers to get hands-on with AI tools and unpack what they mean for the future of design.' },
+  { id: 0, title: 'Captr', image: '/images/card_0_image.png', label: 'Captr', number: '_003', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom', description: 'AI-powered screen capture tool with intelligent annotation and sharing.' },
+  { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', number: '_004', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28, description: 'Generative AI identity system built on cellular automata patterns.' },
+  { id: 1, title: 'Project 1', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_005', logo: '/icons/stars-icon.svg', description: 'Procedural animation experiment exploring organic motion and bloom.' },
+  { id: 2, title: 'Project 2', image: '/images/card_2_image.jpg', label: 'Sling', number: '_006', logo: '/icons/sling-logo.png', description: 'Send and receive digital dollars and euros around the world in seconds.' },
+  { id: 3, title: 'Project 3', video: '/videos/card_3_video.webm', label: 'Face tracking', number: '_007', grainOnly: true, logo: '/icons/qr-code-icon.svg', description: 'Browser-based face tracking with real-time landmark detection.' },
+  { id: 4, title: 'Project 4', image: '/images/card_4_image.jpg', label: 'Group Sessions', number: '_008', logo: '/icons/spotify-logo.png', description: 'Collaborative listening experience for shared music sessions on Spotify.' },
+  { id: 5, title: 'Project 5', image: '/images/card_5_image.jpg', label: 'Enhance', number: '_009', imagePosition: 'top', logo: '/icons/spotify-logo.png', description: 'AI tools for providing personalized recommendations that blend with the mood, genre, and style of your existing music.' },
+  { id: 6, title: 'Project 6', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_010', showControls: true, logo: '/icons/neome-icon.png', description: 'Voice-controlled smart speaker designed for the modern home.' },
+  { id: 7, title: 'Project 7', image: '/images/card_7_image.jpg', label: 'Shared tabs', number: '_011', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Shared financial tabs for splitting expenses with friends on Monzo.' },
+  { id: 8, title: 'Project 8', image: '/images/card_8_image.png', label: 'Golden Tickets', number: '_012', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Gamified referral system with collectible golden ticket rewards on Monzo.' },
 ];
 
 
@@ -237,6 +240,17 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   
+  const [cellsView, setCellsView] = useState({ index: 0, time: 0 });
+  const cellsPlayback = useRef<CellsPlayback>({ video: null, time: 0 });
+  const getCellsPlayback = useCallback(() => cellsPlayback.current, []);
+  const updateCellsPlayback = useCallback((video: HTMLVideoElement, time: number) => {
+    cellsPlayback.current = { video, time };
+  }, []);
+  const toggleCellsView = useCallback((time: number) => {
+    cellsPlayback.current = { ...cellsPlayback.current, time };
+    setCellsView((current) => ({ index: (current.index + 1) % 2, time }));
+  }, []);
+
   // Fixed video effects for card 8
   const videoEffects = {
     brightness: 95,
@@ -455,7 +469,22 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
           className={styles.cardsInner}
           ref={cardsRef}
         >
-          {duplicatedCards.map((card, index) => (
+          {duplicatedCards.map((card, index) => card.cells ? (
+            <CellsCard
+              key={`${card.id}-${index}`}
+              className={`${styles.card} ${showWork ? styles.cardAnimate : ''}`}
+              style={showWork ? { animationDelay: `${(index % cards.length) * 0.1}s` } : {}}
+              number={card.number}
+              enabled={showWork}
+              variantIndex={cellsView.index}
+              switchTime={cellsView.time}
+              getPlayback={getCellsPlayback}
+              onPlaybackChange={updateCellsPlayback}
+              onToggle={toggleCellsView}
+              onMouseEnter={handleCardMouseEnter}
+              onMouseLeave={handleCardMouseLeave}
+            />
+          ) : (
 <div
               key={`${card.id}-${index}`}
               className={`${styles.card} ${showWork ? styles.cardAnimate : ''} ${card.hasBorder ? styles.cardWithBorder : ''}`}
