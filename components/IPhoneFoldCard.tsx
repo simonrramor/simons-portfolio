@@ -6,17 +6,17 @@ import styles from './IPhoneFoldCard.module.css';
 
 export const IPHONE_FOLD_VIEWS = [
   {
-    src: '/images/iphone-fold/partly-open-rear.webp',
+    src: '/images/iphone-fold/partly-open-rear-edited.webp',
     name: 'Partly open',
     alt: 'Partly open iPhone Fold concept showing the worn aluminum rear panels and central hinge.',
   },
   {
-    src: '/images/iphone-fold/closed-rear.webp',
+    src: '/images/iphone-fold/closed-rear-edited.webp',
     name: 'Closed',
     alt: 'Closed iPhone Fold concept with a worn silver back, black Apple logo and black lower panel.',
   },
   {
-    src: '/images/iphone-fold/inner-screen.webp',
+    src: '/images/iphone-fold/inner-screen-edited.webp',
     name: 'Inner screen',
     alt: 'Unfolded iPhone Fold concept with the original 2007 home-screen icons across its wider display.',
   },
