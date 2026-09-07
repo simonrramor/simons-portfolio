@@ -14,16 +14,37 @@
   outline-offset: -4px;
 }
 
+.background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 350ms ease;
+  pointer-events: none;
+}
+
 .images {
   position: absolute;
   inset: 60px 0 80px;
-  background-color: inherit;
   isolation: isolate;
   pointer-events: none;
 }
 
 .image {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
+  mask-image:
+    linear-gradient(to right, transparent, #000 4%, #000 96%, transparent),
+    linear-gradient(to bottom, transparent, #000 4%, #000 96%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
   opacity: 0;
   transition: opacity 350ms ease;
 }
@@ -59,5 +80,6 @@
 .hint { opacity: 0.8; }
 
 @media (prefers-reduced-motion: reduce) {
-  .image { transition: none; }
+  .image,
+  .background { transition: none; }
 }
