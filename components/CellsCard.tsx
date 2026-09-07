@@ -99,7 +99,7 @@ export default function CellsCard({
     <button
       ref={cardRef}
       type="button"
-      className={`${className} ${styles.cellsCard} ${variantIndex === 1 ? styles.heatMap : ''}`}
+      className={`${className} ${styles.cellsCard} ${variant.lightBackground ? styles.heatMap : ''}`}
       style={{ ...style, backgroundImage: `url("${variant.poster}")` }}
       tabIndex={enabled && visible ? 0 : -1}
       aria-label={`Cells: ${variant.name}. Switch to ${nextVariant.name.toLowerCase()}.`}

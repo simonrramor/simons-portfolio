@@ -1,17 +1,19 @@
 export const CELL_STYLES = [
-  { name: 'Teal microscopy', poster: '/posters/cells-teal.jpg' },
-  { name: 'Heat map', poster: '/posters/cells-heat-map.jpg' },
-  { name: 'Infrared', poster: '/posters/cells-infrared-depth.jpg' },
-  { name: 'X-ray film', poster: '/posters/cells-xray-film.jpg' },
+  { name: 'Heat map', poster: '/posters/cells-heat-map.jpg', atlasIndex: 1, lightBackground: true },
+  { name: 'Infrared', poster: '/posters/cells-infrared-depth.jpg', atlasIndex: 2, lightBackground: false },
+  { name: 'X-ray film', poster: '/posters/cells-xray-film.jpg', atlasIndex: 3, lightBackground: false },
+  { name: 'Teal microscopy', poster: '/posters/cells-teal.jpg', atlasIndex: 0, lightBackground: false },
 ] as const;
 
 export const CELL_FADE_MS = 220;
 
 // Teal / heat map above infrared / X-ray in one 1920 × 1080 frame.
+// Each style keeps its original tile when the display order changes.
 export function cellSourceRect(index: number, videoWidth: number, videoHeight: number) {
+  const tile = CELL_STYLES[index].atlasIndex;
   const width = videoWidth / 2;
   const height = videoHeight / 2;
-  return [(index % 2) * width, Math.floor(index / 2) * height, width, height] as const;
+  return [(tile % 2) * width, Math.floor(tile / 2) * height, width, height] as const;
 }
 
 // Interrupted transitions start from their current mixture.

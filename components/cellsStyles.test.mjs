@@ -4,18 +4,18 @@ import { CELL_STYLES, cellBlendWeights, cellSourceRect } from './cellsStyles.ts'
 
 test('styles select the matching quadrant of the synchronized video', () => {
   assert.deepEqual(CELL_STYLES.map(style => style.name),
-    ['Teal microscopy', 'Heat map', 'Infrared', 'X-ray film']);
+    ['Heat map', 'Infrared', 'X-ray film', 'Teal microscopy']);
   assert.deepEqual(CELL_STYLES.map((_, index) => cellSourceRect(index, 1920, 1080)), [
-    [0, 0, 960, 540], [960, 0, 960, 540],
-    [0, 540, 960, 540], [960, 540, 960, 540],
+    [960, 0, 960, 540], [0, 540, 960, 540],
+    [960, 540, 960, 540], [0, 0, 960, 540],
   ]);
 });
 
-test('X-ray can fade back to teal without cutting an interrupted blend', () => {
-  const toXray = cellBlendWeights([0, 0, 1, 0], 3, 0.5);
-  assert.deepEqual(toXray, [0, 0, 0.5, 0.5]);
-  assert.deepEqual(cellBlendWeights(toXray, 0, 0), toXray);
-  assert.deepEqual(cellBlendWeights(toXray, 0, 1), [1, 0, 0, 0]);
+test('teal can fade back to heat map without cutting an interrupted blend', () => {
+  const toTeal = cellBlendWeights([0, 0, 1, 0], 3, 0.5);
+  assert.deepEqual(toTeal, [0, 0, 0.5, 0.5]);
+  assert.deepEqual(cellBlendWeights(toTeal, 0, 0), toTeal);
+  assert.deepEqual(cellBlendWeights(toTeal, 0, 1), [1, 0, 0, 0]);
 });
 
 test('a completed style change keeps only the requested style', () => {
