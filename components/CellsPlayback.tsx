@@ -46,12 +46,12 @@ export function CellsPlaybackProvider({ children }: { children: ReactNode }) {
 
   return (
     <CellsContext.Provider value={player}>
-      {/* One decoder serves every carousel copy. All three styles are packed
+      {/* One decoder serves every carousel copy. All four styles are packed
           into each video frame, so a style change cannot seek or drift. */}
       <video
         ref={videoRef}
         className={styles.source}
-        src={loaded ? '/videos/cells-styles-depth-sync.mp4' : undefined}
+        src={loaded ? '/videos/cells-styles-xray-sync.mp4' : undefined}
         preload="auto"
         muted
         playsInline

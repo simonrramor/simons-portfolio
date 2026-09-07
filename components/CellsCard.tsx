@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { useCellsPlayback } from './CellsPlayback';
-import { CELL_STYLES, CELL_FADE_MS, cellBlendWeights } from './cellsStyles';
+import { CELL_STYLES, CELL_FADE_MS, cellBlendWeights, cellSourceRect } from './cellsStyles';
 import styles from './CellsCard.module.css';
 
 interface CellsCardProps {
@@ -72,7 +72,6 @@ export default function CellsCard({
         const { from, target, started } = transition.current;
         const weights = cellBlendWeights(from, target,
           reducedMotion.matches ? 1 : (now - started) / CELL_FADE_MS);
-        const tileWidth = video.videoWidth / CELL_STYLES.length;
         context.globalAlpha = 1;
         context.globalCompositeOperation = 'source-over';
         context.fillStyle = '#000';
@@ -83,7 +82,7 @@ export default function CellsCard({
         weights.forEach((weight, index) => {
           if (weight <= 0) return;
           context.globalAlpha = weight;
-          context.drawImage(video, index * tileWidth, 0, tileWidth, video.videoHeight,
+          context.drawImage(video, ...cellSourceRect(index, video.videoWidth, video.videoHeight),
             0, 0, canvas.width, canvas.height);
         });
         context.globalCompositeOperation = 'source-over';
