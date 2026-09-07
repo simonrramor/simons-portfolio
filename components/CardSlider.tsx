@@ -213,7 +213,7 @@ interface CardSliderProps {
 }
 
 const defaultCards: Card[] = [
-  { id: 13, title: 'Morse Card', video: '/videos/morse-card.mp4', poster: '/posters/morse-card.png', label: 'Morse Card', number: '_001', noOverlay: true, videoScale: 1, backgroundColor: '#FFFFFF', hasBorder: true, darkText: true, description: 'A rotating 3D card study for Morse.' },
+  { id: 13, title: 'Morse Card', video: '/videos/morse-card.mp4', poster: '/posters/morse-card.png', label: 'Morse Card', number: '_001', noOverlay: true, videoScale: 1, backgroundColor: '#000000', hasBorder: true, description: 'A rotating 3D card study for Morse.' },
   { id: 12, iphoneFold: true, title: 'iPhone Fold', label: 'iPhone Fold', number: '_002' },
   { id: 11, cells: true, title: 'Cells', label: 'Cells', number: '_003' },
   { id: 9, title: 'Mostly working', video: '/videos/card_9_video.mp4', label: 'Mostly working', number: '_004', noOverlay: true, videoScale: 0.7, showRotation: true, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true, description: 'A monthly(ish) AI meetup for London designers to get hands-on with AI tools and unpack what they mean for the future of design.' },
