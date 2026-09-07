@@ -42,7 +42,8 @@
 }
 
 .bio {
-  max-width: 600px;
+  width: 100%;
+  max-width: 500px;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -58,6 +59,7 @@
 .bioText {
   font-size: 14px;
   line-height: 1.3;
+  text-wrap: balance;
   color: var(--color-text-muted);
   text-transform: uppercase;
   font-family: "SF Mono", SFMono-Regular, ui-monospace, monospace;
@@ -109,10 +111,6 @@
     padding: 1.5rem;
   }
   
-  .bio {
-    max-width: 100%;
-  }
-
   .viewWorkButton {
     align-self: flex-start;
   }
