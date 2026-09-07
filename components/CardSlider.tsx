@@ -5,6 +5,7 @@ import Image from 'next/image';
 import styles from './CardSlider.module.css';
 import CardLogo from './CardLogo';
 import CellsCard from './CellsCard';
+import IPhoneFoldCard, { IPHONE_FOLD_VIEWS } from './IPhoneFoldCard';
 import { CellsPlaybackProvider } from './CellsPlayback';
 import { CELL_STYLES } from './cellsStyles';
 
@@ -182,6 +183,7 @@ function ProgressiveImage({
 interface Card {
   id: number;
   cells?: boolean;
+  iphoneFold?: boolean;
   title?: string;
   video?: string;
   poster?: string;
@@ -211,18 +213,19 @@ interface CardSliderProps {
 }
 
 const defaultCards: Card[] = [
-  { id: 11, cells: true, title: 'Cells', label: 'Cells', number: '_001' },
-  { id: 9, title: 'Mostly working', video: '/videos/card_9_video.mp4', label: 'Mostly working', number: '_002', noOverlay: true, videoScale: 0.7, showRotation: true, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true, description: 'A monthly(ish) AI meetup for London designers to get hands-on with AI tools and unpack what they mean for the future of design.' },
-  { id: 0, title: 'Captr', image: '/images/card_0_image.png', label: 'Captr', number: '_003', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom', description: 'AI-powered screen capture tool with intelligent annotation and sharing.' },
-  { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', number: '_004', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28, description: 'Generative AI identity system built on cellular automata patterns.' },
-  { id: 1, title: 'Project 1', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_005', logo: '/icons/stars-icon.svg', description: 'Procedural animation experiment exploring organic motion and bloom.' },
-  { id: 2, title: 'Project 2', image: '/images/card_2_image.jpg', label: 'Sling', number: '_006', logo: '/icons/sling-logo.png', description: 'Send and receive digital dollars and euros around the world in seconds.' },
-  { id: 3, title: 'Project 3', video: '/videos/card_3_video.webm', label: 'Face tracking', number: '_007', grainOnly: true, logo: '/icons/qr-code-icon.svg', description: 'Browser-based face tracking with real-time landmark detection.' },
-  { id: 4, title: 'Project 4', image: '/images/card_4_image.jpg', label: 'Group Sessions', number: '_008', logo: '/icons/spotify-logo.png', description: 'Collaborative listening experience for shared music sessions on Spotify.' },
-  { id: 5, title: 'Project 5', image: '/images/card_5_image.jpg', label: 'Enhance', number: '_009', imagePosition: 'top', logo: '/icons/spotify-logo.png', description: 'AI tools for providing personalized recommendations that blend with the mood, genre, and style of your existing music.' },
-  { id: 6, title: 'Project 6', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_010', showControls: true, logo: '/icons/neome-icon.png', description: 'Voice-controlled smart speaker designed for the modern home.' },
-  { id: 7, title: 'Project 7', image: '/images/card_7_image.jpg', label: 'Shared tabs', number: '_011', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Shared financial tabs for splitting expenses with friends on Monzo.' },
-  { id: 8, title: 'Project 8', image: '/images/card_8_image.png', label: 'Golden Tickets', number: '_012', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Gamified referral system with collectible golden ticket rewards on Monzo.' },
+  { id: 12, iphoneFold: true, title: 'iPhone Fold', label: 'iPhone Fold', number: '_001' },
+  { id: 11, cells: true, title: 'Cells', label: 'Cells', number: '_002' },
+  { id: 9, title: 'Mostly working', video: '/videos/card_9_video.mp4', label: 'Mostly working', number: '_003', noOverlay: true, videoScale: 0.7, showRotation: true, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true, description: 'A monthly(ish) AI meetup for London designers to get hands-on with AI tools and unpack what they mean for the future of design.' },
+  { id: 0, title: 'Captr', image: '/images/card_0_image.png', label: 'Captr', number: '_004', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom', description: 'AI-powered screen capture tool with intelligent annotation and sharing.' },
+  { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', number: '_005', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28, description: 'Generative AI identity system built on cellular automata patterns.' },
+  { id: 1, title: 'Project 1', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_006', logo: '/icons/stars-icon.svg', description: 'Procedural animation experiment exploring organic motion and bloom.' },
+  { id: 2, title: 'Project 2', image: '/images/card_2_image.jpg', label: 'Sling', number: '_007', logo: '/icons/sling-logo.png', description: 'Send and receive digital dollars and euros around the world in seconds.' },
+  { id: 3, title: 'Project 3', video: '/videos/card_3_video.webm', label: 'Face tracking', number: '_008', grainOnly: true, logo: '/icons/qr-code-icon.svg', description: 'Browser-based face tracking with real-time landmark detection.' },
+  { id: 4, title: 'Project 4', image: '/images/card_4_image.jpg', label: 'Group Sessions', number: '_009', logo: '/icons/spotify-logo.png', description: 'Collaborative listening experience for shared music sessions on Spotify.' },
+  { id: 5, title: 'Project 5', image: '/images/card_5_image.jpg', label: 'Enhance', number: '_010', imagePosition: 'top', logo: '/icons/spotify-logo.png', description: 'AI tools for providing personalized recommendations that blend with the mood, genre, and style of your existing music.' },
+  { id: 6, title: 'Project 6', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_011', showControls: true, logo: '/icons/neome-icon.png', description: 'Voice-controlled smart speaker designed for the modern home.' },
+  { id: 7, title: 'Project 7', image: '/images/card_7_image.jpg', label: 'Shared tabs', number: '_012', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Shared financial tabs for splitting expenses with friends on Monzo.' },
+  { id: 8, title: 'Project 8', image: '/images/card_8_image.png', label: 'Golden Tickets', number: '_013', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Gamified referral system with collectible golden ticket rewards on Monzo.' },
 ];
 
 
@@ -243,6 +246,10 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   
   const [cellsVariant, setCellsVariant] = useState(0);
+  const [phoneView, setPhoneView] = useState(0);
+  const togglePhoneView = useCallback(() => {
+    setPhoneView((current) => (current + 1) % IPHONE_FOLD_VIEWS.length);
+  }, []);
   const toggleCellsView = useCallback(() => {
     setCellsVariant((current) => (current + 1) % CELL_STYLES.length);
   }, []);
@@ -465,7 +472,19 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
           className={styles.cardsInner}
           ref={cardsRef}
         >
-          {duplicatedCards.map((card, index) => card.cells ? (
+          {duplicatedCards.map((card, index) => card.iphoneFold ? (
+            <IPhoneFoldCard
+              key={`${card.id}-${index}`}
+              className={`${styles.card} ${showWork ? styles.cardAnimate : ''}`}
+              style={showWork ? { animationDelay: `${(index % cards.length) * 0.1}s` } : {}}
+              number={card.number}
+              enabled={showWork}
+              viewIndex={phoneView}
+              onToggle={togglePhoneView}
+              onMouseEnter={handleCardMouseEnter}
+              onMouseLeave={handleCardMouseLeave}
+            />
+          ) : card.cells ? (
             <CellsCard
               key={`${card.id}-${index}`}
               className={`${styles.card} ${showWork ? styles.cardAnimate : ''}`}

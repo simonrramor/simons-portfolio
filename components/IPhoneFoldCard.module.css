@@ -1,0 +1,61 @@
+.phoneCard {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  color: var(--color-text-muted);
+  font: inherit;
+  text-align: left;
+  background-color: #f8f8f8;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.phoneCard:focus-visible {
+  outline: 3px solid var(--color-blue);
+  outline-offset: -4px;
+}
+
+.images {
+  position: absolute;
+  inset: 60px 0 80px;
+  pointer-events: none;
+}
+
+.image {
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 350ms ease;
+}
+
+.activeImage {
+  opacity: 1;
+}
+
+.label,
+.number,
+.caption {
+  position: absolute;
+  font-family: var(--font-roboto-mono), monospace;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.label { top: 24px; left: 24px; }
+.number { top: 24px; right: 24px; }
+
+.caption {
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hint { opacity: 0.8; }
+
+@media (prefers-reduced-motion: reduce) {
+  .image { transition: none; }
+}
