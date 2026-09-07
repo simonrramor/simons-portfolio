@@ -25,8 +25,8 @@ export default function Header({ showWork, onViewWork }: HeaderProps) {
         <div className={styles.bio}>
           <p className={styles.bioText}>
             London-based designer and Co-Founder of{' '}
-            <a href="https://slingmoney.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
-              Sling Money
+            <a href="https://morsemoney.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
+              Morse
             </a>
             . Previously building at{' '}
             <a href="https://spotify.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
@@ -40,7 +40,7 @@ export default function Header({ showWork, onViewWork }: HeaderProps) {
             <a href="https://google.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
               Google
             </a>
-            {' '}and more. This isn&apos;t really a portfolio. I guess it is. But it&apos;s more a space to test ideas and build without an outcome in mind.
+            {' '}and more.
           </p>
         </div>
       </div>
