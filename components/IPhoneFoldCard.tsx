@@ -6,14 +6,14 @@ import styles from './IPhoneFoldCard.module.css';
 
 export const IPHONE_FOLD_VIEWS = [
   {
-    src: '/images/iphone-fold/closed-rear.webp',
-    name: 'Closed',
-    alt: 'Closed iPhone Fold concept with a worn silver back, black Apple logo and black lower panel.',
-  },
-  {
     src: '/images/iphone-fold/partly-open-rear.webp',
     name: 'Partly open',
     alt: 'Partly open iPhone Fold concept showing the worn aluminum rear panels and central hinge.',
+  },
+  {
+    src: '/images/iphone-fold/closed-rear.webp',
+    name: 'Closed',
+    alt: 'Closed iPhone Fold concept with a worn silver back, black Apple logo and black lower panel.',
   },
   {
     src: '/images/iphone-fold/inner-screen.webp',
