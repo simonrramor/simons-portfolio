@@ -51,7 +51,7 @@ export function CellsPlaybackProvider({ children }: { children: ReactNode }) {
       <video
         ref={videoRef}
         className={styles.source}
-        src={loaded ? '/videos/cells-styles-sync.mp4' : undefined}
+        src={loaded ? '/videos/cells-styles-depth-sync.mp4' : undefined}
         preload="auto"
         muted
         playsInline

@@ -1,7 +1,7 @@
 export const CELL_STYLES = [
   { name: 'Teal microscopy', poster: '/posters/cells-teal.jpg' },
   { name: 'Heat map', poster: '/posters/cells-heat-map.jpg' },
-  { name: 'Infrared', poster: '/posters/cells-infrared.jpg' },
+  { name: 'Infrared', poster: '/posters/cells-infrared-depth.jpg' },
 ] as const;
 
 export const CELL_FADE_MS = 220;
