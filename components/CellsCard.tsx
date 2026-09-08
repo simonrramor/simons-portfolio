@@ -117,10 +117,6 @@ export default function CellsCard({
       {!expanded && <>
       <span className={styles.label}>Cells</span>
       <span className={styles.number}>{number}</span>
-      <span className={styles.caption}>
-        <span>{variant.name}</span>
-        <span className={styles.hint}>Click to expand</span>
-      </span>
       </>}
     </button>
   );

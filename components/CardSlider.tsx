@@ -495,7 +495,8 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
     const handleLinkEnter = () => setIsOverLink(true);
     const handleLinkLeave = () => setIsOverLink(false);
 
-    const links = document.querySelectorAll('a, button');
+    const links = Array.from(document.querySelectorAll('a, button'))
+      .filter(element => !element.classList.contains(styles.card));
     links.forEach(link => {
       link.addEventListener('mouseenter', handleLinkEnter);
       link.addEventListener('mouseleave', handleLinkLeave);
