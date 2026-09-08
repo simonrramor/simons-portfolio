@@ -230,6 +230,8 @@ interface Card {
 interface CardSliderProps {
   cards?: Card[];
   showWork?: boolean;
+  exiting?: boolean;
+  onExitComplete?: () => void;
 }
 
 const defaultCards: Card[] = [
@@ -250,7 +252,7 @@ const defaultCards: Card[] = [
 ];
 
 
-export default function CardSlider({ cards = defaultCards, showWork = true }: CardSliderProps) {
+export default function CardSlider({ cards = defaultCards, showWork = true, exiting = false, onExitComplete }: CardSliderProps) {
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const sourceCardRef = useRef<HTMLElement | null>(null);
@@ -542,8 +544,37 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
 
   const playHoverSound = useCardHoverSound();
   useEffect(() => {
+    if (!exiting) return;
+    const visible = Array.from(cardsRef.current?.children ?? []).filter((element): element is HTMLElement => {
+      const bounds = element.getBoundingClientRect();
+      return element instanceof HTMLElement && bounds.right > 0 && bounds.left < window.innerWidth;
+    }).reverse();
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    const animations = visible.map((card, index) => {
+      const current = getComputedStyle(card);
+      const animation = card.animate([
+        { transform: current.transform, opacity: current.opacity },
+        { transform: 'translateY(100vh)', opacity: 0 },
+      ], { duration: reduced ? 0 : 700, delay: reduced ? 0 : index * 100,
+        easing: 'cubic-bezier(0.64, 0, 0.78, -0.1)', fill: 'forwards' });
+      if (!reduced) timers.push(setTimeout(() => { playHoverSound(); }, index * 100 + 550));
+      return animation;
+    });
+    let cancelled = false;
+    void Promise.all(animations.map(animation => animation.finished)).then(() => {
+      if (!cancelled) onExitComplete?.();
+    }).catch(() => {});
+    return () => {
+      cancelled = true;
+      timers.forEach(clearTimeout);
+      animations.forEach(animation => animation.cancel());
+    };
+  }, [exiting, onExitComplete, playHoverSound]);
+
+  useEffect(() => {
     const container = cardsRef.current;
-    if (!container || !showWork || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!container || !showWork || exiting || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     let frame: number;
     let arrivals: { card: HTMLElement; animation: Animation; at: number }[] | undefined;
     const tick = () => {
@@ -574,11 +605,11 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [showWork, cards.length, playHoverSound]);
+  }, [showWork, exiting, cards.length, playHoverSound]);
 
   const handleCardMouseEnter = (expanded: boolean) => {
     setIsOverCard(true);
-    if (!expanded && !selectedCard && showWork) playHoverSound();
+    if (!expanded && !selectedCard && showWork && !exiting) playHoverSound();
   };
   const handleCardMouseLeave = () => setIsOverCard(false);
 

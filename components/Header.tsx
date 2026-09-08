@@ -5,16 +5,19 @@ import styles from './Header.module.css';
 
 interface HeaderProps {
   showWork: boolean;
+  exiting?: boolean;
   onViewWork: () => void;
+  onReset: () => void;
 }
 
-export default function Header({ showWork, onViewWork }: HeaderProps) {
+export default function Header({ showWork, exiting = false, onViewWork, onReset }: HeaderProps) {
   return (
-    <header className={`${styles.header} ${showWork ? styles.headerTop : styles.headerCentered}`}>
+    <header className={`${styles.header} ${showWork && !exiting ? styles.headerTop : styles.headerCentered} ${exiting ? styles.headerExiting : ''}`}>
       <div className={styles.headerContent}>
-        <Link href="/about" className={styles.logo}>
-          Simon Amor
-        </Link>
+        <div className={styles.logo}>
+          <Link href="/about" className={styles.nameAction}>Simon</Link>{' '}
+          <button type="button" className={styles.nameAction} onClick={onReset}>Amor</button>
+        </div>
 
         {!showWork && (
           <button className={styles.viewWorkButton} onClick={onViewWork}>
