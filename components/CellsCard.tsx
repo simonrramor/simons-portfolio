@@ -114,12 +114,14 @@ export default function CellsCard({
       }}
     >
       <canvas ref={canvasRef} className={styles.canvas} width={960} height={540} aria-hidden="true" />
+      {!expanded && <>
       <span className={styles.label}>Cells</span>
       <span className={styles.number}>{number}</span>
       <span className={styles.caption}>
         <span>{variant.name}</span>
-        <span className={styles.hint}>{expanded ? 'Click to switch' : 'Click to expand'}</span>
+        <span className={styles.hint}>Click to expand</span>
       </span>
+      </>}
     </button>
   );
 }

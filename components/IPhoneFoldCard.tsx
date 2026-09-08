@@ -113,12 +113,14 @@ export default function IPhoneFoldCard({
           />
         ))}
       </span>
+      {!expanded && <>
       <span className={styles.label}>iPhone Fold</span>
       <span className={styles.number}>{number}</span>
       <span className={styles.caption}>
         <span>{currentView.name} · {viewIndex + 1}/{IPHONE_FOLD_VIEWS.length}</span>
-        <span className={styles.hint}>{expanded ? 'Click to switch' : 'Click to expand'}</span>
+        <span className={styles.hint}>Click to expand</span>
       </span>
+      </>}
     </button>
   );
 }

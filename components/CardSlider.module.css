@@ -441,11 +441,11 @@
   position: relative;
   display: grid;
   --modal-width: min(92vw, 138.6dvh, 1200px);
-  grid-template-columns: calc(var(--modal-width) * 0.606 - 32px) minmax(0, 1fr);
+  grid-template-columns: calc(var(--modal-width) * 0.606 - 16px) minmax(0, 1fr);
   gap: calc(var(--modal-width) * 0.039);
   width: var(--modal-width);
   height: calc(var(--modal-width) * 0.606);
-  padding: 16px;
+  padding: 8px;
   border-radius: 32px;
   background: transparent;
   overflow: visible;
@@ -523,7 +523,7 @@
     width: min(92vw, calc(100vw - 32px));
     height: 84dvh;
     gap: 24px;
-    padding: 16px;
+    padding: 8px;
     border-radius: 24px;
     overflow-y: auto;
   }
