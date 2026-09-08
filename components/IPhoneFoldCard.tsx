@@ -114,7 +114,7 @@ export default function IPhoneFoldCard({
         ))}
       </span>
       {!expanded && <>
-      <span className={styles.label}>iPhone Fold</span>
+      <span className={styles.label}><span style={{ textTransform: 'none' }}>i</span>Phone Fold</span>
       <span className={styles.number}>{number}</span>
       </>}
     </button>
