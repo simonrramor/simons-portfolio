@@ -5,8 +5,7 @@ import { useCallback, useEffect, useRef } from 'react';
 // Card 6's digital pip, shared by every card without audio downloads.
 const HOVER_SOUND = { frequency: 650, end: 650, duration: .045, type: 'triangle' as OscillatorType };
 
-export function useCardHoverSound(showWork = false) {
-  const previousShowWork = useRef(showWork);
+export function useCardHoverSound() {
   const context = useRef<AudioContext | null>(null);
   const lastPlayed = useRef(-Infinity);
 
@@ -27,13 +26,13 @@ export function useCardHoverSound(showWork = false) {
     };
   }, []);
 
-  const playSound = useCallback((reveal = false) => {
+  const playSound = useCallback(() => {
     const audio = context.current;
     if (!audio || audio.state !== 'running' || document.hidden) return;
     const now = audio.currentTime;
     if (now - lastPlayed.current < .08) return;
     lastPlayed.current = now;
-    const sound = reveal ? { ...HOVER_SOUND, duration: .18 } : HOVER_SOUND;
+    const sound = HOVER_SOUND;
     const voice = (multiple: number, volume: number) => {
       const oscillator = audio.createOscillator();
       const gain = audio.createGain();
@@ -41,7 +40,7 @@ export function useCardHoverSound(showWork = false) {
       oscillator.frequency.setValueAtTime(sound.frequency * multiple, now);
       oscillator.frequency.exponentialRampToValueAtTime(sound.end * multiple, now + sound.duration);
       gain.gain.setValueAtTime(0, now);
-      gain.gain.linearRampToValueAtTime(volume, now + (reveal ? .012 : .004));
+      gain.gain.linearRampToValueAtTime(volume, now + .004);
       gain.gain.exponentialRampToValueAtTime(.0001, now + sound.duration);
       oscillator.connect(gain);
       gain.connect(audio.destination);
@@ -49,22 +48,8 @@ export function useCardHoverSound(showWork = false) {
       oscillator.stop(now + sound.duration + .01);
       oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); };
     };
-    voice(1, reveal ? .04 : .055);
+    voice(1, .055);
   }, []);
 
-  useEffect(() => {
-    const justOpened = showWork && !previousShowWork.current;
-    previousShowWork.current = showWork;
-    if (!justOpened) return;
-    const audio = context.current;
-    if (!audio) return;
-    // Wait for the initiating click to unlock audio, without delaying the visuals.
-    if (audio.state === 'suspended') {
-      void audio.resume().then(() => playSound(true)).catch(() => {});
-    } else {
-      playSound(true);
-    }
-  }, [showWork, playSound]);
-
-  return useCallback(() => playSound(), [playSound]);
+  return playSound;
 }

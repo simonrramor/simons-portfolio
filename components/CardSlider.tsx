@@ -540,7 +540,40 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
     setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
   }, []);
 
-  const playHoverSound = useCardHoverSound(showWork);
+  const playHoverSound = useCardHoverSound();
+  useEffect(() => {
+    const container = cardsRef.current;
+    if (!container || !showWork || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let frame: number;
+    let arrivals: { card: HTMLElement; animation: Animation; at: number }[] | undefined;
+    const tick = () => {
+      if (!arrivals) {
+        // Only the initial visible run, beginning with card 1 in the middle copy.
+        arrivals = Array.from(container.children).slice(cards.length, cards.length * 2)
+          .flatMap(element => {
+            const card = element as HTMLElement;
+            const bounds = card.getBoundingClientRect();
+            if (bounds.right <= 0 || bounds.left >= window.innerWidth) return [];
+            const animation = card.getAnimations().find(item =>
+              item instanceof CSSAnimation && item.animationName.includes('slideInFromBottom'));
+            if (!animation?.effect) return [];
+            const timing = animation.effect.getTiming();
+            // Lead the visual settling by 200ms so the pip feels aligned with arrival.
+            return [{ card, animation, at: (timing.delay ?? 0) + Math.max(0, Number(timing.duration) * .5 - 200) }];
+          });
+      }
+      arrivals = arrivals.filter(arrival => {
+        if (Number(arrival.animation.currentTime ?? 0) < arrival.at) return true;
+        const bounds = arrival.card.getBoundingClientRect();
+        if (!dialogRef.current?.open && bounds.right > 0 && bounds.left < window.innerWidth && bounds.bottom > 0 && bounds.top < window.innerHeight) playHoverSound();
+        return false;
+      });
+      if (arrivals.length) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [showWork, cards.length, playHoverSound]);
+
   const handleCardMouseEnter = (expanded: boolean) => {
     setIsOverCard(true);
     if (!expanded && !selectedCard && showWork) playHoverSound();
