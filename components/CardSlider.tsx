@@ -490,23 +490,29 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Track link/button hover globally
+  // Derive hover from the current hit target: buttons can disappear without mouseleave.
   useEffect(() => {
-    const handleLinkEnter = () => setIsOverLink(true);
-    const handleLinkLeave = () => setIsOverLink(false);
-
-    const links = Array.from(document.querySelectorAll('a, button'))
-      .filter(element => !element.classList.contains(styles.card));
-    links.forEach(link => {
-      link.addEventListener('mouseenter', handleLinkEnter);
-      link.addEventListener('mouseleave', handleLinkLeave);
-    });
-
+    const updateHover = (event: MouseEvent) => {
+      const target = event.target instanceof Element ? event.target : null;
+      const card = target?.closest(`.${styles.card}`);
+      setIsOverCard(Boolean(card));
+      setIsOverLink(Boolean(target?.closest('a, button')) && !card);
+    };
+    const resetHover = () => {
+      setIsOverCard(false);
+      setIsOverLink(false);
+      setIsMouseDown(false);
+    };
+    // View work removes the hovered button, so clear its state after the DOM updates.
+    const frame = requestAnimationFrame(resetHover);
+    window.addEventListener('mousemove', updateHover);
+    window.addEventListener('mouseover', updateHover);
+    window.addEventListener('blur', resetHover);
     return () => {
-      links.forEach(link => {
-        link.removeEventListener('mouseenter', handleLinkEnter);
-        link.removeEventListener('mouseleave', handleLinkLeave);
-      });
+      cancelAnimationFrame(frame);
+      window.removeEventListener('mousemove', updateHover);
+      window.removeEventListener('mouseover', updateHover);
+      window.removeEventListener('blur', resetHover);
     };
   }, [showWork]);
 
