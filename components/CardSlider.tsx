@@ -9,6 +9,8 @@ import IPhoneFoldCard, { IPHONE_FOLD_VIEWS } from './IPhoneFoldCard';
 import { CellsPlaybackProvider } from './CellsPlayback';
 import { CELL_STYLES } from './cellsStyles';
 
+const CARD_TRANSITION = { duration: 320, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' };
+
 // Helper function to count neighbors for cellular automata
 function countNeighbors(grid: number[], row: number, col: number, size: number): number {
   let count = 0;
@@ -45,13 +47,13 @@ function PixelGlyph() {
       setGrid(prevGrid => {
         const newGrid = [...prevGrid];
         const size = 16;
-        
+
         for (let i = 0; i < size; i++) {
           for (let j = 0; j < size; j++) {
             const idx = i * size + j;
             const neighbors = countNeighbors(prevGrid, i, j, size);
             const alive = prevGrid[idx] === 1;
-            
+
             // Game of Life rules
             if (alive && (neighbors < 2 || neighbors > 3)) {
               newGrid[idx] = 0;
@@ -60,17 +62,17 @@ function PixelGlyph() {
             }
           }
         }
-        
+
         // If pattern becomes static, dead, or too sparse, reinitialize
         const livingCells = newGrid.filter(v => v === 1).length;
         if (livingCells === 0 || livingCells < 15 || arraysEqual(newGrid, prevGrid)) {
           return generateRandomGrid();
         }
-        
+
         return newGrid;
       });
     }, 100);
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -152,7 +154,7 @@ function ProgressiveImage({
         fill
         sizes="50px"
         quality={1}
-        style={{ 
+        style={{
           objectPosition,
           objectFit,
           opacity: isLoaded ? 0 : 1,
@@ -169,7 +171,7 @@ function ProgressiveImage({
         priority={priority}
         quality={85}
         onLoad={handleLoad}
-        style={{ 
+        style={{
           objectPosition,
           objectFit,
           opacity: isLoaded ? 1 : 0,
@@ -214,8 +216,8 @@ interface CardSliderProps {
 
 const defaultCards: Card[] = [
   { id: 13, title: 'Morse Card', video: '/videos/morse-card.mp4', poster: '/posters/morse-card.png', label: 'Morse Card', number: '_001', noOverlay: true, videoScale: 1, backgroundColor: '#000000', hasBorder: true, description: 'A rotating 3D card study for Morse.' },
-  { id: 12, iphoneFold: true, title: 'iPhone Fold', label: 'iPhone Fold', number: '_002' },
-  { id: 11, cells: true, title: 'Cells', label: 'Cells', number: '_003' },
+  { id: 12, iphoneFold: true, title: 'iPhone Fold', label: 'iPhone Fold', number: '_002', description: 'A folding iPhone concept exploring a worn aluminium finish and central hinge. Click the image to cycle through three views.' },
+  { id: 11, cells: true, title: 'Cells', label: 'Cells', number: '_003', description: 'A moving cellular study, viewed through different colour treatments. Click the image to switch between microscopy, heat map and infrared views.' },
   { id: 9, title: 'Mostly working', video: '/videos/card_9_video.mp4', label: 'Mostly working', number: '_004', noOverlay: true, videoScale: 0.7, showRotation: true, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true, description: 'A monthly(ish) AI meetup for London designers to get hands-on with AI tools and unpack what they mean for the future of design.' },
   { id: 0, title: 'Captr', image: '/images/card_0_image.png', label: 'Captr', number: '_005', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom', description: 'AI-powered screen capture tool with intelligent annotation and sharing.' },
   { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', number: '_006', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28, description: 'Generative AI identity system built on cellular automata patterns.' },
@@ -231,6 +233,145 @@ const defaultCards: Card[] = [
 
 
 export default function CardSlider({ cards = defaultCards, showWork = true }: CardSliderProps) {
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const sourceCardRef = useRef<HTMLElement | null>(null);
+  const backgroundAnimationsRef = useRef<Animation[]>([]);
+  const panelAnimationsRef = useRef<Animation[]>([]);
+  const scrimRef = useRef<HTMLDivElement>(null);
+  const cardAnimationRef = useRef<Animation | null>(null);
+  const closingRef = useRef(false);
+  const openingRectRef = useRef<DOMRect | null>(null);
+  const pointerStartRef = useRef({ x: 0, y: 0 });
+  const openCard = (card: Card, index: number) => {
+    const source = cardsRef.current?.children[index] as HTMLElement | undefined;
+    sourceCardRef.current = source ?? null;
+    closingRef.current = false;
+    openingRectRef.current = source?.getBoundingClientRect() ?? null;
+    source?.focus({ preventScroll: true });
+    setSelectedCard(card);
+    setIsOverCard(false);
+  };
+
+  const animateBackground = useCallback((opening: boolean) => {
+    const dialog = dialogRef.current;
+    const scrim = scrimRef.current;
+    if (!dialog || !scrim) return;
+    const background = Array.from(dialog.parentElement?.children ?? [])
+      .filter((element): element is HTMLElement => element instanceof HTMLElement && element !== dialog);
+    // Sample before cancelling so an interrupted opening reverses without a jump.
+    const filters = background.map(element => getComputedStyle(element).filter);
+    const opacity = getComputedStyle(scrim).opacity;
+    backgroundAnimationsRef.current.forEach(animation => animation.cancel());
+    const timing = {
+      ...CARD_TRANSITION,
+      duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : CARD_TRANSITION.duration,
+      fill: 'forwards' as FillMode,
+    };
+    backgroundAnimationsRef.current = [
+      ...background.map((element, index) => element.animate([
+        { filter: filters[index] === 'none' ? 'blur(0px)' : filters[index] },
+        { filter: opening ? 'blur(12px)' : 'blur(0px)' },
+      ], timing)),
+      scrim.animate([{ opacity }, { opacity: opening ? 1 : 0 }], timing),
+    ];
+  }, []);
+
+  const animatePanel = useCallback((opening: boolean) => {
+    const elements = Array.from(dialogRef.current?.querySelectorAll<HTMLElement>('[data-modal-chrome]') ?? []);
+    const opacities = elements.map(element => getComputedStyle(element).opacity);
+    panelAnimationsRef.current.forEach(animation => animation.cancel());
+    panelAnimationsRef.current = elements.map((element, index) => element.animate([
+      { opacity: opening ? 0 : opacities[index] },
+      { opacity: opening ? 1 : 0 },
+    ], {
+      ...CARD_TRANSITION,
+      duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : CARD_TRANSITION.duration,
+      fill: 'forwards',
+    }));
+  }, []);
+
+  const closeCard = () => {
+    const dialog = dialogRef.current;
+    if (!dialog?.open || closingRef.current) return;
+    closingRef.current = true;
+    animateBackground(false);
+    animatePanel(false);
+    const panel = dialog.querySelector<HTMLElement>('[data-expanded-card]');
+    panel?.setAttribute('data-transitioning', '');
+    const card = dialog.querySelector<HTMLElement>('[data-expanded-media] > *');
+    const destination = sourceCardRef.current?.getBoundingClientRect() ?? openingRectRef.current;
+    if (!card || !destination || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      cardAnimationRef.current?.cancel();
+      if (sourceCardRef.current) sourceCardRef.current.style.visibility = '';
+      dialog.close();
+      return;
+    }
+    // Start from the current animated position, even if expansion is still running.
+    const currentStyle = getComputedStyle(card);
+    const currentTransform = currentStyle.transform;
+    const currentWidth = currentStyle.width;
+    const currentHeight = currentStyle.height;
+    cardAnimationRef.current?.cancel();
+    const expanded = card.getBoundingClientRect();
+    const animation = card.animate([
+      { transform: currentTransform, width: currentWidth, height: currentHeight },
+      { transform: `translate(${destination.x + destination.width / 2 - expanded.x - expanded.width / 2}px, ${destination.y + destination.height / 2 - expanded.y - expanded.height / 2}px) `, width: `${destination.width}px`, height: `${destination.height}px` },
+    ], { ...CARD_TRANSITION, fill: 'forwards' });
+    cardAnimationRef.current = animation;
+    animation.onfinish = () => {
+      if (sourceCardRef.current) sourceCardRef.current.style.visibility = '';
+      dialog.close();
+      animation.cancel();
+    };
+  };
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!selectedCard || !dialog) return;
+    dialog.showModal();
+    animateBackground(true);
+    animatePanel(true);
+    const panel = dialog.querySelector<HTMLElement>('[data-expanded-card]');
+    const media = dialog.querySelector<HTMLElement>('[data-expanded-media]');
+    const card = media?.firstElementChild as HTMLElement | null;
+    const source = openingRectRef.current;
+    const sourceElement = sourceCardRef.current;
+    let resizeObserver: ResizeObserver | undefined;
+    if (card && media && source) {
+      // Morph the frame into a square; object-fit keeps the media proportional.
+      const sizeMedia = () => {
+        const bounds = media.getBoundingClientRect();
+        const width = Math.min(bounds.width, bounds.height);
+        card.style.width = `${width}px`;
+        card.style.height = `${width}px`;
+      };
+      sizeMedia();
+      resizeObserver = new ResizeObserver(sizeMedia);
+      resizeObserver.observe(media);
+      const destination = card.getBoundingClientRect();
+      if (sourceElement) sourceElement.style.visibility = 'hidden';
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        panel?.setAttribute('data-transitioning', '');
+        const animation = card.animate([
+          { transform: `translate(${source.x + source.width / 2 - destination.x - destination.width / 2}px, ${source.y + source.height / 2 - destination.y - destination.height / 2}px) `, width: `${source.width}px`, height: `${source.height}px` },
+          { transform: 'translate(0, 0)', width: `${destination.width}px`, height: `${destination.height}px` },
+        ], CARD_TRANSITION);
+        cardAnimationRef.current = animation;
+        animation.onfinish = () => panel?.removeAttribute('data-transitioning');
+      }
+    }
+    return () => {
+      resizeObserver?.disconnect();
+      if (sourceElement) sourceElement.style.visibility = '';
+      cardAnimationRef.current?.cancel();
+      backgroundAnimationsRef.current.forEach(animation => animation.cancel());
+      panelAnimationsRef.current.forEach(animation => animation.cancel());
+      backgroundAnimationsRef.current = [];
+      panelAnimationsRef.current = [];
+    };
+  }, [selectedCard, animateBackground, animatePanel]);
+
   const cardsRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
@@ -245,7 +386,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
   const [isOverLink, setIsOverLink] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
-  
+
   const [cellsVariant, setCellsVariant] = useState(0);
   const [phoneView, setPhoneView] = useState(0);
   const togglePhoneView = useCallback(() => {
@@ -348,13 +489,10 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
   // Shared wrap-around helper for infinite scroll
   const wrapTarget = useCallback((newTarget: number) => {
     const singleSetWidth = singleSetWidthRef.current;
-    if (newTarget >= singleSetWidth * 2) {
-      newTarget -= singleSetWidth;
-      translateXRef.current -= singleSetWidth;
-    } else if (newTarget < 0) {
-      newTarget += singleSetWidth;
-      translateXRef.current += singleSetWidth;
-    }
+    if (singleSetWidth <= 0) return;
+    const wrapped = singleSetWidth + ((newTarget % singleSetWidth) + singleSetWidth) % singleSetWidth;
+    translateXRef.current += wrapped - newTarget;
+    newTarget = wrapped;
     targetXRef.current = newTarget;
   }, []);
 
@@ -363,14 +501,38 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
     if (!cardsRef.current) return;
     const container = scrollContainerRef.current;
     if (!container) return;
-    
-    // Calculate single set width and start from middle
-    singleSetWidthRef.current = cardsRef.current.scrollWidth / 3;
-    translateXRef.current = singleSetWidthRef.current;
-    targetXRef.current = singleSetWidthRef.current;
-    cardsRef.current.style.transform = `translate3d(-${translateXRef.current}px, 0, 0)`;
+
+    const track = cardsRef.current;
+    const firstCard = track.children[0] as HTMLElement | undefined;
+    const nextSetFirstCard = track.children[cards.length] as HTMLElement | undefined;
+    if (!firstCard || !nextSetFirstCard) return;
+
+    const updateMeasurements = () => {
+      // Measure the repeat distance, including the gap between card sets.
+      const width = nextSetFirstCard.offsetLeft - firstCard.offsetLeft;
+      if (width <= 0) return;
+      const previousWidth = singleSetWidthRef.current;
+      if (previousWidth > 0) {
+        const progress = ((translateXRef.current % previousWidth) + previousWidth) % previousWidth;
+        const pendingScroll = targetXRef.current - translateXRef.current;
+        translateXRef.current = width + progress / previousWidth * width;
+        targetXRef.current = translateXRef.current + pendingScroll / previousWidth * width;
+      } else {
+        translateXRef.current = width;
+        targetXRef.current = width;
+      }
+      singleSetWidthRef.current = width;
+      wrapTarget(targetXRef.current);
+      track.style.transform = `translate3d(-${translateXRef.current}px, 0, 0)`;
+    };
+
+    updateMeasurements();
+    const resizeObserver = new ResizeObserver(updateMeasurements);
+    resizeObserver.observe(container);
+    resizeObserver.observe(firstCard);
 
     const handleWheel = (e: WheelEvent) => {
+      if (dialogRef.current?.open) return;
       e.preventDefault();
       const maxDelta = 100;
       const delta = Math.max(-maxDelta, Math.min(maxDelta, e.deltaY)) * 0.8;
@@ -406,39 +568,40 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
     container.addEventListener('touchend', handleTouchEnd);
 
     return () => {
+      resizeObserver.disconnect();
       window.removeEventListener('wheel', handleWheel);
       container.removeEventListener('touchstart', handleTouchStart);
       container.removeEventListener('touchmove', handleTouchMove);
       container.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [showWork, wrapTarget]);
+  }, [showWork, cards.length, wrapTarget]);
 
   // Smooth animation loop with lerp
   useEffect(() => {
-    if (!showWork || !cardsRef.current) return;
-    
+    if (!showWork || selectedCard || !cardsRef.current) return;
+
     let animationId: number;
-    
+
     const animate = () => {
       if (!cardsRef.current) return;
-      
+
       const current = translateXRef.current;
       const target = targetXRef.current;
       const diff = target - current;
-      
+
       // Lerp factor (higher = more responsive)
       translateXRef.current += diff * 0.15;
-      
+
       // Apply transform with translate3d for GPU acceleration
       cardsRef.current.style.transform = `translate3d(-${translateXRef.current}px, 0, 0)`;
-      
+
       animationId = requestAnimationFrame(animate);
     };
-    
+
     animationId = requestAnimationFrame(animate);
-    
+
     return () => cancelAnimationFrame(animationId);
-  }, [showWork]);
+  }, [showWork, selectedCard]);
 
   // Video filter style for card 8
   const videoFilterStyle = {
@@ -453,56 +616,51 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
     animation: 'grain 0.033s steps(30) infinite',
   };
 
-  return (
-    <CellsPlaybackProvider>
-      {!isTouchDevice && (
-        <>
-          <div 
-            ref={cursorTrailRef}
-            className={`${styles.customCursorTrail} ${isOverCard ? styles.customCursorTrailLarge : ''} ${isOverLink || isMouseDown ? styles.customCursorTrailLink : ''}`}
-          />
-          <div 
-            ref={cursorRef}
-            className={`${styles.customCursor} ${isOverCard ? styles.customCursorLarge : ''} ${isOverLink || isMouseDown ? styles.customCursorLink : ''}`}
-          />
-        </>
-      )}
-      <div ref={scrollContainerRef} className={`${styles.scrollContainer} ${showWork ? styles.scrollContainerVisible : styles.scrollContainerHidden}`}>
-        <div className={styles.cardsWrapper}>
-        <div 
-          className={styles.cardsInner}
-          ref={cardsRef}
-        >
-          {duplicatedCards.map((card, index) => card.iphoneFold ? (
+  const renderCard = (card: Card, index: number, expanded = false) => card.iphoneFold ? (
             <IPhoneFoldCard
               key={`${card.id}-${index}`}
-              className={`${styles.card} ${showWork ? styles.cardAnimate : ''}`}
-              style={showWork ? { animationDelay: `${(index % cards.length) * 0.1}s` } : {}}
+              className={`${styles.card} ${expanded ? styles.expandedCard : showWork ? styles.cardAnimate : ''}`}
+              style={!expanded && showWork ? { animationDelay: `${(index % cards.length) * 0.1}s` } : {}}
               number={card.number}
               enabled={showWork}
+              expanded={expanded}
               viewIndex={phoneView}
-              onToggle={togglePhoneView}
+              onToggle={expanded ? togglePhoneView : () => openCard(card, index)}
               onMouseEnter={handleCardMouseEnter}
               onMouseLeave={handleCardMouseLeave}
             />
           ) : card.cells ? (
             <CellsCard
               key={`${card.id}-${index}`}
-              className={`${styles.card} ${showWork ? styles.cardAnimate : ''}`}
-              style={showWork ? { animationDelay: `${(index % cards.length) * 0.1}s` } : {}}
+              className={`${styles.card} ${expanded ? styles.expandedCard : showWork ? styles.cardAnimate : ''}`}
+              style={!expanded && showWork ? { animationDelay: `${(index % cards.length) * 0.1}s` } : {}}
               number={card.number}
               enabled={showWork}
+              expanded={expanded}
               variantIndex={cellsVariant}
-              onToggle={toggleCellsView}
+              onToggle={expanded ? toggleCellsView : () => openCard(card, index)}
               onMouseEnter={handleCardMouseEnter}
               onMouseLeave={handleCardMouseLeave}
             />
           ) : (
 <div
+              role={expanded ? undefined : 'button'}
+              tabIndex={expanded || !showWork ? -1 : 0}
+              aria-label={expanded ? undefined : `Expand ${card.label || card.title}`}
+              onPointerDown={(event) => { pointerStartRef.current = { x: event.clientX, y: event.clientY }; }}
+              onClick={(event) => {
+                if (!expanded && (event.detail === 0 || Math.hypot(event.clientX - pointerStartRef.current.x, event.clientY - pointerStartRef.current.y) < 10)) openCard(card, index);
+              }}
+              onKeyDown={(event) => {
+                if (!expanded && (event.key === 'Enter' || event.key === ' ')) {
+                  event.preventDefault();
+                  openCard(card, index);
+                }
+              }}
               key={`${card.id}-${index}`}
-              className={`${styles.card} ${showWork ? styles.cardAnimate : ''} ${card.hasBorder ? styles.cardWithBorder : ''}`}
+              className={`${styles.card} ${expanded ? styles.expandedCard : showWork ? styles.cardAnimate : ''} ${card.hasBorder ? styles.cardWithBorder : ''}`}
               style={{
-                ...(showWork ? { animationDelay: `${(index % cards.length) * 0.1}s` } : {}),
+                ...(!expanded && showWork ? { animationDelay: `${(index % cards.length) * 0.1}s` } : {}),
                 ...(card.backgroundColor ? { backgroundColor: card.backgroundColor } : {}),
               }}
               onMouseEnter={handleCardMouseEnter}
@@ -510,7 +668,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
             >
               {card.video ? (
                 <>
-                  <video 
+                  <video
                     className={styles.cardVideo}
                     src={card.video}
                     poster={card.poster}
@@ -524,6 +682,10 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
                       ...(card.videoScale ? { width: `${card.videoScale * 100}%`, height: `${card.videoScale * 100}%`, objectFit: 'contain' as const, margin: 'auto' } : {}),
                     }}
                     onLoadedMetadata={(e) => {
+                      if (expanded) {
+                        const sourceVideo = sourceCardRef.current?.querySelector('video');
+                        if (sourceVideo) e.currentTarget.currentTime = sourceVideo.currentTime;
+                      }
                       if (card.showControls) {
                         (e.target as HTMLVideoElement).playbackRate = 0.5;
                       }
@@ -580,16 +742,56 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
                   )}
                 </>
               )}
-              {card.description && (
-                <div className={styles.cardHoverOverlay}>
-                  <p className={styles.cardDescription}>{card.description}</p>
-                </div>
-              )}
             </div>
-          ))}
+          );
+
+  return (
+    <CellsPlaybackProvider>
+      {!isTouchDevice && (
+        <>
+          <div
+            ref={cursorTrailRef}
+            className={`${styles.customCursorTrail} ${isOverCard ? styles.customCursorTrailLarge : ''} ${isOverLink || isMouseDown ? styles.customCursorTrailLink : ''}`}
+          />
+          <div
+            ref={cursorRef}
+            className={`${styles.customCursor} ${isOverCard ? styles.customCursorLarge : ''} ${isOverLink || isMouseDown ? styles.customCursorLink : ''}`}
+          />
+        </>
+      )}
+      <div ref={scrollContainerRef} className={`${styles.scrollContainer} ${showWork ? styles.scrollContainerVisible : styles.scrollContainerHidden}`}>
+        <div className={styles.cardsWrapper}>
+        <div
+          className={styles.cardsInner}
+          ref={cardsRef}
+        >
+          {duplicatedCards.map((card, index) => renderCard(card, index))}
         </div>
       </div>
     </div>
+      <dialog
+        ref={dialogRef}
+        className={styles.expandedDialog}
+        aria-labelledby="expanded-project-title"
+        onClose={() => { closingRef.current = false; setSelectedCard(null); }}
+        onCancel={(event) => { event.preventDefault(); closeCard(); }}
+        onClick={(event) => { if (event.target === event.currentTarget) closeCard(); }}
+      >
+        <div ref={scrimRef} className={styles.modalScrim} aria-hidden="true" />
+        {selectedCard && (
+          <div data-expanded-card className={styles.expandedContent}>
+            <div data-modal-chrome className={styles.modalSurface} aria-hidden="true" />
+            <div data-expanded-media className={styles.expandedMedia}>{renderCard(selectedCard, 0, true)}</div>
+            <div data-modal-chrome className={styles.expandedDetails}>
+              <h2 id="expanded-project-title" className={styles.expandedTitle}>{selectedCard.label || selectedCard.title}</h2>
+              {selectedCard.description && <p className={styles.expandedDescription}>{selectedCard.description}</p>}
+            </div>
+            <button data-modal-chrome autoFocus type="button" className={styles.closeButton} aria-label="Close expanded card" onClick={closeCard}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" strokeWidth="1.5" /></svg>
+            </button>
+          </div>
+        )}
+      </dialog>
     </CellsPlaybackProvider>
   );
 }

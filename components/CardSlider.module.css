@@ -116,6 +116,20 @@
   justify-content: center;
   cursor: none;
   overflow: hidden;
+  translate: 0 0;
+  transition: translate 250ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    translate: 0 -12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
 }
 
 .cardWithBorder {
@@ -164,41 +178,6 @@
   object-fit: cover;
   border-radius: 32px;
   transition: opacity 0.3s ease-out, filter 0.3s ease;
-}
-
-.card:hover .cardVideo,
-.card:hover .cardImage {
-  filter: blur(8px) !important;
-}
-
-.card:hover .cardHoverOverlay {
-  opacity: 1;
-}
-
-.cardHoverOverlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 32px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  padding: 32px;
-  z-index: 5;
-}
-
-.cardDescription {
-  color: white;
-  font-size: 12px;
-  font-weight: 500;
-  font-family: var(--font-roboto-mono), monospace;
-  text-transform: uppercase;
-  text-align: center;
-  line-height: 1.5;
-  max-width: 80%;
 }
 
 .cardImageLowRes {
@@ -393,10 +372,6 @@
   transition: filter 0.3s ease;
 }
 
-.card:hover .pixelGlyph {
-  filter: blur(8px);
-}
-
 .pixel {
   background-color: #1a1a1a;
 }
@@ -428,4 +403,164 @@
   gap: 12px;
   justify-content: flex-end;
   white-space: pre;
+}
+
+.expandedDialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 48px 24px;
+  border: 0;
+  background: transparent;
+  overflow: hidden;
+  cursor: auto;
+}
+
+.expandedDialog[open] {
+  display: grid;
+  place-items: center;
+}
+
+.expandedDialog::backdrop {
+  background: transparent;
+}
+
+.modalScrim {
+  position: absolute;
+  inset: 0;
+  background: rgb(255 255 255 / 35%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.expandedContent {
+  position: relative;
+  display: grid;
+  --modal-width: min(92vw, 138.6dvh, 1200px);
+  grid-template-columns: calc(var(--modal-width) * 0.606 - 32px) minmax(0, 1fr);
+  gap: calc(var(--modal-width) * 0.039);
+  width: var(--modal-width);
+  height: calc(var(--modal-width) * 0.606);
+  padding: 16px;
+  border-radius: 32px;
+  background: transparent;
+  overflow: visible;
+}
+
+.modalSurface {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #fff;
+  box-shadow: 0 24px 80px rgb(0 0 0 / 18%);
+  pointer-events: none;
+}
+
+.expandedContent[data-transitioning] {
+  overflow: visible;
+}
+
+.expandedMedia {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+}
+
+.expandedMedia > .expandedCard {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  max-height: none;
+  translate: none;
+  cursor: auto;
+  border-radius: 24px;
+}
+
+.expandedDetails {
+  position: relative;
+  min-width: 0;
+  padding: calc(var(--modal-width) * 0.04) 16px 24px 0;
+  overflow-y: auto;
+  font-family: Arial, Helvetica, sans-serif;
+  user-select: text;
+  -webkit-user-select: text;
+  cursor: auto;
+}
+
+.expandedTitle {
+  margin: 0 0 20px;
+  font-size: clamp(30px, 3.5vw, 48px);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  color: #111;
+}
+
+.expandedDescription {
+  max-width: 38ch;
+  font-size: 18px;
+  line-height: 1.55;
+  color: #333;
+}
+
+.expandedCard .cardLabel,
+.expandedCard .cardNumberLabel,
+.expandedCard .rotationData {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .expandedContent {
+    display: flex;
+    flex-direction: column;
+    width: min(92vw, calc(100vw - 32px));
+    height: 84dvh;
+    gap: 24px;
+    padding: 16px;
+    border-radius: 24px;
+    overflow-y: auto;
+  }
+
+  .expandedMedia {
+    flex: 0 0 48dvh;
+  }
+
+  .expandedDetails {
+    flex: 0 0 auto;
+    padding: 0 8px 16px;
+    overflow: visible;
+  }
+
+  .expandedDescription {
+    font-size: 16px;
+  }
+}
+
+.closeButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid rgb(0 0 0 / 8%);
+  border-radius: 50%;
+  background: white;
+  color: #111;
+  cursor: pointer;
+}
+
+.closeButton:focus-visible,
+.card:focus-visible {
+  outline: 2px solid #4da6ff;
+  outline-offset: 3px;
 }

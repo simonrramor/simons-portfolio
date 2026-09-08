@@ -10,6 +10,7 @@ interface CellsCardProps {
   style: CSSProperties;
   number?: string;
   enabled: boolean;
+  expanded?: boolean;
   variantIndex: number;
   onToggle: () => void;
   onMouseEnter: () => void;
@@ -17,7 +18,7 @@ interface CellsCardProps {
 }
 
 export default function CellsCard({
-  className, style, number, enabled, variantIndex, onToggle, onMouseEnter, onMouseLeave,
+  className, style, number, enabled, expanded = false, variantIndex, onToggle, onMouseEnter, onMouseLeave,
 }: CellsCardProps) {
   const cardRef = useRef<HTMLButtonElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -102,7 +103,7 @@ export default function CellsCard({
       className={`${className} ${styles.cellsCard} ${variant.lightBackground ? styles.heatMap : ''}`}
       style={{ ...style, backgroundImage: `url("${variant.poster}")` }}
       tabIndex={enabled && visible ? 0 : -1}
-      aria-label={`Cells: ${variant.name}. Switch to ${nextVariant.name.toLowerCase()}.`}
+      aria-label={expanded ? `Cells: ${variant.name}. Switch to ${nextVariant.name.toLowerCase()}.` : 'Expand Cells'}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onPointerDown={(event) => { pointerStart.current = { x: event.clientX, y: event.clientY }; }}
@@ -117,7 +118,7 @@ export default function CellsCard({
       <span className={styles.number}>{number}</span>
       <span className={styles.caption}>
         <span>{variant.name}</span>
-        <span className={styles.hint}>Click to switch</span>
+        <span className={styles.hint}>{expanded ? 'Click to switch' : 'Click to expand'}</span>
       </span>
     </button>
   );

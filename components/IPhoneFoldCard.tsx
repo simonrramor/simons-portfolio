@@ -33,6 +33,7 @@ interface IPhoneFoldCardProps {
   style: CSSProperties;
   number?: string;
   enabled: boolean;
+  expanded?: boolean;
   viewIndex: number;
   onToggle: () => void;
   onMouseEnter: () => void;
@@ -40,7 +41,7 @@ interface IPhoneFoldCardProps {
 }
 
 export default function IPhoneFoldCard({
-  className, style, number, enabled, viewIndex, onToggle, onMouseEnter, onMouseLeave,
+  className, style, number, enabled, expanded = false, viewIndex, onToggle, onMouseEnter, onMouseLeave,
 }: IPhoneFoldCardProps) {
   const backgroundId = useId();
   const cardRef = useRef<HTMLButtonElement>(null);
@@ -64,7 +65,7 @@ export default function IPhoneFoldCard({
       className={`${className} ${styles.phoneCard}`}
       style={style}
       tabIndex={enabled && visible ? 0 : -1}
-      aria-label={`iPhone Fold: ${currentView.name}, view ${viewIndex + 1} of ${IPHONE_FOLD_VIEWS.length}. Show ${nextView.name.toLowerCase()}.`}
+      aria-label={expanded ? `iPhone Fold: ${currentView.name}, view ${viewIndex + 1} of ${IPHONE_FOLD_VIEWS.length}. Show ${nextView.name.toLowerCase()}.` : 'Expand iPhone Fold'}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onPointerDown={(event) => { pointerStart.current = { x: event.clientX, y: event.clientY }; }}
@@ -116,7 +117,7 @@ export default function IPhoneFoldCard({
       <span className={styles.number}>{number}</span>
       <span className={styles.caption}>
         <span>{currentView.name} · {viewIndex + 1}/{IPHONE_FOLD_VIEWS.length}</span>
-        <span className={styles.hint}>Click to switch</span>
+        <span className={styles.hint}>{expanded ? 'Click to switch' : 'Click to expand'}</span>
       </span>
     </button>
   );
