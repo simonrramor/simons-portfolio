@@ -8,6 +8,7 @@ import CellsCard from './CellsCard';
 import IPhoneFoldCard, { IPHONE_FOLD_VIEWS } from './IPhoneFoldCard';
 import { CellsPlaybackProvider } from './CellsPlayback';
 import { CELL_STYLES } from './cellsStyles';
+import { useCardHoverSound } from './useCardHoverSound';
 
 const CARD_TRANSITION = { duration: 320, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' };
 
@@ -539,7 +540,11 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
     setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
   }, []);
 
-  const handleCardMouseEnter = () => setIsOverCard(true);
+  const playHoverSound = useCardHoverSound(showWork);
+  const handleCardMouseEnter = (expanded: boolean) => {
+    setIsOverCard(true);
+    if (!expanded && !selectedCard && showWork) playHoverSound();
+  };
   const handleCardMouseLeave = () => setIsOverCard(false);
 
   // Grain settings with overlay filter (for project 1)
@@ -699,7 +704,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
               expanded={expanded}
               viewIndex={phoneView}
               onToggle={expanded ? togglePhoneView : () => openCard(card, index)}
-              onMouseEnter={handleCardMouseEnter}
+              onMouseEnter={() => handleCardMouseEnter(expanded)}
               onMouseLeave={handleCardMouseLeave}
             />
           ) : card.cells ? (
@@ -712,7 +717,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
               expanded={expanded}
               variantIndex={cellsVariant}
               onToggle={expanded ? toggleCellsView : () => openCard(card, index)}
-              onMouseEnter={handleCardMouseEnter}
+              onMouseEnter={() => handleCardMouseEnter(expanded)}
               onMouseLeave={handleCardMouseLeave}
             />
           ) : (
@@ -736,7 +741,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
                 ...(!expanded && showWork ? { animationDelay: `${(index % cards.length) * 0.1}s` } : {}),
                 ...(card.backgroundColor ? { backgroundColor: card.backgroundColor } : {}),
               }}
-              onMouseEnter={handleCardMouseEnter}
+              onMouseEnter={() => handleCardMouseEnter(expanded)}
               onMouseLeave={handleCardMouseLeave}
             >
               {card.video ? (
