@@ -565,8 +565,10 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
       arrivals = arrivals.filter(arrival => {
         if (Number(arrival.animation.currentTime ?? 0) < arrival.at) return true;
         const bounds = arrival.card.getBoundingClientRect();
-        if (!dialogRef.current?.open && bounds.right > 0 && bounds.left < window.innerWidth && bounds.bottom > 0 && bounds.top < window.innerHeight) playHoverSound();
-        return false;
+        if (dialogRef.current?.open || document.hidden || bounds.right <= 0 || bounds.left >= window.innerWidth) return false;
+        // Judge visibility in the resting row, not the still-moving vertical position.
+        // Keep early arrivals pending while the first gesture unlocks the audio engine.
+        return !playHoverSound() && Number(arrival.animation.currentTime ?? 0) < arrival.at + 1000;
       });
       if (arrivals.length) frame = requestAnimationFrame(tick);
     };

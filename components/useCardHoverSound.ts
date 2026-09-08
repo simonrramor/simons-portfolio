@@ -10,6 +10,8 @@ export function useCardHoverSound() {
   const lastPlayed = useRef(-Infinity);
 
   useEffect(() => {
+    // Prepare the audio engine before the first interaction; playback still waits for a gesture.
+    try { context.current = new AudioContext({ latencyHint: 'interactive' }); } catch {}
     const unlock = () => {
       try {
         context.current ??= new AudioContext();
@@ -28,9 +30,9 @@ export function useCardHoverSound() {
 
   const playSound = useCallback(() => {
     const audio = context.current;
-    if (!audio || audio.state !== 'running' || document.hidden) return;
+    if (!audio || audio.state !== 'running' || document.hidden) return false;
     const now = audio.currentTime;
-    if (now - lastPlayed.current < .08) return;
+    if (now - lastPlayed.current < .08) return false;
     lastPlayed.current = now;
     const sound = HOVER_SOUND;
     const voice = (multiple: number, volume: number) => {
@@ -49,6 +51,7 @@ export function useCardHoverSound() {
       oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); };
     };
     voice(1, .055);
+    return true;
   }, []);
 
   return playSound;
