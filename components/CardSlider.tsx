@@ -122,6 +122,22 @@ function RotationData({ dark }: { dark?: boolean }) {
   );
 }
 
+// Retain decoded images across carousel/modal mounts so opening never restarts a fade.
+const readyImages = new Set<string>();
+const warmingImages = new Map<string, Promise<void>>();
+function warmImage(src: string): Promise<void> {
+  if (readyImages.has(src)) return Promise.resolve();
+  const pending = warmingImages.get(src);
+  if (pending) return pending;
+  const image = new window.Image();
+  image.src = src;
+  const loading = image.decode().then(() => { readyImages.add(src); }).catch(() => {
+    // Loading failures stay retryable; they must never block an interaction.
+  }).finally(() => { warmingImages.delete(src); });
+  warmingImages.set(src, loading);
+  return loading;
+}
+
 // Progressive image component - loads low-res first, then full-res
 function ProgressiveImage({
   src,
@@ -138,11 +154,12 @@ function ProgressiveImage({
   scale?: number;
   priority?: boolean;
 }) {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(() => readyImages.has(src));
 
   const handleLoad = useCallback(() => {
+    readyImages.add(src);
     setIsLoaded(true);
-  }, []);
+  }, [src]);
 
   return (
     <>
@@ -374,6 +391,55 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
 
   const cardsRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = cardsRef.current;
+    if (!container || !showWork) return;
+    let stopped = false;
+    let active = 0;
+    const queued = new Set<string>();
+    const queue: string[] = [];
+    const drain = () => {
+      while (!stopped && active < 2 && queue.length) {
+        const src = queue.shift()!;
+        active++;
+        void warmImage(src).finally(() => { active--; drain(); });
+      }
+    };
+    const prepare = (element: Element) => {
+      element.querySelectorAll('img').forEach(image => {
+        const src = image.getAttribute('src');
+        if (!src || queued.has(src)) return;
+        queued.add(src);
+        queue.push(src);
+      });
+      drain();
+    };
+    // Warm cards just before they enter view, without downloading the entire gallery.
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          prepare(entry.target);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { root: scrollContainerRef.current, rootMargin: '0px 400px' });
+    Array.from(container.children).forEach(element => observer.observe(element));
+    const onIntent = (event: Event) => {
+      const target = event.target as Element;
+      const card = target.closest('[aria-label^="Expand"]');
+      if (card) prepare(card);
+    };
+    container.addEventListener('pointerover', onIntent);
+    container.addEventListener('focusin', onIntent);
+    return () => {
+      stopped = true;
+      observer.disconnect();
+      container.removeEventListener('pointerover', onIntent);
+      container.removeEventListener('focusin', onIntent);
+    };
+  }, [showWork, cards]);
+
   const cursorRef = useRef<HTMLDivElement>(null);
   const cursorTrailRef = useRef<HTMLDivElement>(null);
   const translateXRef = useRef(0);
@@ -724,7 +790,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true }: Ca
                     objectPosition={card.imagePosition}
                     objectFit={card.imageFit}
                     scale={card.imageScale}
-                    priority={card.id <= 4}
+                    priority={expanded || card.id <= 4}
                   />
                   {card.label && <span className={`${styles.cardLabel} ${card.darkText ? styles.cardLabelDark : ''}`}>{card.label}</span>}
                   {card.number && <span className={`${styles.cardNumberLabel} ${card.darkText ? styles.cardNumberLabelDark : ''}`}>{card.number}</span>}
