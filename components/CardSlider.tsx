@@ -230,7 +230,7 @@ interface Card {
   showGlyph?: boolean;
   showRotation?: boolean;
   description?: string;
-  gallery?: { video: string; poster: string; title: string }[];
+  gallery?: { video: string; poster: string; title: string; backgroundColor?: string }[];
   speakers?: { name: string; company: string }[];
 }
 
@@ -242,7 +242,16 @@ interface CardSliderProps {
 }
 
 const defaultCards: Card[] = [
-  { id: 13, title: 'Morse Card', video: '/videos/morse-card.mp4', poster: '/posters/morse-card.png', label: 'Morse Card', number: '_001', logo: '/icons/morse-logo.png', logoHeight: 32, noOverlay: true, videoScale: 1, backgroundColor: '#000000', hasBorder: true, description: 'A rotating 3D card study for Morse, exploring the card’s surface, branding and appearance in motion.' },
+  {
+    id: 13, title: 'Morse Card', video: '/videos/morse-card.mp4', poster: '/posters/morse-card.png', label: 'Morse Card', number: '_001', logo: '/icons/morse-logo.png', logoHeight: 32, noOverlay: true, videoScale: 1, backgroundColor: '#000000', hasBorder: true,
+    description: 'A rotating 3D card study for Morse, exploring the card’s surface, branding and appearance in motion.',
+    gallery: [{
+      video: '/videos/morse-card-white.mp4',
+      poster: '/posters/morse-card-white.png',
+      title: 'White Morse Card',
+      backgroundColor: '#ffffff',
+    }],
+  },
   { id: 12, iphoneFold: true, title: 'iPhone Fold', label: 'iPhone Fold', number: '_002', description: 'A folding iPhone concept exploring a worn aluminium finish and central hinge. Click the image to cycle through three views.' },
   { id: 11, cells: true, title: 'Cells', label: 'Cells', number: '_003', description: 'A moving cellular study, viewed through different colour treatments. Click the image to switch between microscopy, heat map and infrared views.' },
   {
