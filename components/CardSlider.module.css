@@ -561,6 +561,7 @@
 
 .expandedCard .cardLabel,
 .expandedCard .cardNumberLabel,
+.expandedCard .cardLogo,
 .expandedCard .rotationData {
   display: none;
 }
