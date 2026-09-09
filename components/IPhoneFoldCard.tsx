@@ -6,23 +6,23 @@ import styles from './IPhoneFoldCard.module.css';
 
 export const IPHONE_FOLD_VIEWS = [
   {
-    src: '/images/iphone-fold/partly-open-rear-edited.webp',
-    width: 2100,
-    height: 2400,
+    src: '/images/iphone-fold/partly-open-rear-display.webp',
+    width: 1400,
+    height: 1600,
     name: 'Partly open',
     alt: 'Partly open iPhone Fold concept showing the worn aluminum rear panels and central hinge.',
   },
   {
-    src: '/images/iphone-fold/closed-rear-edited.webp',
+    src: '/images/iphone-fold/closed-rear-display.webp',
     width: 1400,
     height: 1600,
     name: 'Closed',
     alt: 'Closed iPhone Fold concept with a worn silver back, black Apple logo and black lower panel.',
   },
   {
-    src: '/images/iphone-fold/inner-screen-edited.webp',
-    width: 2100,
-    height: 2400,
+    src: '/images/iphone-fold/inner-screen-display.webp',
+    width: 1400,
+    height: 1600,
     name: 'Inner screen',
     alt: 'Unfolded iPhone Fold concept with the original 2007 home-screen icons across its wider display.',
   },
@@ -108,6 +108,11 @@ export default function IPhoneFoldCard({
             width={view.width}
             height={view.height}
             sizes="(max-width: 640px) 70vw, (max-width: 1024px) 40vw, 33vw"
+            // Start the opening view in the initial HTML, before View Work.
+            // The carousel and modal share the same compressed URLs and cache.
+            preload={index === 0}
+            loading={index === 0 ? undefined : enabled || expanded ? 'eager' : 'lazy'}
+            fetchPriority={index === viewIndex ? 'high' : 'low'}
             className={`${styles.image} ${index === viewIndex ? styles.activeImage : ''}`}
             draggable={false}
           />
