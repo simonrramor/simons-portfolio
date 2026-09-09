@@ -274,7 +274,7 @@ const defaultCards: Card[] = [
   { id: 5, title: 'Enhance', image: '/images/card_5_image.jpg', label: 'Enhance', number: '_011', imagePosition: 'top', logo: '/icons/spotify-logo.png', description: 'AI tools for providing personalized recommendations that blend with the mood, genre, and style of your existing music.' },
   { id: 6, title: 'Project 6', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_012', showControls: true, logo: '/icons/neome-icon.png', description: 'Voice-controlled smart speaker designed for the modern home.' },
   { id: 7, title: 'Shared tabs', image: '/images/card_7_image.jpg', label: 'Shared tabs', number: '_013', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Shared tabs for splitting expenses with friends on Monzo. The feature brings a group’s shared spending together so people can see and settle what they owe.' },
-  { id: 8, title: 'Golden Tickets', image: '/images/card_8_image.png', label: 'Golden Tickets', number: '_014', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Gamified referral system with collectible golden ticket rewards on Monzo.' },
+  { id: 8, title: 'Golden Tickets', image: '/images/monzo-golden-tickets.webp', label: 'Golden Tickets', number: '_014', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Gamified referral system with collectible golden ticket rewards on Monzo.' },
 ];
 
 
