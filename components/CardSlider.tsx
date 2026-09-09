@@ -250,7 +250,7 @@ const defaultCards: Card[] = [
     synchronizedGallery: true,
     gallery: [{
       video: '/videos/morse-card-white.mp4',
-      poster: '/posters/morse-card-white.png',
+      poster: '/posters/morse-card-white-2160.webp',
       title: 'White Morse Card',
       backgroundColor: '#ffffff',
     }],
