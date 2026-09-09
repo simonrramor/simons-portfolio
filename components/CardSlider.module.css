@@ -22,10 +22,11 @@
 }
 
 .scrollContainer {
+  --card-gap: 16px;
   flex: 1;
   display: flex;
   align-items: center;
-  padding: 40px 0;
+  padding: 40px var(--card-gap);
   overflow: hidden;
   margin-top: var(--header-height, 200px);
   transition: opacity 0.5s ease;
@@ -99,7 +100,7 @@
 
 .cardsInner {
   display: flex;
-  gap: 16px;
+  gap: var(--card-gap);
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -341,7 +342,7 @@
 
 @media (max-width: 640px) {
   .scrollContainer {
-    padding: 20px 0;
+    padding: 20px var(--card-gap);
   }
 
   .stickyWrapper {

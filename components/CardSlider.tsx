@@ -697,7 +697,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
 
     const updateMeasurements = () => {
       // Measure the repeat distance, including the gap between card sets.
-      const width = nextSetFirstCard.offsetLeft - firstCard.offsetLeft;
+      const width = nextSetFirstCard.getBoundingClientRect().left - firstCard.getBoundingClientRect().left;
       if (width <= 0) return;
       const previousWidth = showWork ? singleSetWidthRef.current : 0;
       if (previousWidth > 0) {
@@ -767,7 +767,8 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
 
   useEffect(() => {
     const track = cardsRef.current;
-    if (!track) return;
+    const container = scrollContainerRef.current;
+    if (!track || !container) return;
     const update = (entries: IntersectionObserverEntry[]) => entries.forEach(entry => {
       const card = entry.target as HTMLElement;
       card.inert = !showWork || !entry.isIntersecting;
@@ -785,7 +786,8 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
       index = event.key === 'Home' ? cards.length : event.key === 'End' ? cards.length * 2 - 1 : index + (event.key === 'ArrowRight' ? 1 : -1);
       const next = list[(index + list.length) % list.length];
       const bounds = next.getBoundingClientRect();
-      targetXRef.current += bounds.left;
+      const contentLeft = container.getBoundingClientRect().left + parseFloat(getComputedStyle(container).paddingLeft);
+      targetXRef.current = translateXRef.current + bounds.left - contentLeft;
       translateXRef.current = targetXRef.current;
       track.style.transform = `translate3d(-${targetXRef.current}px, 0, 0)`;
       next.inert = false;
