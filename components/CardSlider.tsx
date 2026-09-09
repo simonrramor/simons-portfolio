@@ -230,6 +230,8 @@ interface Card {
   showGlyph?: boolean;
   showRotation?: boolean;
   description?: string;
+  gallery?: { video: string; poster: string; title: string }[];
+  speakers?: { name: string; company: string }[];
 }
 
 interface CardSliderProps {
@@ -243,7 +245,26 @@ const defaultCards: Card[] = [
   { id: 13, title: 'Morse Card', video: '/videos/morse-card.mp4', poster: '/posters/morse-card.png', label: 'Morse Card', number: '_001', logo: '/icons/morse-logo.png', logoHeight: 32, noOverlay: true, videoScale: 1, backgroundColor: '#000000', hasBorder: true, description: 'A rotating 3D card study for Morse, exploring the card’s surface, branding and appearance in motion.' },
   { id: 12, iphoneFold: true, title: 'iPhone Fold', label: 'iPhone Fold', number: '_002', description: 'A folding iPhone concept exploring a worn aluminium finish and central hinge. Click the image to cycle through three views.' },
   { id: 11, cells: true, title: 'Cells', label: 'Cells', number: '_003', description: 'A moving cellular study, viewed through different colour treatments. Click the image to switch between microscopy, heat map and infrared views.' },
-  { id: 9, title: 'Mostly working', video: '/videos/card_9_video.mp4', label: 'Mostly working', number: '_004', noOverlay: true, videoScale: 0.7, showRotation: true, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true, description: 'A monthly(ish) AI meetup for London designers to get hands-on with AI tools and unpack what they mean for the future of design.' },
+  {
+    id: 9, title: 'Mostly working', video: '/videos/card_9_video.mp4', label: 'Mostly working', number: '_004', noOverlay: true, videoScale: 0.7, showRotation: true, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true,
+    description: 'A monthly(ish) AI meetup for London designers to get hands-on with AI tools and unpack what they mean for the future of design. When I have time, I make fun event artwork.',
+    gallery: [{
+      video: '/videos/mostly-working-christine-rode.mp4',
+      poster: '/posters/mostly-working-christine-rode.png',
+      title: 'Christine Røde speaker animation',
+    }],
+    speakers: [
+      { name: 'Domingo Widen', company: 'Intercom' },
+      { name: 'ÌníOlúwa Abíódún', company: 'Intercom' },
+      { name: 'Rich Cahill', company: 'Lovable' },
+      { name: 'Ben Strak', company: 'Monzo' },
+      { name: 'Raphaël Guilleminot', company: 'Meta' },
+      { name: 'Robert van Klinken', company: 'DuckDuckGo' },
+      { name: 'James Storer', company: 'Monzo' },
+      { name: 'Kate Pincott', company: 'Multiverse' },
+      { name: 'Christine Røde', company: 'The Browser Company' },
+    ],
+  },
   { id: 0, title: 'Captr', image: '/images/card_0_image.png', label: 'Captr', number: '_005', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom', description: 'An AI-powered screen capture tool with annotation and sharing, bringing captured content and the context around it into one workflow.' },
   { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', number: '_006', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28, description: 'A generative identity system built on cellular automata. The evolving pixel patterns give the identity a changing visual expression rather than a single fixed mark.' },
   { id: 1, title: 'Project 1', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_007', logo: '/icons/stars-icon.svg', description: 'Procedural animation experiment exploring organic motion and bloom.' },
@@ -259,6 +280,7 @@ const defaultCards: Card[] = [
 
 export default function CardSlider({ cards = defaultCards, showWork = true, exiting = false, onExitComplete }: CardSliderProps) {
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+  const [mediaView, setMediaView] = useState(0);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const sourceCardRef = useRef<HTMLElement | null>(null);
   const backgroundAnimationsRef = useRef<Animation[]>([]);
@@ -274,6 +296,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
     closingRef.current = false;
     openingRectRef.current = source?.getBoundingClientRect() ?? null;
     source?.focus({ preventScroll: true });
+    setMediaView(0);
     setSelectedCard(card);
     setIsOverCard(false);
   };
@@ -674,8 +697,6 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
 
     const updateMeasurements = () => {
       // Measure the repeat distance, including the gap between card sets.
-      container.style.setProperty('--start-gap', `${firstCard.offsetWidth}px`);
-      if (!showWork) container.setAttribute('data-at-start', 'true');
       const width = nextSetFirstCard.offsetLeft - firstCard.offsetLeft;
       if (width <= 0) return;
       const previousWidth = showWork ? singleSetWidthRef.current : 0;
@@ -701,7 +722,6 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
     const handleWheel = (e: WheelEvent) => {
       if (!showWork || exiting || dialogRef.current?.open || e.ctrlKey) return;
       e.preventDefault();
-      container.removeAttribute('data-at-start');
       const maxDelta = 100;
       const delta = Math.max(-maxDelta, Math.min(maxDelta, Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY)) * 0.8;
       wrapTarget(targetXRef.current + delta);
@@ -716,7 +736,6 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
     const handleTouchMove = (e: TouchEvent) => {
       if (!showWork || exiting || dialogRef.current?.open) return;
       e.preventDefault();
-      container.removeAttribute('data-at-start');
       const currentX = e.touches[0].clientX;
       const delta = touchLastXRef.current - currentX;
       const now = Date.now();
@@ -761,7 +780,6 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
       const current = (event.target as Element).closest(`.${styles.card}`);
       if (!current) return;
       event.preventDefault();
-      scrollContainerRef.current?.removeAttribute('data-at-start');
       const list = Array.from(track.children) as HTMLElement[];
       let index = list.indexOf(current as HTMLElement);
       index = event.key === 'Home' ? cards.length : event.key === 'End' ? cards.length * 2 - 1 : index + (event.key === 'ArrowRight' ? 1 : -1);
@@ -871,10 +889,12 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
               {card.video ? (
                 <>
                   <CardVideo
+                    key={card.video}
                     enabled={expanded || (showWork && !selectedCard && !exiting)}
                     className={styles.cardVideo}
                     src={card.video}
                     poster={card.poster}
+                    aria-label={card.title}
                     loop
                     muted
                     playsInline
@@ -885,13 +905,13 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
                     onLoadedMetadata={(e) => {
                       if (expanded) {
                         const sourceVideo = sourceCardRef.current?.querySelector('video');
-                        if (sourceVideo) e.currentTarget.currentTime = sourceVideo.currentTime;
+                        if (sourceVideo && sourceVideo.getAttribute('src') === card.video) e.currentTarget.currentTime = sourceVideo.currentTime;
                       }
                       if (card.showControls) {
                         (e.target as HTMLVideoElement).playbackRate = 0.5;
                       }
                     }}
-                    onTimeUpdate={(e) => {
+                    onTimeUpdate={expanded && mediaView > 0 && selectedCard?.gallery ? undefined : (e) => {
                       const video = e.target as HTMLVideoElement;
                       // Seamless loop: seek to start before video ends
                       if (video.duration - video.currentTime < 0.1) {
@@ -946,11 +966,16 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
             </div>
           );
 
-  const viewCount = selectedCard?.iphoneFold ? IPHONE_FOLD_VIEWS.length : selectedCard?.cells ? CELL_STYLES.length : 0;
-  const activeView = selectedCard?.iphoneFold ? phoneView : cellsVariant;
+  const viewCount = selectedCard?.iphoneFold ? IPHONE_FOLD_VIEWS.length : selectedCard?.cells ? CELL_STYLES.length : selectedCard?.gallery ? selectedCard.gallery.length + 1 : 0;
+  const activeView = selectedCard?.iphoneFold ? phoneView : selectedCard?.cells ? cellsVariant : mediaView;
+  const galleryItem = selectedCard?.gallery?.[mediaView - 1];
+  const expandedCard = selectedCard && galleryItem
+    ? { ...selectedCard, ...galleryItem, videoScale: 1, showRotation: false }
+    : selectedCard;
   const selectView = (index: number) => {
     if (selectedCard?.iphoneFold) setPhoneView((index + viewCount) % viewCount);
     else if (selectedCard?.cells) setCellsVariant((index + viewCount) % viewCount);
+    else if (selectedCard?.gallery) setMediaView((index + viewCount) % viewCount);
   };
 
   return (
@@ -991,18 +1016,18 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
           <div data-expanded-card className={styles.expandedContent}>
             <div data-modal-chrome className={styles.modalSurface} aria-hidden="true" />
             <div data-expanded-media className={styles.expandedMedia}>
-              {renderCard(selectedCard, 0, true)}
+              {expandedCard && renderCard(expandedCard, 0, true)}
               {viewCount > 1 && (
                 <div data-gallery-controls data-modal-chrome className={styles.galleryControls}>
-                  <button type="button" className={`${styles.galleryArrow} ${styles.galleryPrevious}`} aria-label="Previous image" onClick={() => selectView(activeView - 1)}>
+                  <button type="button" className={`${styles.galleryArrow} ${styles.galleryPrevious}`} aria-label="Previous gallery item" onClick={() => selectView(activeView - 1)}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m14 6-6 6 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   </button>
-                  <button type="button" className={`${styles.galleryArrow} ${styles.galleryNext}`} aria-label="Next image" onClick={() => selectView(activeView + 1)}>
+                  <button type="button" className={`${styles.galleryArrow} ${styles.galleryNext}`} aria-label="Next gallery item" onClick={() => selectView(activeView + 1)}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m10 6 6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   </button>
-                  <div className={styles.galleryDots} role="group" aria-label="Image selection">
+                  <div className={styles.galleryDots} role="group" aria-label="Gallery selection">
                     {Array.from({ length: viewCount }, (_, index) => (
-                      <button key={index} type="button" className={styles.galleryDot} aria-label={`Show image ${index + 1} of ${viewCount}`} aria-pressed={activeView === index} onClick={() => selectView(index)}><span /></button>
+                      <button key={index} type="button" className={styles.galleryDot} aria-label={`Show gallery item ${index + 1} of ${viewCount}`} aria-pressed={activeView === index} onClick={() => selectView(index)}><span /></button>
                     ))}
                   </div>
                 </div>
@@ -1011,6 +1036,16 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
             <div data-modal-chrome className={styles.expandedDetails}>
               <h2 id="expanded-project-title" className={styles.expandedTitle}>{selectedCard.label || selectedCard.title}</h2>
               {selectedCard.description && <p className={styles.expandedDescription}>{selectedCard.description}</p>}
+              {selectedCard.speakers && (
+                <section className={styles.speakers} aria-labelledby="project-speakers-title">
+                  <h3 id="project-speakers-title">Speakers</h3>
+                  <ul>
+                    {selectedCard.speakers.map(speaker => (
+                      <li key={speaker.name}>{speaker.name} <span>({speaker.company})</span></li>
+                    ))}
+                  </ul>
+                </section>
+              )}
               {selectedCard.title === 'Morse Card' && <a className={styles.projectLink} href="https://morsemoney.com" target="_blank" rel="noopener noreferrer">Visit Morse ↗</a>}
             </div>
             <button data-modal-chrome autoFocus type="button" className={styles.closeButton} aria-label="Close expanded card" onClick={closeCard}>

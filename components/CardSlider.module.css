@@ -511,6 +511,31 @@
   color: #333;
 }
 
+.speakers {
+  margin-top: 24px;
+  color: #333;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.speakers h3 {
+  margin: 0 0 12px;
+  font-size: inherit;
+  font-weight: 600;
+}
+
+.speakers ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.speakers li span {
+  color: #666;
+}
+
 .expandedCard .cardLabel,
 .expandedCard .cardNumberLabel,
 .expandedCard .rotationData {
@@ -527,6 +552,15 @@
     padding: 8px;
     border-radius: 24px;
     overflow-y: auto;
+  }
+
+  .expandedContent:has(.speakers) {
+    background: #fff;
+    box-shadow: 0 24px 80px rgb(0 0 0 / 18%);
+  }
+
+  .expandedContent:has(.speakers) .modalSurface {
+    box-shadow: none;
   }
 
   .expandedMedia {
@@ -630,6 +664,3 @@
 }
 
 .projectLink { display: inline-block; margin-top: 24px; text-decoration: underline; cursor: pointer; color: #171717; }
-
-.scrollContainer { padding-left: var(--start-gap, 0px); }
-.scrollContainer[data-at-start="true"] { clip-path: inset(0 0 0 var(--start-gap, 0px)); }
