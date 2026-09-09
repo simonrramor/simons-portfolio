@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import styles from './CardSlider.module.css';
 import CardLogo from './CardLogo';
 import CardVideo from './CardVideo';
+import SynchronizedVideoGallery from './SynchronizedVideoGallery';
 import { GALLERY_MOTION } from './motion';
 import CellsCard from './CellsCard';
 import IPhoneFoldCard, { IPHONE_FOLD_VIEWS } from './IPhoneFoldCard';
@@ -231,6 +232,7 @@ interface Card {
   showRotation?: boolean;
   description?: string;
   gallery?: { video: string; poster: string; title: string; backgroundColor?: string }[];
+  synchronizedGallery?: boolean;
   speakers?: { name: string; company: string }[];
 }
 
@@ -245,6 +247,7 @@ const defaultCards: Card[] = [
   {
     id: 13, title: 'Morse Card', video: '/videos/morse-card.mp4', poster: '/posters/morse-card.png', label: 'Morse Card', number: '_001', logo: '/icons/morse-logo.png', logoHeight: 32, noOverlay: true, videoScale: 1, backgroundColor: '#000000', hasBorder: true,
     description: 'A rotating 3D card study for Morse, exploring the card’s surface, branding and appearance in motion.',
+    synchronizedGallery: true,
     gallery: [{
       video: '/videos/morse-card-white.mp4',
       poster: '/posters/morse-card-white.png',
@@ -290,6 +293,10 @@ const defaultCards: Card[] = [
 export default function CardSlider({ cards = defaultCards, showWork = true, exiting = false, onExitComplete }: CardSliderProps) {
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [mediaView, setMediaView] = useState(0);
+  const galleryStartTimeRef = useRef(0);
+  const synchronizedVideos = useMemo(() => selectedCard?.synchronizedGallery && selectedCard.video
+    ? [{ video: selectedCard.video, poster: selectedCard.poster, title: selectedCard.title, backgroundColor: selectedCard.backgroundColor }, ...(selectedCard.gallery ?? [])]
+    : null, [selectedCard]);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const sourceCardRef = useRef<HTMLElement | null>(null);
   const backgroundAnimationsRef = useRef<Animation[]>([]);
@@ -302,6 +309,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
   const openCard = (card: Card, index: number) => {
     const source = cardsRef.current?.children[index] as HTMLElement | undefined;
     sourceCardRef.current = source ?? null;
+    galleryStartTimeRef.current = source?.querySelector('video')?.currentTime ?? 0;
     closingRef.current = false;
     openingRectRef.current = source?.getBoundingClientRect() ?? null;
     source?.focus({ preventScroll: true });
@@ -899,7 +907,14 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
             >
               {card.video ? (
                 <>
-                  <CardVideo
+                  {expanded && synchronizedVideos ? (
+                    <SynchronizedVideoGallery
+                      videos={synchronizedVideos}
+                      activeIndex={mediaView}
+                      initialTime={galleryStartTimeRef.current}
+                      className={styles.cardVideo}
+                    />
+                  ) : <CardVideo
                     key={card.video}
                     enabled={expanded || (showWork && !selectedCard && !exiting)}
                     className={styles.cardVideo}
@@ -929,7 +944,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
                         video.currentTime = 0;
                       }
                     }}
-                  />
+                  />}
                   {!card.showControls && !card.noOverlay && (
                     <div className={styles.grainOverlay} style={card.grainOnly ? grainOnlyStyle : grainStyle} />
                   )}
