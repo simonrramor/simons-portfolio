@@ -1060,19 +1060,21 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
               )}
             </div>
             <div data-modal-chrome className={styles.expandedDetails}>
-              <h2 id="expanded-project-title" className={styles.expandedTitle}>{selectedCard.label || selectedCard.title}</h2>
-              {selectedCard.description && <p className={styles.expandedDescription}>{selectedCard.description}</p>}
-              {selectedCard.speakers && (
-                <section className={styles.speakers} aria-labelledby="project-speakers-title">
-                  <h3 id="project-speakers-title">Speakers</h3>
-                  <ul>
-                    {selectedCard.speakers.map(speaker => (
-                      <li key={speaker.name}>{speaker.name} <span>({speaker.company})</span></li>
-                    ))}
-                  </ul>
-                </section>
-              )}
-              {selectedCard.title === 'Morse Card' && <a className={styles.projectLink} href="https://morsemoney.com" target="_blank" rel="noopener noreferrer">Visit Morse ↗</a>}
+              <div className={styles.expandedDetailsContent}>
+                <h2 id="expanded-project-title" className={styles.expandedTitle}>{selectedCard.label || selectedCard.title}</h2>
+                {selectedCard.description && <p className={styles.expandedDescription}>{selectedCard.description}</p>}
+                {selectedCard.speakers && (
+                  <section className={styles.speakers} aria-labelledby="project-speakers-title">
+                    <h3 id="project-speakers-title">Speakers</h3>
+                    <ul>
+                      {selectedCard.speakers.map(speaker => (
+                        <li key={speaker.name}>{speaker.name} <span>({speaker.company})</span></li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+                {selectedCard.title === 'Morse Card' && <a className={styles.projectLink} href="https://morsemoney.com" target="_blank" rel="noopener noreferrer">Visit Morse ↗</a>}
+              </div>
             </div>
             <button data-modal-chrome autoFocus type="button" className={styles.closeButton} aria-label="Close expanded card" onClick={closeCard}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" strokeWidth="1.5" /></svg>
