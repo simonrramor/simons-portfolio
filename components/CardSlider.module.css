@@ -485,6 +485,16 @@
   border-radius: 24px;
 }
 
+.centeredCardMedia {
+  container-type: size;
+}
+
+.centeredCardMedia .cardVideo {
+  /* Both square renders place the card at ~41.5% of the frame height.
+     Use the contained image's side length so mobile letterboxing stays centred. */
+  transform: translateY(8.4cqmin);
+}
+
 .expandedDetails {
   position: relative;
   display: flex;

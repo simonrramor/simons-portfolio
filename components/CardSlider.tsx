@@ -897,7 +897,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
                 }
               }}
               key={`${card.id}-${index}`}
-              className={`${styles.card} ${expanded ? styles.expandedCard : showWork ? styles.cardAnimate : ''} ${card.hasBorder ? styles.cardWithBorder : ''}`}
+              className={`${styles.card} ${expanded ? styles.expandedCard : showWork ? styles.cardAnimate : ''} ${card.hasBorder ? styles.cardWithBorder : ''} ${expanded && synchronizedVideos ? styles.centeredCardMedia : ''}`}
               style={{
                 ...(!expanded && showWork ? { animationDelay: `${(index % cards.length) * GALLERY_MOTION.stagger / 1000}s` } : {}),
                 ...(card.backgroundColor ? { backgroundColor: card.backgroundColor } : {}),
