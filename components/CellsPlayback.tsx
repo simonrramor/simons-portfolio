@@ -20,7 +20,7 @@ export function CellsPlaybackProvider({ children }: { children: ReactNode }) {
   const resume = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
-    if (visibleCards.current.size > 0 && !document.hidden) {
+    if (visibleCards.current.size > 0 && !document.hidden && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       void video.play().catch(() => { /* Keep the poster or last frame; retry on click. */ });
     } else {
       video.pause();
@@ -38,8 +38,10 @@ export function CellsPlaybackProvider({ children }: { children: ReactNode }) {
   }, [resume]);
 
   useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    query.addEventListener('change', resume);
     document.addEventListener('visibilitychange', resume);
-    return () => document.removeEventListener('visibilitychange', resume);
+    return () => { query.removeEventListener('change', resume); document.removeEventListener('visibilitychange', resume); };
   }, [resume]);
 
   const player = useMemo(() => ({ getVideo, setVisible, resume }), [getVideo, setVisible, resume]);

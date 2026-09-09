@@ -180,7 +180,7 @@ function CodeTyper() {
   const linesRef = useRef<ScriptLine[]>([]);
   const totalRef = useRef(0);
   const charsRef = useRef(0);
-  const [, setTick] = useState(0);
+  const [snapshot, setSnapshot] = useState<{ chars: number; lines: ScriptLine[] }>({ chars: 0, lines: [] });
 
   useEffect(() => {
     linesRef.current = generateSection();
@@ -211,15 +211,14 @@ function CodeTyper() {
         charsRef.current = Math.max(0, charsRef.current - droppedChars);
       }
 
-      setTick((t) => (t + 1) & 0xffff);
+      setSnapshot({ chars: Math.floor(charsRef.current), lines: linesRef.current });
       raf = requestAnimationFrame(step);
     };
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  const chars = Math.floor(charsRef.current);
-  const lines = linesRef.current;
+  const { chars, lines } = snapshot;
   const rendered: React.ReactNode[] = [];
   let consumed = 0;
 

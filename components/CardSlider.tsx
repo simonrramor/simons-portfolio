@@ -4,6 +4,8 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import styles from './CardSlider.module.css';
 import CardLogo from './CardLogo';
+import CardVideo from './CardVideo';
+import { GALLERY_MOTION } from './motion';
 import CellsCard from './CellsCard';
 import IPhoneFoldCard, { IPHONE_FOLD_VIEWS } from './IPhoneFoldCard';
 import { CellsPlaybackProvider } from './CellsPlayback';
@@ -45,6 +47,7 @@ function PixelGlyph() {
 
   useEffect(() => {
     const interval = setInterval(() => {
+      if (document.hidden || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       setGrid(prevGrid => {
         const newGrid = [...prevGrid];
         const size = 16;
@@ -95,6 +98,7 @@ function RotationData({ dark }: { dark?: boolean }) {
 
   useEffect(() => {
     const interval = setInterval(() => {
+      if (document.hidden || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       setValues(prev => ({
         rot: prev.rot + (Math.random() - 0.5) * 2.4,
         z: prev.z + (Math.random() - 0.5) * 3.0,
@@ -168,7 +172,8 @@ function ProgressiveImage({
       <Image
         className={`${styles.cardImage} ${styles.cardImageLowRes}`}
         src={src}
-        alt={alt}
+        alt=""
+        aria-hidden="true"
         fill
         sizes="50px"
         quality={1}
@@ -235,20 +240,20 @@ interface CardSliderProps {
 }
 
 const defaultCards: Card[] = [
-  { id: 13, title: 'Morse Card', video: '/videos/morse-card.mp4', poster: '/posters/morse-card.png', label: 'Morse Card', number: '_001', logo: '/icons/morse-logo.png', logoHeight: 32, noOverlay: true, videoScale: 1, backgroundColor: '#000000', hasBorder: true, description: 'A rotating 3D card study for Morse.' },
+  { id: 13, title: 'Morse Card', video: '/videos/morse-card.mp4', poster: '/posters/morse-card.png', label: 'Morse Card', number: '_001', logo: '/icons/morse-logo.png', logoHeight: 32, noOverlay: true, videoScale: 1, backgroundColor: '#000000', hasBorder: true, description: 'A rotating 3D card study for Morse, exploring the card’s surface, branding and appearance in motion.' },
   { id: 12, iphoneFold: true, title: 'iPhone Fold', label: 'iPhone Fold', number: '_002', description: 'A folding iPhone concept exploring a worn aluminium finish and central hinge. Click the image to cycle through three views.' },
   { id: 11, cells: true, title: 'Cells', label: 'Cells', number: '_003', description: 'A moving cellular study, viewed through different colour treatments. Click the image to switch between microscopy, heat map and infrared views.' },
   { id: 9, title: 'Mostly working', video: '/videos/card_9_video.mp4', label: 'Mostly working', number: '_004', noOverlay: true, videoScale: 0.7, showRotation: true, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true, description: 'A monthly(ish) AI meetup for London designers to get hands-on with AI tools and unpack what they mean for the future of design.' },
-  { id: 0, title: 'Captr', image: '/images/card_0_image.png', label: 'Captr', number: '_005', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom', description: 'AI-powered screen capture tool with intelligent annotation and sharing.' },
-  { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', number: '_006', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28, description: 'Generative AI identity system built on cellular automata patterns.' },
+  { id: 0, title: 'Captr', image: '/images/card_0_image.png', label: 'Captr', number: '_005', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom', description: 'An AI-powered screen capture tool with annotation and sharing, bringing captured content and the context around it into one workflow.' },
+  { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', number: '_006', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28, description: 'A generative identity system built on cellular automata. The evolving pixel patterns give the identity a changing visual expression rather than a single fixed mark.' },
   { id: 1, title: 'Project 1', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_007', logo: '/icons/stars-icon.svg', description: 'Procedural animation experiment exploring organic motion and bloom.' },
-  { id: 2, title: 'Project 2', image: '/images/card_2_image.jpg', label: 'Sling', number: '_008', logo: '/icons/sling-logo.png', description: 'Send and receive digital dollars and euros around the world in seconds.' },
+  { id: 2, title: 'Sling', image: '/images/card_2_image.jpg', label: 'Sling', number: '_008', logo: '/icons/sling-logo.png', description: 'Send and receive digital dollars and euros around the world in seconds.' },
   { id: 3, title: 'Project 3', video: '/videos/card_3_video.webm', label: 'Face tracking', number: '_009', grainOnly: true, logo: '/icons/qr-code-icon.svg', description: 'Browser-based face tracking with real-time landmark detection.' },
-  { id: 4, title: 'Project 4', image: '/images/card_4_image.jpg', label: 'Group Sessions', number: '_010', logo: '/icons/spotify-logo.png', description: 'Collaborative listening experience for shared music sessions on Spotify.' },
-  { id: 5, title: 'Project 5', image: '/images/card_5_image.jpg', label: 'Enhance', number: '_011', imagePosition: 'top', logo: '/icons/spotify-logo.png', description: 'AI tools for providing personalized recommendations that blend with the mood, genre, and style of your existing music.' },
+  { id: 4, title: 'Group Sessions', image: '/images/card_4_image.jpg', label: 'Group Sessions', number: '_010', logo: '/icons/spotify-logo.png', description: 'Collaborative listening experience for shared music sessions on Spotify.' },
+  { id: 5, title: 'Enhance', image: '/images/card_5_image.jpg', label: 'Enhance', number: '_011', imagePosition: 'top', logo: '/icons/spotify-logo.png', description: 'AI tools for providing personalized recommendations that blend with the mood, genre, and style of your existing music.' },
   { id: 6, title: 'Project 6', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_012', showControls: true, logo: '/icons/neome-icon.png', description: 'Voice-controlled smart speaker designed for the modern home.' },
-  { id: 7, title: 'Project 7', image: '/images/card_7_image.jpg', label: 'Shared tabs', number: '_013', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Shared financial tabs for splitting expenses with friends on Monzo.' },
-  { id: 8, title: 'Project 8', image: '/images/card_8_image.png', label: 'Golden Tickets', number: '_014', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Gamified referral system with collectible golden ticket rewards on Monzo.' },
+  { id: 7, title: 'Shared tabs', image: '/images/card_7_image.jpg', label: 'Shared tabs', number: '_013', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Shared tabs for splitting expenses with friends on Monzo. The feature brings a group’s shared spending together so people can see and settle what they owe.' },
+  { id: 8, title: 'Golden Tickets', image: '/images/card_8_image.png', label: 'Golden Tickets', number: '_014', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Gamified referral system with collectible golden ticket rewards on Monzo.' },
 ];
 
 
@@ -365,6 +370,8 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
         const width = Math.min(bounds.width, bounds.height);
         card.style.width = `${width}px`;
         card.style.height = `${width}px`;
+        const controls = media.querySelector<HTMLElement>('[data-gallery-controls]');
+        if (controls) { controls.style.width = `${width}px`; controls.style.height = `${width}px`; }
       };
       sizeMedia();
       resizeObserver = new ResizeObserver(sizeMedia);
@@ -539,10 +546,14 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
   }, []);
 
   useEffect(() => {
-    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    const query = window.matchMedia('(any-hover: hover) and (any-pointer: fine)');
+    const update = () => setIsTouchDevice(!query.matches);
+    const frame = requestAnimationFrame(update);
+    query.addEventListener('change', update);
+    return () => { cancelAnimationFrame(frame); query.removeEventListener('change', update); };
   }, []);
 
-  const playHoverSound = useCardHoverSound();
+  const { playSound: playHoverSound, muted, toggleMuted } = useCardHoverSound();
   useEffect(() => {
     if (!exiting) return;
     const visible = Array.from(cardsRef.current?.children ?? []).filter((element): element is HTMLElement => {
@@ -550,24 +561,34 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
       return element instanceof HTMLElement && bounds.right > 0 && bounds.left < window.innerWidth;
     }).reverse();
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const timers: ReturnType<typeof setTimeout>[] = [];
+    let soundFrame = 0;
+    const startTime = document.timeline.currentTime;
     const animations = visible.map((card, index) => {
       const current = getComputedStyle(card);
       const animation = card.animate([
         { transform: current.transform, opacity: current.opacity },
         { transform: 'translateY(100vh)', opacity: 0 },
-      ], { duration: reduced ? 0 : 700, delay: reduced ? 0 : index * 100,
-        easing: 'cubic-bezier(0.64, 0, 0.78, -0.1)', fill: 'forwards' });
-      if (!reduced) timers.push(setTimeout(() => { playHoverSound(); }, index * 100 + 550));
+      ], { duration: reduced ? 0 : GALLERY_MOTION.duration, delay: reduced ? 0 : index * GALLERY_MOTION.stagger,
+        easing: GALLERY_MOTION.exitEase, fill: 'forwards' });
+      if (typeof startTime === 'number') animation.startTime = startTime;
       return animation;
     });
+    const sounded = new Set<number>();
+    const syncSounds = () => {
+      animations.forEach((animation, index) => {
+        const at = index * GALLERY_MOTION.stagger + GALLERY_MOTION.duration - GALLERY_MOTION.arrival;
+        if (!sounded.has(index) && Number(animation.currentTime ?? 0) >= at && playHoverSound()) sounded.add(index);
+      });
+      if (sounded.size < animations.length) soundFrame = requestAnimationFrame(syncSounds);
+    };
+    if (!reduced) soundFrame = requestAnimationFrame(syncSounds);
     let cancelled = false;
     void Promise.all(animations.map(animation => animation.finished)).then(() => {
       if (!cancelled) onExitComplete?.();
     }).catch(() => {});
     return () => {
       cancelled = true;
-      timers.forEach(clearTimeout);
+      cancelAnimationFrame(soundFrame);
       animations.forEach(animation => animation.cancel());
     };
   }, [exiting, onExitComplete, playHoverSound]);
@@ -590,7 +611,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
             if (!animation?.effect) return [];
             const timing = animation.effect.getTiming();
             // Lead the visual settling by 200ms so the pip feels aligned with arrival.
-            return [{ card, animation, at: (timing.delay ?? 0) + Math.max(0, Number(timing.duration) * .5 - 200) }];
+            return [{ card, animation, at: (timing.delay ?? 0) + GALLERY_MOTION.arrival }];
           });
       }
       arrivals = arrivals.filter(arrival => {
@@ -653,9 +674,11 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
 
     const updateMeasurements = () => {
       // Measure the repeat distance, including the gap between card sets.
+      container.style.setProperty('--start-gap', `${firstCard.offsetWidth}px`);
+      if (!showWork) container.setAttribute('data-at-start', 'true');
       const width = nextSetFirstCard.offsetLeft - firstCard.offsetLeft;
       if (width <= 0) return;
-      const previousWidth = singleSetWidthRef.current;
+      const previousWidth = showWork ? singleSetWidthRef.current : 0;
       if (previousWidth > 0) {
         const progress = ((translateXRef.current % previousWidth) + previousWidth) % previousWidth;
         const pendingScroll = targetXRef.current - translateXRef.current;
@@ -676,10 +699,11 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
     resizeObserver.observe(firstCard);
 
     const handleWheel = (e: WheelEvent) => {
-      if (dialogRef.current?.open) return;
+      if (!showWork || exiting || dialogRef.current?.open || e.ctrlKey) return;
       e.preventDefault();
+      container.removeAttribute('data-at-start');
       const maxDelta = 100;
-      const delta = Math.max(-maxDelta, Math.min(maxDelta, e.deltaY)) * 0.8;
+      const delta = Math.max(-maxDelta, Math.min(maxDelta, Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY)) * 0.8;
       wrapTarget(targetXRef.current + delta);
     };
 
@@ -690,7 +714,9 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
     };
 
     const handleTouchMove = (e: TouchEvent) => {
+      if (!showWork || exiting || dialogRef.current?.open) return;
       e.preventDefault();
+      container.removeAttribute('data-at-start');
       const currentX = e.touches[0].clientX;
       const delta = touchLastXRef.current - currentX;
       const now = Date.now();
@@ -718,11 +744,43 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
       container.removeEventListener('touchmove', handleTouchMove);
       container.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [showWork, cards.length, wrapTarget]);
+  }, [showWork, exiting, cards.length, wrapTarget]);
+
+  useEffect(() => {
+    const track = cardsRef.current;
+    if (!track) return;
+    const update = (entries: IntersectionObserverEntry[]) => entries.forEach(entry => {
+      const card = entry.target as HTMLElement;
+      card.inert = !showWork || !entry.isIntersecting;
+      card.setAttribute('aria-hidden', String(card.inert));
+    });
+    const observer = new IntersectionObserver(update, { root: scrollContainerRef.current, threshold: 0.01 });
+    Array.from(track.children).forEach(card => observer.observe(card));
+    const onKey = (event: KeyboardEvent) => {
+      if (!showWork || exiting || dialogRef.current?.open || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+      const current = (event.target as Element).closest(`.${styles.card}`);
+      if (!current) return;
+      event.preventDefault();
+      scrollContainerRef.current?.removeAttribute('data-at-start');
+      const list = Array.from(track.children) as HTMLElement[];
+      let index = list.indexOf(current as HTMLElement);
+      index = event.key === 'Home' ? cards.length : event.key === 'End' ? cards.length * 2 - 1 : index + (event.key === 'ArrowRight' ? 1 : -1);
+      const next = list[(index + list.length) % list.length];
+      const bounds = next.getBoundingClientRect();
+      targetXRef.current += bounds.left;
+      translateXRef.current = targetXRef.current;
+      track.style.transform = `translate3d(-${targetXRef.current}px, 0, 0)`;
+      next.inert = false;
+      next.removeAttribute('aria-hidden');
+      next.focus({ preventScroll: true });
+    };
+    track.addEventListener('keydown', onKey);
+    return () => { observer.disconnect(); track.removeEventListener('keydown', onKey); };
+  }, [showWork, exiting, cards.length]);
 
   // Smooth animation loop with lerp
   useEffect(() => {
-    if (!showWork || selectedCard || !cardsRef.current) return;
+    if (!showWork || exiting || selectedCard || !cardsRef.current) return;
 
     let animationId: number;
 
@@ -745,7 +803,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
     animationId = requestAnimationFrame(animate);
 
     return () => cancelAnimationFrame(animationId);
-  }, [showWork, selectedCard]);
+  }, [showWork, exiting, selectedCard]);
 
   // Video filter style for card 8
   const videoFilterStyle = {
@@ -764,7 +822,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
             <IPhoneFoldCard
               key={`${card.id}-${index}`}
               className={`${styles.card} ${expanded ? styles.expandedCard : showWork ? styles.cardAnimate : ''}`}
-              style={!expanded && showWork ? { animationDelay: `${(index % cards.length) * 0.1}s` } : {}}
+              style={!expanded && showWork ? { animationDelay: `${(index % cards.length) * GALLERY_MOTION.stagger / 1000}s` } : {}}
               number={card.number}
               enabled={showWork}
               expanded={expanded}
@@ -777,7 +835,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
             <CellsCard
               key={`${card.id}-${index}`}
               className={`${styles.card} ${expanded ? styles.expandedCard : showWork ? styles.cardAnimate : ''}`}
-              style={!expanded && showWork ? { animationDelay: `${(index % cards.length) * 0.1}s` } : {}}
+              style={!expanded && showWork ? { animationDelay: `${(index % cards.length) * GALLERY_MOTION.stagger / 1000}s` } : {}}
               number={card.number}
               enabled={showWork}
               expanded={expanded}
@@ -804,7 +862,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
               key={`${card.id}-${index}`}
               className={`${styles.card} ${expanded ? styles.expandedCard : showWork ? styles.cardAnimate : ''} ${card.hasBorder ? styles.cardWithBorder : ''}`}
               style={{
-                ...(!expanded && showWork ? { animationDelay: `${(index % cards.length) * 0.1}s` } : {}),
+                ...(!expanded && showWork ? { animationDelay: `${(index % cards.length) * GALLERY_MOTION.stagger / 1000}s` } : {}),
                 ...(card.backgroundColor ? { backgroundColor: card.backgroundColor } : {}),
               }}
               onMouseEnter={() => handleCardMouseEnter(expanded)}
@@ -812,12 +870,11 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
             >
               {card.video ? (
                 <>
-                  <video
+                  <CardVideo
+                    enabled={expanded || (showWork && !selectedCard && !exiting)}
                     className={styles.cardVideo}
                     src={card.video}
                     poster={card.poster}
-                    preload="auto"
-                    autoPlay
                     loop
                     muted
                     playsInline
@@ -889,8 +946,16 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
             </div>
           );
 
+  const viewCount = selectedCard?.iphoneFold ? IPHONE_FOLD_VIEWS.length : selectedCard?.cells ? CELL_STYLES.length : 0;
+  const activeView = selectedCard?.iphoneFold ? phoneView : cellsVariant;
+  const selectView = (index: number) => {
+    if (selectedCard?.iphoneFold) setPhoneView((index + viewCount) % viewCount);
+    else if (selectedCard?.cells) setCellsVariant((index + viewCount) % viewCount);
+  };
+
   return (
     <CellsPlaybackProvider>
+      <button type="button" className={styles.soundToggle} aria-pressed={muted} onClick={toggleMuted}>{muted ? 'Sound off' : 'Sound on'}</button>
       {!isTouchDevice && (
         <>
           <div
@@ -925,10 +990,28 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
         {selectedCard && (
           <div data-expanded-card className={styles.expandedContent}>
             <div data-modal-chrome className={styles.modalSurface} aria-hidden="true" />
-            <div data-expanded-media className={styles.expandedMedia}>{renderCard(selectedCard, 0, true)}</div>
+            <div data-expanded-media className={styles.expandedMedia}>
+              {renderCard(selectedCard, 0, true)}
+              {viewCount > 1 && (
+                <div data-gallery-controls data-modal-chrome className={styles.galleryControls}>
+                  <button type="button" className={`${styles.galleryArrow} ${styles.galleryPrevious}`} aria-label="Previous image" onClick={() => selectView(activeView - 1)}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m14 6-6 6 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  </button>
+                  <button type="button" className={`${styles.galleryArrow} ${styles.galleryNext}`} aria-label="Next image" onClick={() => selectView(activeView + 1)}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m10 6 6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  </button>
+                  <div className={styles.galleryDots} role="group" aria-label="Image selection">
+                    {Array.from({ length: viewCount }, (_, index) => (
+                      <button key={index} type="button" className={styles.galleryDot} aria-label={`Show image ${index + 1} of ${viewCount}`} aria-pressed={activeView === index} onClick={() => selectView(index)}><span /></button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
             <div data-modal-chrome className={styles.expandedDetails}>
               <h2 id="expanded-project-title" className={styles.expandedTitle}>{selectedCard.label || selectedCard.title}</h2>
               {selectedCard.description && <p className={styles.expandedDescription}>{selectedCard.description}</p>}
+              {selectedCard.title === 'Morse Card' && <a className={styles.projectLink} href="https://morsemoney.com" target="_blank" rel="noopener noreferrer">Visit Morse ↗</a>}
             </div>
             <button data-modal-chrome autoFocus type="button" className={styles.closeButton} aria-label="Close expanded card" onClick={closeCard}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" strokeWidth="1.5" /></svg>

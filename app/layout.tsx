@@ -14,8 +14,10 @@ const robotoMono = Roboto_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://simonamor.design"),
   title: "Simon Amor",
-  description: "London-based designer and Co-Founder of Sling Money. Previously building at Spotify, Monzo, Google and more.",
+  openGraph: { title: "Simon Amor — Design & experiments", images: [{ url: "/social-card.png", width: 1200, height: 630 }] },
+  description: "London-based designer and Co-Founder of Morse. Previously building at Spotify, Monzo, Google and more.",
 };
 
 export default function RootLayout({
@@ -25,12 +27,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="preload" href="/images/project2.png" as="image" />
-        <link rel="preload" href="/images/project3.png" as="image" />
-        <link rel="preload" href="/images/project4.png" as="image" />
-        <link rel="preload" href="/posters/project1.png" as="image" />
-      </head>
       <body className={`${inter.className} ${robotoMono.variable}`}>
         {children}
       </body>

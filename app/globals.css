@@ -76,3 +76,8 @@ h1, h2, h3, h4, h5, h6 {
   --header-height: 200px;
   --card-border-radius: 24px;
 }
+
+@media not all and (any-hover: hover) and (any-pointer: fine) {
+  body, a, button, [role="button"] { cursor: auto !important; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

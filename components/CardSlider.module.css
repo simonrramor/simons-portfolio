@@ -25,7 +25,7 @@
   flex: 1;
   display: flex;
   align-items: center;
-  padding: 40px;
+  padding: 40px 0;
   overflow: hidden;
   margin-top: var(--header-height, 200px);
   transition: opacity 0.5s ease;
@@ -140,7 +140,7 @@
 .cardAnimate {
   opacity: 0;
   transform: translateY(100vh);
-  animation: slideInFromBottom 0.7s cubic-bezier(0.22, 1.1, 0.36, 1) forwards;
+  animation: slideInFromBottom var(--gallery-duration, 700ms) var(--gallery-enter, ease-out) forwards;
 }
 
 @keyframes slideInFromBottom {
@@ -341,7 +341,7 @@
 
 @media (max-width: 640px) {
   .scrollContainer {
-    padding: 20px;
+    padding: 20px 0;
   }
 
   .stickyWrapper {
@@ -565,3 +565,71 @@
   outline: 2px solid #4da6ff;
   outline-offset: 3px;
 }
+
+.galleryControls {
+  position: absolute;
+  pointer-events: none;
+}
+.galleryArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgb(0 0 0 / 8%);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 85%);
+  color: #171717;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.galleryPrevious { left: 16px; }
+.galleryNext { right: 16px; }
+.galleryDots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  padding: 0 4px;
+  border-radius: 24px;
+  background: rgb(255 255 255 / 85%);
+  pointer-events: auto;
+}
+.galleryDot {
+  display: grid;
+  place-items: center;
+  width: 10px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.galleryDot span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #aaa;
+}
+.galleryDot[aria-pressed="true"] span { background: #171717; }
+.galleryArrow:hover { background: white; }
+.galleryArrow:focus-visible, .galleryDot:focus-visible {
+  outline: 2px solid #4da6ff;
+  outline-offset: 2px;
+}
+
+.soundToggle { position: fixed; right: 20px; bottom: 16px; z-index: 110; background: white; border: 0; padding: 8px; font: inherit; font-size: 11px; text-transform: uppercase; color: #6b7280; cursor: pointer; }
+@media (prefers-reduced-motion: reduce) {
+  .cardAnimate { animation: none; opacity: 1; transform: none; }
+  .card:hover { translate: none; }
+  .grainOverlay { animation: none !important; }
+  .scrollContainer { transition: none; }
+}
+
+.projectLink { display: inline-block; margin-top: 24px; text-decoration: underline; cursor: pointer; color: #171717; }
+
+.scrollContainer { padding-left: var(--start-gap, 0px); }
+.scrollContainer[data-at-start="true"] { clip-path: inset(0 0 0 var(--start-gap, 0px)); }

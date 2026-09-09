@@ -8,7 +8,7 @@
   align-items: center;
   background-color: transparent;
   cursor: none;
-  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: top var(--gallery-duration) var(--gallery-enter), transform var(--gallery-duration) var(--gallery-enter);
 }
 
 .headerCentered {
@@ -128,5 +128,7 @@
 }
 
 .headerExiting {
-  transition: top 0.7s cubic-bezier(0.64, 0, 0.78, -0.1) 0.15s, transform 0.7s cubic-bezier(0.64, 0, 0.78, -0.1) 0.15s;
+  transition: top var(--gallery-duration) var(--gallery-exit) var(--header-delay), transform var(--gallery-duration) var(--gallery-exit) var(--header-delay);
 }
+
+@media (prefers-reduced-motion: reduce) { .header, .headerExiting { transition: none; } }

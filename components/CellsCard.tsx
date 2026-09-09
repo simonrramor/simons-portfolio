@@ -61,7 +61,7 @@ export default function CellsCard({
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !enabled || !visible) return;
+    if (!canvas || !enabled || !visible || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const context = canvas.getContext('2d', { alpha: false });
     if (!context) return;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');

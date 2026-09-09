@@ -1,11 +1,22 @@
 'use client';
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useSyncExternalStore } from 'react';
 
 // Card 6's digital pip, shared by every card without audio downloads.
 const HOVER_SOUND = { frequency: 650, end: 650, duration: .045, type: 'triangle' as OscillatorType };
 
+const subscribe = (callback: () => void) => {
+  window.addEventListener('portfolio-sound', callback);
+  window.addEventListener('storage', callback);
+  return () => { window.removeEventListener('portfolio-sound', callback); window.removeEventListener('storage', callback); };
+};
+const readMuted = () => { try { return localStorage.getItem('portfolio-muted') === 'true'; } catch { return false; } };
 export function useCardHoverSound() {
+  const muted = useSyncExternalStore(subscribe, readMuted, () => false);
+  const toggleMuted = () => {
+    try { localStorage.setItem('portfolio-muted', String(!readMuted())); } catch {}
+    window.dispatchEvent(new Event('portfolio-sound'));
+  };
   const context = useRef<AudioContext | null>(null);
   const lastPlayed = useRef(-Infinity);
 
@@ -29,6 +40,7 @@ export function useCardHoverSound() {
   }, []);
 
   const playSound = useCallback(() => {
+    if (readMuted()) return true;
     const audio = context.current;
     if (!audio || audio.state !== 'running' || document.hidden) return false;
     const now = audio.currentTime;
@@ -54,5 +66,5 @@ export function useCardHoverSound() {
     return true;
   }, []);
 
-  return playSound;
+  return { playSound, muted, toggleMuted };
 }
