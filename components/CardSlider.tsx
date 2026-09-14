@@ -217,6 +217,7 @@ interface Card {
   label?: string;
   number?: string;
   imagePosition?: string;
+  expandedImagePosition?: string;
   imageScale?: number;
   imageFit?: 'cover' | 'contain';
   logo?: string;
@@ -280,7 +281,7 @@ const defaultCards: Card[] = [
   { id: 0, title: 'Captr', image: '/images/captr-detail.webp', label: 'Captr', number: '_005', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom', description: 'A screen capture tool for grabbing, annotating and sharing what’s on your screen.' },
   { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', number: '_006', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28, description: 'A visual identity built from pixel patterns that grow and change over time.' },
   { id: 1, title: '咲く花', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_007', logo: '/icons/stars-icon.svg', description: 'An animation experiment with organic forms that grow and bloom.' },
-  { id: 2, title: 'Sling', image: '/images/card_2_image.jpg', label: 'Sling', number: '_008', logo: '/icons/sling-logo.png', description: 'A way to send and receive digital dollars and euros around the world.' },
+  { id: 2, title: 'Sling', image: '/images/card_2_image.jpg', label: 'Sling', number: '_008', logo: '/icons/sling-logo.png', expandedImagePosition: 'center 10%', description: 'A way to send and receive digital dollars and euros around the world.' },
   { id: 3, title: 'Face tracking', video: '/videos/card_3_video.webm', label: 'Face tracking', number: '_009', grainOnly: true, logo: '/icons/qr-code-icon.svg', description: 'A browser experiment that follows facial features as you move.' },
   { id: 4, title: 'Group Sessions', image: '/images/spotify-group-sessions.webp', label: 'Group Sessions', number: '_010', logo: '/icons/spotify-logo.png', description: 'Listen to music together with shared sessions on Spotify.' },
   { id: 5, title: 'Enhance', image: '/images/spotify-enhance.webp', label: 'Enhance', number: '_011', imagePosition: 'top', logo: '/icons/spotify-logo.png', description: 'Song recommendations that fit the mood of your Spotify playlists, helping you find something new among your favourites.' },
@@ -968,7 +969,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
                   <ProgressiveImage
                     src={card.image}
                     alt={card.title || ''}
-                    objectPosition={card.imagePosition}
+                    objectPosition={expanded ? card.expandedImagePosition ?? card.imagePosition : card.imagePosition}
                     objectFit={card.imageFit}
                     scale={card.imageScale}
                     priority={expanded || card.id <= 4}
