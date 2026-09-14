@@ -246,7 +246,7 @@ interface CardSliderProps {
 const defaultCards: Card[] = [
   {
     id: 13, title: 'Morse Card', video: '/videos/morse-card.mp4', poster: '/posters/morse-card.png', label: 'Morse Card', number: '_001', logo: '/icons/morse-logo.png', logoHeight: 32, noOverlay: true, videoScale: 1, backgroundColor: '#000000', hasBorder: true,
-    description: 'A rotating 3D card study for Morse, exploring the card’s surface, branding and appearance in motion.',
+    description: 'A rotating 3D study of the Morse card in black and white, playing with materials and light.',
     synchronizedGallery: true,
     gallery: [{
       video: '/videos/morse-card-white.mp4',
@@ -255,11 +255,11 @@ const defaultCards: Card[] = [
       backgroundColor: '#ffffff',
     }],
   },
-  { id: 12, iphoneFold: true, title: 'iPhone Fold', label: 'iPhone Fold', number: '_002', description: 'A folding iPhone concept exploring a worn aluminium finish and central hinge. Click the image to cycle through three views.' },
-  { id: 11, cells: true, title: 'Cells', label: 'Cells', number: '_003', description: 'A moving cellular study, viewed through different colour treatments. Click the image to switch between microscopy, heat map and infrared views.' },
+  { id: 12, iphoneFold: true, title: 'iPhone Fold', label: 'iPhone Fold', number: '_002', description: 'A folding iPhone concept with a worn aluminium finish and a central hinge.' },
+  { id: 11, cells: true, title: 'Cells', label: 'Cells', number: '_003', description: 'An animated study of cells in four styles: heat map, infrared, X-ray and microscopy.' },
   {
     id: 9, title: 'Mostly working', video: '/videos/card_9_video.mp4', label: 'Mostly working', number: '_004', noOverlay: true, videoScale: 0.7, showRotation: true, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true,
-    description: 'A monthly(ish) AI meetup for London designers to get hands-on with AI tools and unpack what they mean for the future of design. When I have time, I make fun event artwork.',
+    description: 'A monthly(ish) meetup for London designers to try AI tools and talk about how they’re changing design. When I have time, I make fun artwork for the events.',
     gallery: [{
       video: '/videos/mostly-working-christine-rode.mp4',
       poster: '/posters/mostly-working-christine-rode.png',
@@ -277,16 +277,16 @@ const defaultCards: Card[] = [
       { name: 'Christine Røde', company: 'The Browser Company' },
     ],
   },
-  { id: 0, title: 'Captr', image: '/images/captr-detail.webp', label: 'Captr', number: '_005', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom', description: 'An AI-powered screen capture tool with annotation and sharing, bringing captured content and the context around it into one workflow.' },
-  { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', number: '_006', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28, description: 'A generative identity system built on cellular automata. The evolving pixel patterns give the identity a changing visual expression rather than a single fixed mark.' },
-  { id: 1, title: 'Project 1', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_007', logo: '/icons/stars-icon.svg', description: 'Procedural animation experiment exploring organic motion and bloom.' },
-  { id: 2, title: 'Sling', image: '/images/card_2_image.jpg', label: 'Sling', number: '_008', logo: '/icons/sling-logo.png', description: 'Send and receive digital dollars and euros around the world in seconds.' },
-  { id: 3, title: 'Project 3', video: '/videos/card_3_video.webm', label: 'Face tracking', number: '_009', grainOnly: true, logo: '/icons/qr-code-icon.svg', description: 'Browser-based face tracking with real-time landmark detection.' },
-  { id: 4, title: 'Group Sessions', image: '/images/spotify-group-sessions.webp', label: 'Group Sessions', number: '_010', logo: '/icons/spotify-logo.png', description: 'Collaborative listening experience for shared music sessions on Spotify.' },
-  { id: 5, title: 'Enhance', image: '/images/spotify-enhance.webp', label: 'Enhance', number: '_011', imagePosition: 'top', logo: '/icons/spotify-logo.png', description: 'AI tools for providing personalized recommendations that blend with the mood, genre, and style of your existing music.' },
-  { id: 6, title: 'Project 6', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_012', showControls: true, logo: '/icons/neome-icon.png', description: 'Voice-controlled smart speaker designed for the modern home.' },
-  { id: 7, title: 'Shared tabs', image: '/images/monzo-shared-tabs.webp', label: 'Shared tabs', number: '_013', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Shared tabs for splitting expenses with friends on Monzo. The feature brings a group’s shared spending together so people can see and settle what they owe.' },
-  { id: 8, title: 'Golden Tickets', image: '/images/monzo-golden-tickets.webp', label: 'Golden Tickets', number: '_014', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Gamified referral system with collectible golden ticket rewards on Monzo.' },
+  { id: 0, title: 'Captr', image: '/images/captr-detail.webp', label: 'Captr', number: '_005', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom', description: 'An AI screen capture tool for grabbing, annotating and sharing what’s on your screen.' },
+  { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', number: '_006', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28, description: 'A visual identity built from pixel patterns that grow and change over time.' },
+  { id: 1, title: '咲く花', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_007', logo: '/icons/stars-icon.svg', description: 'An animation experiment with organic forms that grow and bloom.' },
+  { id: 2, title: 'Sling', image: '/images/card_2_image.jpg', label: 'Sling', number: '_008', logo: '/icons/sling-logo.png', description: 'A way to send and receive digital dollars and euros around the world.' },
+  { id: 3, title: 'Face tracking', video: '/videos/card_3_video.webm', label: 'Face tracking', number: '_009', grainOnly: true, logo: '/icons/qr-code-icon.svg', description: 'A browser experiment that follows facial features as you move.' },
+  { id: 4, title: 'Group Sessions', image: '/images/spotify-group-sessions.webp', label: 'Group Sessions', number: '_010', logo: '/icons/spotify-logo.png', description: 'Listen to music together with shared sessions on Spotify.' },
+  { id: 5, title: 'Enhance', image: '/images/spotify-enhance.webp', label: 'Enhance', number: '_011', imagePosition: 'top', logo: '/icons/spotify-logo.png', description: 'Song recommendations that fit the mood of your Spotify playlists, helping you find something new among your favourites.' },
+  { id: 6, title: 'Neome', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_012', showControls: true, logo: '/icons/neome-icon.png', description: 'A smart speaker you can control with your voice.' },
+  { id: 7, title: 'Shared tabs', image: '/images/monzo-shared-tabs.webp', label: 'Shared tabs', number: '_013', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'A way to keep track of shared expenses in Monzo, so friends can see what they owe and settle up.' },
+  { id: 8, title: 'Golden Tickets', image: '/images/monzo-golden-tickets.webp', label: 'Golden Tickets', number: '_014', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Invite friends to Monzo with a Golden Ticket and earn a reward when they join.' },
 ];
 
 

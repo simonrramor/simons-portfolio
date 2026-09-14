@@ -21,17 +21,17 @@ export default function Header({ showWork, exiting = false, onViewWork, onReset 
 
         {!showWork && (
           <button className={styles.viewWorkButton} onClick={onViewWork}>
-            View Work
+            View work
           </button>
         )}
         
         <div className={styles.bio}>
           <p className={styles.bioText}>
-            London-based designer and Co-Founder of{' '}
+            I’m a designer based in London and co-founder of{' '}
             <a href="https://morsemoney.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
               Morse
             </a>
-            . Previously building at{' '}
+            . Before that, I worked at{' '}
             <a href="https://spotify.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
               Spotify
             </a>
@@ -39,11 +39,11 @@ export default function Header({ showWork, exiting = false, onViewWork, onReset 
             <a href="https://monzo.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
               Monzo
             </a>
-            ,{' '}
+            {' '}and{' '}
             <a href="https://google.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
               Google
             </a>
-            {' '}and more.
+            .
           </p>
         </div>
       </div>

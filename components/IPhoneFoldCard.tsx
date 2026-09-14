@@ -10,7 +10,7 @@ export const IPHONE_FOLD_VIEWS = [
     width: 1400,
     height: 1600,
     name: 'Partly open',
-    alt: 'Partly open iPhone Fold concept showing the worn aluminum rear panels and central hinge.',
+    alt: 'Partly open iPhone Fold concept showing the worn aluminium rear panels and central hinge.',
   },
   {
     src: '/images/iphone-fold/closed-rear-display.webp',
