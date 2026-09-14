@@ -277,7 +277,7 @@ const defaultCards: Card[] = [
       { name: 'Christine Røde', company: 'The Browser Company' },
     ],
   },
-  { id: 0, title: 'Captr', image: '/images/captr-detail.webp', label: 'Captr', number: '_005', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom', description: 'An AI screen capture tool for grabbing, annotating and sharing what’s on your screen.' },
+  { id: 0, title: 'Captr', image: '/images/captr-detail.webp', label: 'Captr', number: '_005', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom', description: 'A screen capture tool for grabbing, annotating and sharing what’s on your screen.' },
   { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', number: '_006', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28, description: 'A visual identity built from pixel patterns that grow and change over time.' },
   { id: 1, title: '咲く花', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', number: '_007', logo: '/icons/stars-icon.svg', description: 'An animation experiment with organic forms that grow and bloom.' },
   { id: 2, title: 'Sling', image: '/images/card_2_image.jpg', label: 'Sling', number: '_008', logo: '/icons/sling-logo.png', description: 'A way to send and receive digital dollars and euros around the world.' },
