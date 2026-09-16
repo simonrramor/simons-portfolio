@@ -38,7 +38,6 @@
 }
 
 .label,
-.number,
 .caption {
   position: absolute;
   z-index: 1;
@@ -52,7 +51,6 @@
 }
 
 .label { top: 24px; left: 24px; }
-.number { top: 24px; right: 24px; }
 
 .caption {
   left: 24px;
@@ -71,7 +69,6 @@
 }
 
 .heatMap .label,
-.heatMap .number,
 .heatMap .caption {
   text-shadow: 0 1px 8px rgb(255 255 255 / 65%);
 }

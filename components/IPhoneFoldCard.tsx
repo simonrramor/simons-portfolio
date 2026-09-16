@@ -31,7 +31,6 @@ export const IPHONE_FOLD_VIEWS = [
 interface IPhoneFoldCardProps {
   className: string;
   style: CSSProperties;
-  number?: string;
   enabled: boolean;
   expanded?: boolean;
   viewIndex: number;
@@ -41,7 +40,7 @@ interface IPhoneFoldCardProps {
 }
 
 export default function IPhoneFoldCard({
-  className, style, number, enabled, expanded = false, viewIndex, onToggle, onMouseEnter, onMouseLeave,
+  className, style, enabled, expanded = false, viewIndex, onToggle, onMouseEnter, onMouseLeave,
 }: IPhoneFoldCardProps) {
   const backgroundId = useId();
   const cardRef = useRef<HTMLButtonElement>(null);
@@ -120,7 +119,6 @@ export default function IPhoneFoldCard({
       </span>
       {!expanded && <>
       <span className={styles.label}><span style={{ textTransform: 'none' }}>i</span>Phone Fold</span>
-      <span className={styles.number}>{number}</span>
       </>}
     </button>
   );

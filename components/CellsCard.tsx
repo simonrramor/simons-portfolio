@@ -8,7 +8,6 @@ import styles from './CellsCard.module.css';
 interface CellsCardProps {
   className: string;
   style: CSSProperties;
-  number?: string;
   enabled: boolean;
   expanded?: boolean;
   variantIndex: number;
@@ -18,7 +17,7 @@ interface CellsCardProps {
 }
 
 export default function CellsCard({
-  className, style, number, enabled, expanded = false, variantIndex, onToggle, onMouseEnter, onMouseLeave,
+  className, style, enabled, expanded = false, variantIndex, onToggle, onMouseEnter, onMouseLeave,
 }: CellsCardProps) {
   const cardRef = useRef<HTMLButtonElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -116,7 +115,6 @@ export default function CellsCard({
       <canvas ref={canvasRef} className={styles.canvas} width={960} height={540} aria-hidden="true" />
       {!expanded && <>
       <span className={styles.label}>Cells</span>
-      <span className={styles.number}>{number}</span>
       </>}
     </button>
   );

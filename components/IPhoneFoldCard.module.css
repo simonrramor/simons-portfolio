@@ -55,7 +55,6 @@
 }
 
 .label,
-.number,
 .caption {
   position: absolute;
   font-family: var(--font-roboto-mono), monospace;
@@ -67,7 +66,6 @@
 }
 
 .label { top: 24px; left: 24px; }
-.number { top: 24px; right: 24px; }
 
 .caption {
   left: 24px;

@@ -162,12 +162,6 @@
   opacity: 0;
 }
 
-.cardNumber {
-  color: #ccc;
-  font-size: 3rem;
-  font-weight: 600;
-}
-
 .cardVideo {
   width: 100%;
   height: 100%;
@@ -310,21 +304,6 @@
 }
 
 .cardLabelDark {
-  color: #999;
-}
-
-.cardNumberLabel {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  color: white;
-  font-size: 0.875rem;
-  font-weight: 500;
-  font-family: var(--font-roboto-mono), monospace;
-  text-transform: uppercase;
-}
-
-.cardNumberLabelDark {
   color: #999;
 }
 
@@ -637,7 +616,6 @@
 }
 
 .expandedCard .cardLabel,
-.expandedCard .cardNumberLabel,
 .expandedCard .cardLogo,
 .expandedCard .rotationData {
   display: none;
