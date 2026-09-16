@@ -336,7 +336,7 @@ const defaultCards: Card[] = [
     number: '_016',
     logo: '/icons/monzo-logo.png',
     logoHeight: 24,
-    description: 'An easier way to manage your money, wherever you are. Split your salary between bills, savings and spending in Monzo.',
+    description: 'Make payday simpler, wherever you are. Set money aside in Monzo Pots for bills and savings, see what’s left to spend, and save your split for next time.',
   },
 ];
 
