@@ -55,6 +55,24 @@ button {
   cursor: none;
 }
 
+/* Use text and surface changes for focus instead of browser outline rings. */
+:focus {
+  outline: none;
+}
+
+a:focus-visible,
+button:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  box-shadow: 0 2px currentColor;
+}
+
 ul,
 ol {
   list-style: none;

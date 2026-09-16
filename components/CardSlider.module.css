@@ -671,10 +671,18 @@
   cursor: pointer;
 }
 
-.closeButton:focus-visible,
 .card:focus-visible {
-  outline: 2px solid #4da6ff;
-  outline-offset: 3px;
+  text-decoration: none;
+}
+
+.card:focus-visible .cardLabel {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+button.expandedCard:focus-visible {
+  filter: brightness(0.9);
 }
 
 .galleryControls {
@@ -727,9 +735,15 @@
 }
 .galleryDot[aria-pressed="true"] span { background: #171717; }
 .galleryArrow:hover { background: white; }
-.galleryArrow:focus-visible, .galleryDot:focus-visible {
-  outline: 2px solid #4da6ff;
-  outline-offset: 2px;
+.closeButton:focus-visible,
+.galleryArrow:focus-visible,
+.galleryDot:focus-visible {
+  background: #171717;
+  color: #fff;
+}
+
+.galleryDot:focus-visible span {
+  background: #fff;
 }
 
 .soundToggle { position: fixed; right: 20px; bottom: 16px; z-index: 110; background: white; border: 0; padding: 8px; font: inherit; font-size: 11px; text-transform: uppercase; color: #6b7280; cursor: pointer; }

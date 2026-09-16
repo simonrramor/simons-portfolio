@@ -12,9 +12,10 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.cellsCard:focus-visible {
-  outline: 3px solid #4da6ff;
-  outline-offset: -4px;
+.cellsCard:focus-visible .label {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
 }
 
 .source {
