@@ -270,7 +270,7 @@ const defaultCards: Card[] = [
     imageFit: 'contain',
     extendImageBackground: true,
     backgroundColor: '#bdbcb5',
-    description: 'A still life made in Blender, pairing a half-glazed ceramic vase with flat, oil-pastel-style flowers. An experiment in bringing loose, colourful marks into a realistic 3D scene.',
+    description: 'A still life combining 2D and 3D, made in Blender. Flat, oil-pastel-style flowers sit in a realistic, half-glazed ceramic vase—bringing loose, colourful marks into a three-dimensional scene.',
   },
   {
     id: 13, title: 'Morse Card', video: '/videos/morse-card.mp4', poster: '/posters/morse-card.png', label: 'Morse Card', number: '_002', logo: '/icons/morse-logo.png', logoHeight: 32, noOverlay: true, videoScale: 1, backgroundColor: '#000000', hasBorder: true,
