@@ -200,6 +200,18 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
+  isolation: isolate;
+}
+
+.imageBackdropGrain {
+  position: absolute;
+  inset: 0;
+  /* Tile a background-only sample at the same pixel scale as the user's image;
+     never stretch its grain into lines along the extended edges. */
+  background-repeat: repeat;
+  background-size: min(10.666667cqw, calc((100cqh - var(--artwork-inset-block)) * 0.085333333));
+  filter: grayscale(1) brightness(0.679) contrast(3);
+  mix-blend-mode: overlay;
 }
 
 .imageBackdropFill {

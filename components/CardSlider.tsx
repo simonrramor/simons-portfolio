@@ -151,6 +151,8 @@ function ProgressiveImage({
   objectPosition,
   objectFit = 'cover',
   extendBackground = false,
+  backgroundSrc,
+  backgroundGrain,
   scale = 1,
   priority = false
 }: {
@@ -159,6 +161,8 @@ function ProgressiveImage({
   objectPosition?: string;
   objectFit?: 'cover' | 'contain';
   extendBackground?: boolean;
+  backgroundSrc?: string;
+  backgroundGrain?: string;
   scale?: number;
   priority?: boolean;
 }) {
@@ -173,7 +177,8 @@ function ProgressiveImage({
     <>
       {extendBackground && (
         <div className={styles.imageBackdrop} aria-hidden="true">
-          <div className={styles.imageBackdropFill} style={{ borderImageSource: `url("${src}")` }} />
+          <div className={styles.imageBackdropFill} style={{ borderImageSource: `url("${backgroundSrc || src}")` }} />
+          {backgroundGrain && <div className={styles.imageBackdropGrain} style={{ backgroundImage: `url("${backgroundGrain}")` }} />}
         </div>
       )}
       {/* Low-res blurred version - loads fast */}
@@ -234,6 +239,8 @@ interface Card {
   imageScale?: number;
   imageFit?: 'cover' | 'contain';
   extendImageBackground?: boolean;
+  imageBackgroundSrc?: string;
+  imageBackgroundGrain?: string;
   logo?: string;
   logoHeight?: number;
   grainOnly?: boolean;
@@ -262,13 +269,15 @@ const defaultCards: Card[] = [
   {
     id: 14,
     title: 'Oil-pastel flowers',
-    image: '/images/oil-pastel-flowers.webp',
+    image: '/images/oil-pastel-flowers-grain.webp',
     imageAlt: 'Colourful, loosely drawn oil-pastel-style flowers in a rounded, half-glazed stoneware vase against a warm grey background.',
     label: 'Oil-pastel flowers',
     labelColor: '#393632',
     number: '_001',
     imageFit: 'contain',
     extendImageBackground: true,
+    imageBackgroundSrc: '/images/oil-pastel-flowers.webp',
+    imageBackgroundGrain: '/images/oil-pastel-background-grain.webp',
     backgroundColor: '#bdbcb5',
     description: 'A still life combining 2D and 3D, made in Blender. Flat, oil-pastel-style flowers sit in a realistic, half-glazed ceramic vase—bringing loose, colourful marks into a three-dimensional scene.',
   },
@@ -999,6 +1008,8 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
                     objectPosition={expanded ? card.expandedImagePosition ?? card.imagePosition : card.imagePosition}
                     objectFit={card.imageFit}
                     extendBackground={card.extendImageBackground}
+                    backgroundSrc={card.imageBackgroundSrc}
+                    backgroundGrain={card.imageBackgroundGrain}
                     scale={card.imageScale}
                     priority={expanded || card.id <= 4}
                   />
