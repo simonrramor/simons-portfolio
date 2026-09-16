@@ -1,373 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
+import TerminalPane from './TerminalPane';
+import { advanceTree, createTree, layoutTree, paneCount, type PaneBox, type TerminalTree } from './terminal-layout';
 import styles from './page.module.css';
-
-const LABELS = [
-  'human face', 'boy', 'human', 'a book', 'her hands', 'person', 'man',
-  'woman', 'child', 'eyes', 'mouth', 'door', 'sky', 'tree', 'window',
-  'face', 'shadow', 'hair', 'arm', 'hand', 'his face', 'her face',
-  'a sign', 'a chair', 'a table', 'her arm', 'his hand', 'a road',
-  'cloud', 'water', 'leaf', 'a wall', 'his ear', 'a phone', 'glass',
-];
-
-function generateRows(count: number): string {
-  const lines: string[] = [];
-  for (let i = 0; i < count; i++) {
-    const idx = (i + 1).toString().padStart(3);
-    const nums = Array.from({ length: 8 }, () =>
-      Math.floor(Math.random() * 1900).toString().padStart(4),
-    ).join(' ');
-    const flag = Math.floor(Math.random() * 2);
-    const label = LABELS[Math.floor(Math.random() * LABELS.length)];
-    lines.push(`${idx}  ${nums}  ${flag}  ${label}`);
-  }
-  return lines.join('\n');
-}
-
-function ScrollingTable() {
-  const text = useMemo(() => generateRows(80), []);
-  return (
-    <div className={styles.terminal}>
-      <div className={styles.terminalContent}>
-        {text}
-        {'\n'}
-        {text}
-      </div>
-    </div>
-  );
-}
-
-type ChipColor = 'cyan' | 'green' | 'blue' | 'red' | 'orange' | 'purple' | 'pink';
-type Segment = { text: string; color?: ChipColor };
-type ScriptLine = Segment[];
-
-const SECTION_NAMES = [
-  'VISIONS', 'INFERENCE', 'EMBEDDING', 'DIFFUSION', 'SAMPLING',
-  'DECODING', 'TRANSFORMS', 'GENESIS', 'SYNTHESIS', 'COMPOSITE',
-];
-const STAGE_NAMES = [
-  'INPAINTING', 'OUTPAINTING', 'REFINING', 'STYLIZING', 'BLENDING',
-  'COMPOSITING', 'RENDERING', 'WARMING', 'COOLING',
-];
-const SUBJECTS = ['artwork', 'frame', 'tile', 'patch', 'token', 'batch', 'sample'];
-const MORPHS = ['Blobs', 'Layers', 'Heads', 'Channels', 'Tokens', 'Tiles', 'Patches', 'Frames', 'Cells'];
-const PROMPTS = [
-  'a man reading a book',
-  'sunset over mountains',
-  'a forest in autumn',
-  'morning light through window',
-  'a quiet street at dusk',
-  'children playing in a field',
-  'an empty room with chair',
-  'a boat on the lake',
-  'rainy city at night',
-  'an old garden gate',
-  'two cats on a windowsill',
-  'snow falling on rooftops',
-  'a dog asleep by the fire',
-  'a bridge in the fog',
-];
-
-function pick<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-function randInt(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-function lineCharCount(line: ScriptLine): number {
-  return line.reduce((s, seg) => s + seg.text.length, 0);
-}
-function totalCharCount(lines: ScriptLine[]): number {
-  return lines.reduce((s, l) => s + lineCharCount(l) + 1, 0);
-}
-
-function generateSection(): ScriptLine[] {
-  const name = pick(SECTION_NAMES);
-  const subject = pick(SUBJECTS);
-  const morph = pick(MORPHS);
-  const morphSingular = morph.toLowerCase().replace(/s$/, '');
-  const morphCount = randInt(8, 32);
-  const totalSteps = randInt(50, 200);
-  const stepNum = randInt(1, totalSteps);
-  const w = randInt(800, 2000);
-  const h = randInt(800, 2000);
-  const target = (Math.random() * 2500).toFixed(13);
-  const stage = pick(STAGE_NAMES);
-  const stageCap = stage.charAt(0) + stage.slice(1).toLowerCase();
-  const prompt = pick(PROMPTS);
-  const stateNums = Array.from({ length: morphCount }, (_, i) => i).join(', ');
-  const overlapCount = randInt(2, Math.min(8, morphCount));
-  const overlapStart = randInt(0, Math.max(0, morphCount - overlapCount));
-  const overlapNums = Array.from({ length: overlapCount }, (_, i) => overlapStart + i).join(', ');
-
-  return [
-    [
-      { text: '[[=== ' },
-      { text: `✦ ${name} ✦`, color: 'cyan' },
-      { text: ' ===]]' },
-    ],
-    [
-      { text: `Processing ${subject}:`, color: 'green' },
-      { text: ' ' },
-      { text: `${randInt(100, 999)}`, color: 'red' },
-    ],
-    [
-      { text: 'Target area:', color: 'green' },
-      { text: ' ' },
-      { text: target, color: 'blue' },
-    ],
-    [
-      { text: 'Max steps:', color: 'green' },
-      { text: ` ${totalSteps}` },
-    ],
-    [
-      { text: 'Source size:', color: 'green' },
-      { text: ' (' },
-      { text: `${w}`, color: 'blue' },
-      { text: ', ' },
-      { text: `${h}`, color: 'red' },
-      { text: ')' },
-    ],
-    [],
-    [{ text: 'Loaded data:', color: 'purple' }],
-    [
-      { text: ` - ${morph}:`, color: 'green' },
-      { text: ' ' },
-      { text: `${morphCount}`, color: 'blue' },
-    ],
-    [
-      { text: ' - Transitions:', color: 'green' },
-      { text: ` ${randInt(0, 5)}` },
-    ],
-    [],
-    [{ text: `=== STEP [${stepNum}/${totalSteps}] ===`, color: 'orange' }],
-    [
-      { text: `Expanding ${morphSingular}:`, color: 'green' },
-      { text: ' ' },
-      { text: `${randInt(1, morphCount)}`, color: 'blue' },
-    ],
-    [
-      { text: 'Tail:', color: 'green' },
-      { text: ' []' },
-    ],
-    [
-      { text: 'State:', color: 'green' },
-      { text: ' {' },
-      { text: stateNums, color: 'blue' },
-      { text: '}' },
-    ],
-    [
-      { text: `Overlapping ${morph.toLowerCase()} in state:`, color: 'green' },
-      { text: ' [' },
-      { text: overlapNums, color: 'blue' },
-      { text: ']' },
-    ],
-    [{ text: `=== ${stage} ===`, color: 'pink' }],
-    [
-      { text: `${stageCap} prompt:`, color: 'green' },
-      { text: ' ' },
-      { text: prompt, color: 'pink' },
-    ],
-    [],
-  ];
-}
-
-const TYPER_CPS = 1000;
-const TYPER_MAX_LINES = 60;
-
-function CodeTyper() {
-  const linesRef = useRef<ScriptLine[]>([]);
-  const totalRef = useRef(0);
-  const charsRef = useRef(0);
-  const [snapshot, setSnapshot] = useState<{ chars: number; lines: ScriptLine[] }>({ chars: 0, lines: [] });
-
-  useEffect(() => {
-    linesRef.current = generateSection();
-    totalRef.current = totalCharCount(linesRef.current);
-    charsRef.current = 0;
-
-    let lastTime = performance.now();
-    let raf = 0;
-    const step = () => {
-      const now = performance.now();
-      const dt = now - lastTime;
-      lastTime = now;
-
-      charsRef.current += (dt * TYPER_CPS) / 1000;
-
-      while (charsRef.current >= totalRef.current - 100) {
-        const more = generateSection();
-        linesRef.current = linesRef.current.concat(more);
-        totalRef.current += totalCharCount(more);
-      }
-
-      if (linesRef.current.length > TYPER_MAX_LINES) {
-        const dropCount = linesRef.current.length - TYPER_MAX_LINES;
-        const dropped = linesRef.current.slice(0, dropCount);
-        const droppedChars = totalCharCount(dropped);
-        linesRef.current = linesRef.current.slice(dropCount);
-        totalRef.current -= droppedChars;
-        charsRef.current = Math.max(0, charsRef.current - droppedChars);
-      }
-
-      setSnapshot({ chars: Math.floor(charsRef.current), lines: linesRef.current });
-      raf = requestAnimationFrame(step);
-    };
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
-  }, []);
-
-  const { chars, lines } = snapshot;
-  const rendered: React.ReactNode[] = [];
-  let consumed = 0;
-
-  for (let li = 0; li < lines.length; li++) {
-    const line = lines[li];
-    const lineLen = lineCharCount(line);
-    if (chars < consumed) break;
-
-    const visible = Math.min(chars - consumed, lineLen);
-    const isCurrent = chars < consumed + lineLen + 1;
-
-    const segs: React.ReactNode[] = [];
-    let left = visible;
-    for (let si = 0; si < line.length; si++) {
-      if (left <= 0) break;
-      const seg = line[si];
-      const len = Math.min(seg.text.length, left);
-      segs.push(
-        <span
-          key={si}
-          className={seg.color ? `${styles.codeChip} ${styles[seg.color]}` : undefined}
-        >
-          {seg.text.slice(0, len)}
-        </span>,
-      );
-      left -= len;
-    }
-
-    rendered.push(
-      <div key={li} className={styles.codeLine}>
-        {segs.length > 0 ? segs : ' '}
-        {isCurrent && <span className={styles.typingCursor}>█</span>}
-      </div>,
-    );
-    consumed += lineLen + 1;
-  }
-
-  return (
-    <div className={styles.codeBlock}>
-      <div className={styles.codeContent}>{rendered}</div>
-    </div>
-  );
-}
-
-interface BoxData {
-  id: number;
-  top: number;
-  left: number;
-  width: number;
-  height: number;
-  alpha: number;
-}
-
-type TreeNode =
-  | { kind: 'leaf'; id: number }
-  | { kind: 'branch'; direction: 'V' | 'H'; ratio: number; left: TreeNode; right: TreeNode };
-
-const MIN_W = 400;
-const MIN_H = 300;
-const COUNT = 14;
-
-let leafIdCounter = 0;
-
-function pickRatio(size: number, min: number): number {
-  const minR = Math.min(0.5, min / size);
-  const maxR = 1 - minR;
-  if (maxR <= minR) return 0.5;
-  return minR + Math.random() * (maxR - minR);
-}
-
-function buildTree(width: number, height: number, leafCount: number): TreeNode {
-  if (leafCount <= 1) {
-    return { kind: 'leaf', id: leafIdCounter++ };
-  }
-
-  const canV = width >= MIN_W * 2;
-  const canH = height >= MIN_H * 2;
-
-  if (!canV && !canH) {
-    return { kind: 'leaf', id: leafIdCounter++ };
-  }
-
-  const direction: 'V' | 'H' = canV && canH
-    ? (Math.random() < width / (width + height) ? 'V' : 'H')
-    : canV ? 'V' : 'H';
-
-  const ratio = direction === 'V' ? pickRatio(width, MIN_W) : pickRatio(height, MIN_H);
-
-  const leftW = direction === 'V' ? width * ratio : width;
-  const leftH = direction === 'H' ? height * ratio : height;
-  const rightW = direction === 'V' ? width - leftW : width;
-  const rightH = direction === 'H' ? height - leftH : height;
-
-  const leftArea = leftW * leftH;
-  const rightArea = rightW * rightH;
-  let leftLeaves = Math.max(1, Math.round((leafCount - 1) * leftArea / (leftArea + rightArea)));
-  if (leftLeaves >= leafCount) leftLeaves = leafCount - 1;
-  const rightLeaves = leafCount - leftLeaves;
-
-  return {
-    kind: 'branch',
-    direction,
-    ratio,
-    left: buildTree(leftW, leftH, leftLeaves),
-    right: buildTree(rightW, rightH, rightLeaves),
-  };
-}
-
-function randomizeRatios(node: TreeNode, width: number, height: number): TreeNode {
-  if (node.kind === 'leaf') return node;
-
-  const ratio = node.direction === 'V' ? pickRatio(width, MIN_W) : pickRatio(height, MIN_H);
-
-  const leftW = node.direction === 'V' ? width * ratio : width;
-  const leftH = node.direction === 'H' ? height * ratio : height;
-  const rightW = node.direction === 'V' ? width - leftW : width;
-  const rightH = node.direction === 'H' ? height - leftH : height;
-
-  return {
-    ...node,
-    ratio,
-    left: randomizeRatios(node.left, leftW, leftH),
-    right: randomizeRatios(node.right, rightW, rightH),
-  };
-}
-
-function computeLayout(
-  node: TreeNode,
-  width: number,
-  height: number,
-  x = 0,
-  y = 0,
-): Omit<BoxData, 'alpha'>[] {
-  if (node.kind === 'leaf') {
-    return [{ id: node.id, left: x, top: y, width, height }];
-  }
-  if (node.direction === 'V') {
-    const leftW = width * node.ratio;
-    return [
-      ...computeLayout(node.left, leftW, height, x, y),
-      ...computeLayout(node.right, width - leftW, height, x + leftW, y),
-    ];
-  }
-  const topH = height * node.ratio;
-  return [
-    ...computeLayout(node.left, width, topH, x, y),
-    ...computeLayout(node.right, width, height - topH, x, y + topH),
-  ];
-}
 
 type Bezier = [number, number, number, number];
 
@@ -500,137 +136,158 @@ function BezierChart({
 }
 
 export default function About() {
-  const treeRef = useRef<TreeNode | null>(null);
-  const alphasRef = useRef<Map<number, number>>(new Map());
-  const [boxes, setBoxes] = useState<BoxData[]>([]);
-
-  const [duration, setDuration] = useState(1);
-  const [intervalMs, setIntervalMs] = useState(2000);
-  const [bezier, setBezier] = useState<Bezier>([1, -0.01, 0.01, 1.01]);
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const treeRef = useRef<TerminalTree | null>(null);
+  const sizeRef = useRef({ width: 0, height: 0 });
+  const countRef = useRef(0);
+  const [boxes, setBoxes] = useState<PaneBox[]>([]);
+  const [duration, setDuration] = useState(0.55);
+  const [intervalMs, setIntervalMs] = useState(1450);
+  const [bezier, setBezier] = useState<Bezier>([0.65, 0, 0.35, 1]);
   const [showControls, setShowControls] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(true);
+  const [visible, setVisible] = useState(true);
+  const running = !paused && !reducedMotion && visible;
 
   const refresh = useCallback(() => {
-    if (!treeRef.current) return;
-    const layout = computeLayout(treeRef.current, window.innerWidth, window.innerHeight);
-    setBoxes(layout.map((b) => {
-      if (!alphasRef.current.has(b.id)) {
-        alphasRef.current.set(b.id, 0.02 + Math.random() * 0.13);
-      }
-      return { ...b, alpha: alphasRef.current.get(b.id)! };
-    }));
+    const { width, height } = sizeRef.current;
+    if (treeRef.current) setBoxes(layoutTree(treeRef.current, width, height));
   }, []);
 
   useEffect(() => {
-    treeRef.current = buildTree(window.innerWidth, window.innerHeight, COUNT);
-    refresh();
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const updateMotion = () => setReducedMotion(media.matches);
+    const updateVisibility = () => setVisible(!document.hidden);
+    updateMotion();
+    updateVisibility();
+    media.addEventListener('change', updateMotion);
+    document.addEventListener('visibilitychange', updateVisibility);
+    return () => {
+      media.removeEventListener('change', updateMotion);
+      document.removeEventListener('visibilitychange', updateVisibility);
+    };
+  }, []);
 
-    const onResize = () => refresh();
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
+  useEffect(() => {
+    const scene = sceneRef.current;
+    if (!scene) return;
+    const resize = () => {
+      const { width, height } = scene.getBoundingClientRect();
+      if (!width || !height) return;
+      sizeRef.current = { width, height };
+      const count = paneCount(width);
+      if (!treeRef.current || count !== countRef.current) {
+        treeRef.current = createTree(width, height, count);
+        countRef.current = count;
+      }
+      refresh();
+    };
+    resize();
+    const observer = new ResizeObserver(resize);
+    observer.observe(scene);
+    return () => observer.disconnect();
   }, [refresh]);
 
   useEffect(() => {
-    const id = setInterval(() => {
-      if (!treeRef.current) return;
-      treeRef.current = randomizeRatios(treeRef.current, window.innerWidth, window.innerHeight);
-      refresh();
-    }, intervalMs);
-    return () => clearInterval(id);
-  }, [intervalMs, refresh]);
-
-  const easing = `cubic-bezier(${bezier[0]}, ${bezier[1]}, ${bezier[2]}, ${bezier[3]})`;
+    if (!running) return;
+    let timer: ReturnType<typeof setTimeout>;
+    const schedule = () => {
+      timer = setTimeout(() => {
+        if (treeRef.current) {
+          const { width, height } = sizeRef.current;
+          treeRef.current = advanceTree(treeRef.current, width, height);
+          refresh();
+        }
+        schedule();
+      }, Math.max(duration * 1000 + 150, intervalMs * (0.7 + Math.random() * 0.6)));
+    };
+    schedule();
+    return () => clearTimeout(timer);
+  }, [duration, intervalMs, refresh, running]);
 
   return (
-    <div
+    <main
+      ref={sceneRef}
       className={styles.container}
+      data-running={running}
+      aria-label="Animated terminal experiment"
       style={{
         '--anim-duration': `${duration}s`,
-        '--anim-easing': easing,
+        '--anim-easing': `cubic-bezier(${bezier.join(',')})`,
       } as CSSProperties}
     >
-      {boxes.map((box, i) => (
-        <div
-          key={box.id}
-          className={styles.box}
-          style={{
-            top: `${box.top}px`,
-            left: `${box.left}px`,
-            width: `${box.width}px`,
-            height: `${box.height}px`,
-            backgroundColor: `rgba(255, 255, 255, ${box.alpha})`,
-          }}
-        >
-          {i === 0 && <ScrollingTable />}
-          {i === 1 && <CodeTyper />}
-          <span className={`${styles.corner} ${styles.tl}`} />
-          <span className={`${styles.corner} ${styles.tr}`} />
-          <span className={`${styles.corner} ${styles.bl}`} />
-          <span className={`${styles.corner} ${styles.br}`} />
-        </div>
-      ))}
+      <div className={styles.scene} aria-hidden="true">
+        {boxes.map((box) => (
+          <div
+            key={box.id}
+            className={styles.box}
+            data-pane={box.id}
+            style={{ top: box.top, left: box.left, width: box.width, height: box.height }}
+          >
+            <TerminalPane id={box.id} running={running} />
+            <span className={`${styles.corner} ${styles.tl}`} />
+            <span className={`${styles.corner} ${styles.tr}`} />
+            <span className={`${styles.corner} ${styles.bl}`} />
+            <span className={`${styles.corner} ${styles.br}`} />
+          </div>
+        ))}
+      </div>
 
-      <button
-        className={styles.controlsToggle}
-        onClick={() => setShowControls((s) => !s)}
-      >
-        {showControls ? 'close' : 'tweak'}
-      </button>
+      <div className={styles.controlsToolbar}>
+        <button
+          className={styles.controlsToggle}
+          onClick={() => setPaused((value) => !value)}
+          aria-label={paused ? 'Resume animation' : 'Pause animation'}
+          aria-pressed={paused}
+          disabled={reducedMotion}
+        >
+          {reducedMotion ? 'motion off' : paused ? 'resume' : 'pause'}
+        </button>
+        <button
+          className={styles.controlsToggle}
+          onClick={() => setShowControls((value) => !value)}
+          aria-expanded={showControls}
+          aria-controls="terminal-controls"
+        >
+          {showControls ? 'close' : 'tweak'}
+        </button>
+      </div>
 
       {showControls && (
-        <div className={styles.controlsPanel}>
+        <div className={styles.controlsPanel} id="terminal-controls">
           <div className={styles.controlGroup}>
             <div className={styles.controlHeader}>
-              <span>duration</span>
+              <label htmlFor="motion-duration">duration</label>
               <span className={styles.controlValue}>{duration.toFixed(2)}s</span>
             </div>
-            <input
-              type="range"
-              min="0.05"
-              max="3"
-              step="0.05"
-              value={duration}
-              onChange={(e) => setDuration(+e.target.value)}
-            />
+            <input id="motion-duration" type="range" min="0.05" max="3" step="0.05" value={duration}
+              onChange={(event) => setDuration(+event.target.value)} />
           </div>
-
           <div className={styles.controlGroup}>
             <div className={styles.controlHeader}>
-              <span>interval</span>
+              <label htmlFor="motion-interval">interval</label>
               <span className={styles.controlValue}>{(intervalMs / 1000).toFixed(2)}s</span>
             </div>
-            <input
-              type="range"
-              min="200"
-              max="10000"
-              step="100"
-              value={intervalMs}
-              onChange={(e) => setIntervalMs(+e.target.value)}
-            />
+            <input id="motion-interval" type="range" min="200" max="10000" step="100" value={intervalMs}
+              onChange={(event) => setIntervalMs(+event.target.value)} />
           </div>
-
           <div className={styles.controlGroup}>
             <div className={styles.controlHeader}>
               <span>cubic-bezier</span>
-              <span className={styles.controlValue}>
-                {bezier.map((v) => v.toFixed(2)).join(', ')}
-              </span>
+              <span className={styles.controlValue}>{bezier.map((value) => value.toFixed(2)).join(', ')}</span>
             </div>
             <BezierChart value={bezier} onChange={setBezier} />
           </div>
-
           <div className={styles.presets}>
-            {PRESETS.map((p) => (
-              <button
-                key={p.name}
-                className={styles.presetButton}
-                onClick={() => setBezier(p.vals)}
-              >
-                {p.name}
+            {PRESETS.map((preset) => (
+              <button key={preset.name} className={styles.presetButton} onClick={() => setBezier(preset.vals)}>
+                {preset.name}
               </button>
             ))}
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 }

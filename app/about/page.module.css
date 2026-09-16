@@ -1,147 +1,72 @@
 .container {
   position: relative;
-  background-color: #000000;
-  min-height: 100vh;
+  background: #000;
+  height: 100svh;
+  height: 100dvh;
   width: 100%;
   overflow: hidden;
+  cursor: default;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
 .box {
   position: absolute;
+  background: #000;
+  border-right: 1px solid #363636;
+  border-bottom: 1px solid #363636;
   transition:
-    top var(--anim-duration, 1s) var(--anim-easing, ease-out),
-    left var(--anim-duration, 1s) var(--anim-easing, ease-out),
-    width var(--anim-duration, 1s) var(--anim-easing, ease-out),
-    height var(--anim-duration, 1s) var(--anim-easing, ease-out);
+    top var(--anim-duration) var(--anim-easing),
+    left var(--anim-duration) var(--anim-easing),
+    width var(--anim-duration) var(--anim-easing),
+    height var(--anim-duration) var(--anim-easing);
+}
+
+.container[data-running='false'] .box {
+  transition: none;
 }
 
 .corner {
   position: absolute;
-  width: 14px;
-  height: 14px;
+  z-index: 1;
+  width: 9px;
+  height: 9px;
 }
 
-.corner::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background-color: #6b6b6b;
-}
-
+.corner::before,
 .corner::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: 50%;
-  width: 1px;
-  height: 100%;
-  background-color: #6b6b6b;
+  background: #777;
 }
 
-.tl { top: -7px; left: -7px; }
-.tr { top: -7px; right: -7px; }
-.bl { bottom: -7px; left: -7px; }
-.br { bottom: -7px; right: -7px; }
+.corner::before { top: 4px; left: 0; width: 9px; height: 1px; }
+.corner::after { top: 0; left: 4px; width: 1px; height: 9px; }
+.tl { top: -5px; left: -5px; }
+.tr { top: -5px; right: -5px; }
+.bl { bottom: -5px; left: -5px; }
+.br { bottom: -5px; right: -5px; }
 
-.terminal {
-  position: absolute;
-  inset: 0;
-  padding: 14px 16px;
-  overflow: hidden;
-  pointer-events: none;
-  animation: terminalFadeIn 1.2s ease-out both;
-}
-
-.terminal::after {
-  content: '█';
-  position: absolute;
-  bottom: 14px;
-  left: 16px;
-  font-family: "SF Mono", SFMono-Regular, ui-monospace, monospace;
-  font-size: 10px;
-  line-height: 1;
-  color: rgba(255, 255, 255, 0.85);
-  animation: cursorBlink 1s steps(2, end) infinite;
-}
-
-.terminalContent {
-  font-family: "SF Mono", SFMono-Regular, ui-monospace, monospace;
-  font-size: 10px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.85);
-  white-space: pre;
-  animation: scrollUp 2s steps(80, end) infinite;
-  will-change: transform;
-}
-
-@keyframes terminalFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes scrollUp {
-  from { transform: translateY(0); }
-  to { transform: translateY(-50%); }
-}
-
-@keyframes cursorBlink {
-  to { opacity: 0; }
-}
-
-.codeBlock {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  font-family: "SF Mono", SFMono-Regular, ui-monospace, monospace;
-  font-size: 11px;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.9);
-  animation: terminalFadeIn 0.6s ease-out both;
-}
-
-.codeContent {
-  position: absolute;
-  left: 16px;
+.controlsToolbar {
+  position: fixed;
+  top: 16px;
   right: 16px;
-  bottom: 14px;
+  z-index: 100;
+  display: flex;
+  gap: 6px;
 }
 
-.typingCursor {
-  display: inline-block;
-  margin-left: 1px;
-  color: rgba(255, 255, 255, 0.85);
-  animation: cursorBlink 1s steps(2, end) infinite;
-}
-
-.codeLine {
-  white-space: pre;
-}
-
-.codeChip {
-  padding: 1px 4px;
-  margin: 0 1px;
-  color: #fff;
-  white-space: pre;
-  border-radius: 1px;
-}
-
-.cyan { background-color: rgba(64, 180, 200, 0.65); }
-.green { background-color: rgba(80, 170, 90, 0.65); }
-.blue { background-color: rgba(80, 130, 220, 0.7); }
-.red { background-color: rgba(220, 70, 70, 0.65); }
-.orange { background-color: rgba(230, 130, 50, 0.7); }
-.purple { background-color: rgba(140, 90, 210, 0.65); }
-.pink { background-color: rgba(220, 80, 140, 0.65); }
+.container button,
+.container input { cursor: pointer; }
+.container button:disabled { cursor: default; color: #777; }
+.controlsToggle[aria-pressed='true'] { background: #ddd; color: #000; }
+.controlsToggle:focus-visible { border-color: #eee; }
 
 .controlsToggle {
-  position: fixed;
-  top: 1.5rem;
-  right: 1.5rem;
-  z-index: 100;
   background: rgba(0, 0, 0, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.3);
   color: #aaa;
@@ -158,12 +83,19 @@
   border-color: rgba(255, 255, 255, 0.6);
 }
 
+.controlsToggle[aria-pressed='true']:hover {
+  color: #000;
+  background: #fff;
+}
+
 .controlsPanel {
   position: fixed;
-  top: 4rem;
-  right: 1.5rem;
+  top: 3.5rem;
+  right: 16px;
   z-index: 100;
   width: 280px;
+  max-height: calc(100dvh - 72px);
+  overflow-y: auto;
   background: rgba(0, 0, 0, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.25);
   padding: 1.25rem;
@@ -201,7 +133,7 @@
 }
 
 .bezierHandle {
-  cursor: none;
+  cursor: grab;
   transition: r 0.15s;
 }
 
@@ -266,4 +198,14 @@
 .presetButton:hover {
   color: #fff;
   border-color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 599px) {
+  .controlsToolbar { top: 10px; right: 10px; }
+  .controlsToggle { font-size: 9px; padding: 6px 8px; }
+  .controlsPanel { top: 44px; right: 10px; max-width: calc(100vw - 20px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .box { transition: none; }
 }
