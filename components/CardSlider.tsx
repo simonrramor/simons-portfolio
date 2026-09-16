@@ -233,7 +233,6 @@ interface Card {
   imageAlt?: string;
   label?: string;
   labelColor?: string;
-  labelShadow?: string;
   number?: string;
   imagePosition?: string;
   expandedImagePosition?: string;
@@ -332,7 +331,6 @@ const defaultCards: Card[] = [
     imageAlt: 'A phone displaying Monzo’s Salary sorter, clipped to a yellow bag against a white shirt.',
     label: 'Salary sorter',
     number: '_016',
-    labelShadow: '0 1px 4px rgb(0 0 0 / 65%)',
     logo: '/icons/monzo-logo.png',
     logoHeight: 24,
     description: 'Split your salary between bills, savings and spending in Monzo.',
@@ -1026,8 +1024,8 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
                     scale={card.imageScale}
                     priority={expanded || card.id <= 4}
                   />
-                  {card.label && <span className={`${styles.cardLabel} ${card.darkText ? styles.cardLabelDark : ''}`} style={{ color: card.labelColor, textShadow: card.labelShadow }}>{card.label}</span>}
-                  {card.number && <span className={`${styles.cardNumberLabel} ${card.darkText ? styles.cardNumberLabelDark : ''}`} style={{ color: card.labelColor, textShadow: card.labelShadow }}>{card.number}</span>}
+                  {card.label && <span className={`${styles.cardLabel} ${card.darkText ? styles.cardLabelDark : ''}`} style={{ color: card.labelColor }}>{card.label}</span>}
+                  {card.number && <span className={`${styles.cardNumberLabel} ${card.darkText ? styles.cardNumberLabelDark : ''}`} style={{ color: card.labelColor }}>{card.number}</span>}
                   {card.logo && (
                     <CardLogo src={card.logo} height={card.logoHeight} />
                   )}
