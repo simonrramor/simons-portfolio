@@ -327,7 +327,7 @@ const defaultCards: Card[] = [
   {
     id: 15,
     title: 'Salary sorter',
-    image: '/images/monzo-salary-sorter.webp',
+    image: '/images/monzo-salary-sorter-v2.webp',
     imageAlt: 'A phone displaying Monzo’s Salary sorter, clipped to a yellow bag against a white shirt.',
     imageScale: 1.7,
     imagePosition: 'right center',
