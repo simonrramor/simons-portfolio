@@ -336,7 +336,7 @@ const defaultCards: Card[] = [
     number: '_016',
     logo: '/icons/monzo-logo.png',
     logoHeight: 24,
-    description: 'Split your salary between bills, savings and spending in Monzo.',
+    description: 'An easier way to manage your money, wherever you are. Split your salary between bills, savings and spending in Monzo.',
   },
 ];
 
