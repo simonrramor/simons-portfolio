@@ -144,7 +144,61 @@ function warmImage(src: string): Promise<void> {
   return loading;
 }
 
-// Progressive image component - loads low-res first, then full-res
+function ExtendedArtwork({
+  src,
+  alt,
+  backgroundSrc,
+  backgroundGrain,
+  priority,
+}: {
+  src: string;
+  alt: string;
+  backgroundSrc?: string;
+  backgroundGrain?: string;
+  priority: boolean;
+}) {
+  const sources = useMemo(
+    () => [...new Set([src, backgroundSrc, backgroundGrain].filter((source): source is string => Boolean(source)))],
+    [src, backgroundSrc, backgroundGrain],
+  );
+  const [readySources, setReadySources] = useState(() => sources.every(source => readyImages.has(source)) ? sources : null);
+  const isReady = readySources === sources;
+  const hasCompleteBackground = sources.every(source => readyImages.has(source));
+
+  useEffect(() => {
+    let cancelled = false;
+    // Reveal the artwork and its extended edges together, after decoding.
+    // Independent fades expose the empty rectangle between the background strips.
+    void Promise.all(sources.map(warmImage)).then(() => {
+      if (!cancelled && readyImages.has(src)) setReadySources(sources);
+    });
+    return () => { cancelled = true; };
+  }, [sources, src]);
+
+  return (
+    <div className={styles.extendedArtwork} data-ready={isReady}>
+      {/* If a background asset fails, blend into the card's solid colour instead
+          of exposing an incomplete set of background strips. */}
+      {hasCompleteBackground && (
+        <div className={styles.imageBackdrop} aria-hidden="true">
+          <div className={styles.imageBackdropFill} style={{ borderImageSource: `url("${backgroundSrc || src}")` }} />
+          {backgroundGrain && <div className={styles.imageBackdropGrain} style={{ backgroundImage: `url("${backgroundGrain}")` }} />}
+        </div>
+      )}
+      <div className={styles.artworkForeground}>
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes="(max-width: 768px) 100vw, 60vw"
+          priority={priority}
+        />
+      </div>
+    </div>
+  );
+}
+
+// Keep ordinary image transitions separate from artwork with extended edges.
 function ProgressiveImage({
   src,
   alt,
@@ -173,14 +227,12 @@ function ProgressiveImage({
     setIsLoaded(true);
   }, [src]);
 
-  const imageContent = (
+  if (extendBackground) {
+    return <ExtendedArtwork src={src} alt={alt} backgroundSrc={backgroundSrc} backgroundGrain={backgroundGrain} priority={priority} />;
+  }
+
+  return (
     <>
-      {extendBackground && (
-        <div className={styles.imageBackdrop} aria-hidden="true">
-          <div className={styles.imageBackdropFill} style={{ borderImageSource: `url("${backgroundSrc || src}")` }} />
-          {backgroundGrain && <div className={styles.imageBackdropGrain} style={{ backgroundImage: `url("${backgroundGrain}")` }} />}
-        </div>
-      )}
       {/* Low-res blurred version - loads fast */}
       <Image
         className={`${styles.cardImage} ${styles.cardImageLowRes}`}
@@ -216,10 +268,6 @@ function ProgressiveImage({
       />
     </>
   );
-
-  return extendBackground
-    ? <div className={styles.extendedArtwork}>{imageContent}</div>
-    : imageContent;
 }
 
 interface Card {
@@ -1025,7 +1073,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
                     backgroundSrc={card.imageBackgroundSrc}
                     backgroundGrain={card.imageBackgroundGrain}
                     scale={card.imageScale}
-                    priority={expanded || card.id <= 4}
+                    priority={expanded || index === 0 || card.id <= 4}
                   />
                   {card.label && <span className={`${styles.cardLabel} ${card.darkText ? styles.cardLabelDark : ''}`} style={{ color: card.labelColor }}>{card.label}</span>}
                   {card.number && <span className={`${styles.cardNumberLabel} ${card.darkText ? styles.cardNumberLabelDark : ''}`} style={{ color: card.labelColor }}>{card.number}</span>}

@@ -180,9 +180,18 @@
   --artwork-inset-top: 56px;
   --artwork-inset-bottom: 16px;
   --artwork-inset-block: calc(var(--artwork-inset-top) + var(--artwork-inset-bottom));
+  --artwork-gap-inline: max(0px, (100cqw - 80cqh + var(--artwork-inset-block) * 0.8) / 2);
+  --artwork-gap-top: calc(var(--artwork-inset-top) + max(0px, (100cqh - var(--artwork-inset-block) - 125cqw) / 2));
+  --artwork-gap-bottom: calc(var(--artwork-inset-bottom) + max(0px, (100cqh - var(--artwork-inset-block) - 125cqw) / 2));
   position: absolute;
   inset: 0;
   container-type: size;
+  opacity: 0;
+  transition: opacity 180ms ease-out;
+}
+
+.extendedArtwork[data-ready='true'] {
+  opacity: 1;
 }
 
 .expandedCard .extendedArtwork {
@@ -190,10 +199,24 @@
   --artwork-inset-bottom: 0px;
 }
 
-.extendedArtwork > .cardImage {
-  box-sizing: border-box;
-  padding-top: var(--artwork-inset-top);
-  padding-bottom: var(--artwork-inset-bottom);
+.artworkForeground {
+  position: absolute;
+  width: min(100cqw, calc((100cqh - var(--artwork-inset-block)) * 0.8));
+  aspect-ratio: 4 / 5;
+  left: 50%;
+  top: calc(50% + (var(--artwork-inset-top) - var(--artwork-inset-bottom)) / 2);
+  transform: translate(-50%, -50%);
+  /* Blend only the artwork's empty outer margin into the extended background. */
+  mask-image:
+    linear-gradient(to right, transparent, #000 min(12px, var(--artwork-gap-inline)), #000 calc(100% - min(12px, var(--artwork-gap-inline))), transparent),
+    linear-gradient(to bottom, transparent, #000 min(12px, var(--artwork-gap-top)), #000 calc(100% - min(12px, var(--artwork-gap-bottom))), transparent);
+  mask-composite: intersect;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .extendedArtwork {
+    transition: none;
+  }
 }
 
 .imageBackdrop {
@@ -220,13 +243,14 @@
   border: 0 solid transparent;
   /* Extend only the empty outer pixels of the 4:5 artwork. The central image
      stays contained and undistorted at every card and dialog aspect ratio. */
-  border-image-slice: 1;
+  border-image-slice: 1 fill;
   border-image-repeat: stretch;
+  /* Overlap the feathered margin only where there is space to extend. */
   border-image-width:
-    calc(var(--artwork-inset-top) + max(0px, (100cqh - var(--artwork-inset-block) - 125cqw) / 2) + 2px)
-    calc(max(0px, (100cqw - 80cqh + var(--artwork-inset-block) * 0.8) / 2) + 2px)
-    calc(var(--artwork-inset-bottom) + max(0px, (100cqh - var(--artwork-inset-block) - 125cqw) / 2) + 2px)
-    calc(max(0px, (100cqw - 80cqh + var(--artwork-inset-block) * 0.8) / 2) + 2px);
+    calc(var(--artwork-gap-top) + min(14px, var(--artwork-gap-top)))
+    calc(var(--artwork-gap-inline) + min(14px, var(--artwork-gap-inline)))
+    calc(var(--artwork-gap-bottom) + min(14px, var(--artwork-gap-bottom)))
+    calc(var(--artwork-gap-inline) + min(14px, var(--artwork-gap-inline)));
 }
 
 .cardImage {
