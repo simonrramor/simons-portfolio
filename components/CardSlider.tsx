@@ -233,6 +233,7 @@ interface Card {
   imageAlt?: string;
   label?: string;
   labelColor?: string;
+  labelShadow?: string;
   number?: string;
   imagePosition?: string;
   expandedImagePosition?: string;
@@ -324,6 +325,18 @@ const defaultCards: Card[] = [
   { id: 6, title: 'Neome', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', number: '_013', showControls: true, logo: '/icons/neome-icon.png', description: 'A smart speaker you can control with your voice.' },
   { id: 7, title: 'Shared tabs', image: '/images/monzo-shared-tabs.webp', label: 'Shared tabs', number: '_014', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'A way to keep track of shared expenses in Monzo, so friends can see what they owe and settle up.' },
   { id: 8, title: 'Golden Tickets', image: '/images/monzo-golden-tickets.webp', label: 'Golden Tickets', number: '_015', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Invite friends to Monzo with a Golden Ticket and earn a reward when they join.' },
+  {
+    id: 15,
+    title: 'Salary sorter',
+    image: '/images/monzo-salary-sorter.webp',
+    imageAlt: 'A phone displaying Monzo’s Salary sorter, clipped to a yellow bag against a white shirt.',
+    label: 'Salary sorter',
+    number: '_016',
+    labelShadow: '0 1px 4px rgb(0 0 0 / 65%)',
+    logo: '/icons/monzo-logo.png',
+    logoHeight: 24,
+    description: 'Split your salary between bills, savings and spending in Monzo.',
+  },
 ];
 
 
@@ -1013,8 +1026,8 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
                     scale={card.imageScale}
                     priority={expanded || card.id <= 4}
                   />
-                  {card.label && <span className={`${styles.cardLabel} ${card.darkText ? styles.cardLabelDark : ''}`} style={{ color: card.labelColor }}>{card.label}</span>}
-                  {card.number && <span className={`${styles.cardNumberLabel} ${card.darkText ? styles.cardNumberLabelDark : ''}`} style={{ color: card.labelColor }}>{card.number}</span>}
+                  {card.label && <span className={`${styles.cardLabel} ${card.darkText ? styles.cardLabelDark : ''}`} style={{ color: card.labelColor, textShadow: card.labelShadow }}>{card.label}</span>}
+                  {card.number && <span className={`${styles.cardNumberLabel} ${card.darkText ? styles.cardNumberLabelDark : ''}`} style={{ color: card.labelColor, textShadow: card.labelShadow }}>{card.number}</span>}
                   {card.logo && (
                     <CardLogo src={card.logo} height={card.logoHeight} />
                   )}
