@@ -150,6 +150,7 @@ function ProgressiveImage({
   alt,
   objectPosition,
   objectFit = 'cover',
+  extendBackground = false,
   scale = 1,
   priority = false
 }: {
@@ -157,6 +158,7 @@ function ProgressiveImage({
   alt: string;
   objectPosition?: string;
   objectFit?: 'cover' | 'contain';
+  extendBackground?: boolean;
   scale?: number;
   priority?: boolean;
 }) {
@@ -167,8 +169,13 @@ function ProgressiveImage({
     setIsLoaded(true);
   }, [src]);
 
-  return (
+  const imageContent = (
     <>
+      {extendBackground && (
+        <div className={styles.imageBackdrop} aria-hidden="true">
+          <div className={styles.imageBackdropFill} style={{ borderImageSource: `url("${src}")` }} />
+        </div>
+      )}
       {/* Low-res blurred version - loads fast */}
       <Image
         className={`${styles.cardImage} ${styles.cardImageLowRes}`}
@@ -204,6 +211,10 @@ function ProgressiveImage({
       />
     </>
   );
+
+  return extendBackground
+    ? <div className={styles.extendedArtwork}>{imageContent}</div>
+    : imageContent;
 }
 
 interface Card {
@@ -222,6 +233,7 @@ interface Card {
   expandedImagePosition?: string;
   imageScale?: number;
   imageFit?: 'cover' | 'contain';
+  extendImageBackground?: boolean;
   logo?: string;
   logoHeight?: number;
   grainOnly?: boolean;
@@ -256,7 +268,8 @@ const defaultCards: Card[] = [
     labelColor: '#393632',
     number: '_001',
     imageFit: 'contain',
-    backgroundColor: '#eeece8',
+    extendImageBackground: true,
+    backgroundColor: '#bdbcb5',
     description: 'A still life made in Blender, pairing a half-glazed ceramic vase with flat, oil-pastel-style flowers. An experiment in bringing loose, colourful marks into a realistic 3D scene.',
   },
   {
@@ -985,6 +998,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
                     alt={card.imageAlt || card.title || ''}
                     objectPosition={expanded ? card.expandedImagePosition ?? card.imagePosition : card.imagePosition}
                     objectFit={card.imageFit}
+                    extendBackground={card.extendImageBackground}
                     scale={card.imageScale}
                     priority={expanded || card.id <= 4}
                   />

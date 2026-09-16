@@ -176,6 +176,47 @@
   transition: filter 0.3s ease;
 }
 
+.extendedArtwork {
+  --artwork-inset-top: 56px;
+  --artwork-inset-bottom: 16px;
+  --artwork-inset-block: calc(var(--artwork-inset-top) + var(--artwork-inset-bottom));
+  position: absolute;
+  inset: 0;
+  container-type: size;
+}
+
+.expandedCard .extendedArtwork {
+  --artwork-inset-top: 0px;
+  --artwork-inset-bottom: 0px;
+}
+
+.extendedArtwork > .cardImage {
+  box-sizing: border-box;
+  padding-top: var(--artwork-inset-top);
+  padding-bottom: var(--artwork-inset-bottom);
+}
+
+.imageBackdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.imageBackdropFill {
+  position: absolute;
+  inset: 0;
+  border: 0 solid transparent;
+  /* Extend only the empty outer pixels of the 4:5 artwork. The central image
+     stays contained and undistorted at every card and dialog aspect ratio. */
+  border-image-slice: 1;
+  border-image-repeat: stretch;
+  border-image-width:
+    calc(var(--artwork-inset-top) + max(0px, (100cqh - var(--artwork-inset-block) - 125cqw) / 2) + 2px)
+    calc(max(0px, (100cqw - 80cqh + var(--artwork-inset-block) * 0.8) / 2) + 2px)
+    calc(var(--artwork-inset-bottom) + max(0px, (100cqh - var(--artwork-inset-block) - 125cqw) / 2) + 2px)
+    calc(max(0px, (100cqw - 80cqh + var(--artwork-inset-block) * 0.8) / 2) + 2px);
+}
+
 .cardImage {
   object-fit: cover;
   border-radius: 32px;
