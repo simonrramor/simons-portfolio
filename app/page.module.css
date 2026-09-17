@@ -1,6 +1,13 @@
 .main {
-  height: 100vh;
+  --gallery-viewport-height: 100vh;
+  height: var(--gallery-viewport-height);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+@supports (height: 100dvh) {
+  .main {
+    --gallery-viewport-height: 100dvh;
+  }
 }
