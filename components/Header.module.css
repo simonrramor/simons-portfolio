@@ -77,6 +77,23 @@
   cursor: none;
 }
 
+.companyLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28em;
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
+.companyLogo {
+  width: auto;
+  height: 1em;
+  max-width: 1.35em;
+  object-fit: contain;
+  flex: 0 0 auto;
+  vertical-align: middle;
+}
+
 .bioLink:hover {
   color: #000000;
 }

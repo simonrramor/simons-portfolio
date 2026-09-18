@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './Header.module.css';
 
 interface HeaderProps {
@@ -8,6 +9,21 @@ interface HeaderProps {
   exiting?: boolean;
   onViewWork: () => void;
   onReset: () => void;
+}
+
+interface CompanyLinkProps {
+  href: string;
+  label: string;
+  logo: string;
+}
+
+function CompanyLink({ href, label, logo }: CompanyLinkProps) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className={`${styles.bioLink} ${styles.companyLink}`}>
+      <Image src={logo} alt="" aria-hidden="true" width={20} height={20} className={styles.companyLogo} />
+      <span>{label}</span>
+    </a>
+  );
 }
 
 export default function Header({ showWork, exiting = false, onViewWork, onReset }: HeaderProps) {
@@ -28,33 +44,19 @@ export default function Header({ showWork, exiting = false, onViewWork, onReset 
         <div className={styles.bio}>
           <p className={styles.bioText}>
             I’m a designer based in London and co-founder of{' '}
-            <a href="https://morsemoney.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
-              Morse
-            </a>
+            <CompanyLink href="https://morsemoney.com" label="Morse" logo="/icons/company/morse.svg" />
             . Before that, I worked at{' '}
-            <a href="https://spotify.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
-              Spotify
-            </a>
+            <CompanyLink href="https://spotify.com" label="Spotify" logo="/icons/company/spotify.svg" />
             {' '}and{' '}
-            <a href="https://monzo.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
-              Monzo
-            </a>
+            <CompanyLink href="https://monzo.com" label="Monzo" logo="/icons/company/monzo-symbol.png" />
             , and built products for clients including{' '}
-            <a href="https://google.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
-              Google
-            </a>
+            <CompanyLink href="https://google.com" label="Google" logo="/icons/company/google.svg" />
             ,{' '}
-            <a href="https://android.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
-              Android
-            </a>
+            <CompanyLink href="https://android.com" label="Android" logo="/icons/company/android-symbol.png" />
             ,{' '}
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
-              YouTube
-            </a>
+            <CompanyLink href="https://youtube.com" label="YouTube" logo="/icons/company/youtube.svg" />
             ,{' '}
-            <a href="https://natwest.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
-              NatWest
-            </a>
+            <CompanyLink href="https://natwest.com" label="NatWest" logo="/icons/company/natwest.svg" />
             {' '}and more.
           </p>
         </div>
