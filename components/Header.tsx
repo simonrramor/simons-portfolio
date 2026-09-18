@@ -46,7 +46,7 @@ export default function Header({ showWork, exiting = false, onViewWork, onReset 
               I’m a designer based in London and co-founder of{' '}
               <CompanyLink href="https://morsemoney.com" label="Morse" logo="/icons/company/morse.svg" />
             </span>
-            {' '}Before this, I worked at{' '}
+            {' '}Previously, I worked at{' '}
             <CompanyLink href="https://spotify.com" label="Spotify" logo="/icons/company/spotify.svg" />
             {' '}and{' '}
             <CompanyLink href="https://monzo.com" label="Monzo" logo="/icons/company/monzo-symbol.png" />
