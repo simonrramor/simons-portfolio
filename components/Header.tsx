@@ -19,9 +19,8 @@ interface CompanyLinkProps {
 
 function CompanyLink({ href, label, logo }: CompanyLinkProps) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className={`${styles.bioLink} ${styles.companyLink}`}>
+    <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className={`${styles.bioLink} ${styles.companyLink}`}>
       <Image src={logo} alt="" aria-hidden="true" width={20} height={20} className={styles.companyLogo} />
-      <span>{label}</span>
     </a>
   );
 }
