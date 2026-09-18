@@ -42,8 +42,10 @@ export default function Header({ showWork, exiting = false, onViewWork, onReset 
         
         <div className={styles.bio}>
           <p className={styles.bioText}>
-            I’m a designer based in London and co-founder of{' '}
-            <CompanyLink href="https://morsemoney.com" label="Morse" logo="/icons/company/morse.svg" />
+            <span className={styles.bioLead}>
+              I’m a designer based in London and co-founder of{' '}
+              <CompanyLink href="https://morsemoney.com" label="Morse" logo="/icons/company/morse.svg" />
+            </span>
             {' '}Before this, I worked at{' '}
             <CompanyLink href="https://spotify.com" label="Spotify" logo="/icons/company/spotify.svg" />
             {' '}and{' '}
