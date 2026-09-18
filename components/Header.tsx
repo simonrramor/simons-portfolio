@@ -44,7 +44,7 @@ export default function Header({ showWork, exiting = false, onViewWork, onReset 
           <p className={styles.bioText}>
             I’m a designer based in London and co-founder of{' '}
             <CompanyLink href="https://morsemoney.com" label="Morse" logo="/icons/company/morse.svg" />
-            . Before that, I worked at{' '}
+            {' '}Before this, I worked at{' '}
             <CompanyLink href="https://spotify.com" label="Spotify" logo="/icons/company/spotify.svg" />
             {' '}and{' '}
             <CompanyLink href="https://monzo.com" label="Monzo" logo="/icons/company/monzo-symbol.png" />
@@ -56,7 +56,7 @@ export default function Header({ showWork, exiting = false, onViewWork, onReset 
             <CompanyLink href="https://youtube.com" label="YouTube" logo="/icons/company/youtube.svg" />
             ,{' '}
             <CompanyLink href="https://natwest.com" label="NatWest" logo="/icons/company/natwest.svg" />
-            {' '}and more.
+            {' '}and more
           </p>
         </div>
       </div>

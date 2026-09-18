@@ -78,12 +78,47 @@
 }
 
 .companyLink {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.28em;
   white-space: nowrap;
   vertical-align: baseline;
   text-decoration: none;
+}
+
+.companyLink::after {
+  content: attr(aria-label);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 7px);
+  z-index: 2;
+  padding: 4px 6px;
+  border-radius: 5px;
+  background: #171717;
+  color: #ffffff;
+  font-family: "SF Mono", SFMono-Regular, ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 5px) scale(0.96);
+  transform-origin: 50% 100%;
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+
+.companyLink:hover::after,
+.companyLink:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+
+@media (hover: none) {
+  .companyLink::after { display: none; }
 }
 
 .companyLogo {
