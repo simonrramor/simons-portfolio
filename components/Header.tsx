@@ -35,15 +35,27 @@ export default function Header({ showWork, exiting = false, onViewWork, onReset 
             <a href="https://spotify.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
               Spotify
             </a>
-            ,{' '}
+            {' '}and{' '}
             <a href="https://monzo.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
               Monzo
             </a>
-            {' '}and{' '}
+            , and built products for clients including{' '}
             <a href="https://google.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
               Google
             </a>
-            .
+            ,{' '}
+            <a href="https://android.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
+              Android
+            </a>
+            ,{' '}
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
+              YouTube
+            </a>
+            ,{' '}
+            <a href="https://natwest.com" target="_blank" rel="noopener noreferrer" className={styles.bioLink}>
+              NatWest
+            </a>
+            {' '}and more.
           </p>
         </div>
       </div>

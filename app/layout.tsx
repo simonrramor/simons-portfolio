@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://simonamor.design"),
   title: "Simon Amor",
   openGraph: { title: "Simon Amor — Design & experiments", images: [{ url: "/social-card.png", width: 1200, height: 630 }] },
-  description: "Simon Amor is a designer based in London and co-founder of Morse. Previously at Spotify, Monzo and Google.",
+  description: "Simon Amor is a designer based in London and co-founder of Morse. Previously at Spotify and Monzo. Has built products for clients including Google, Android, YouTube, NatWest and more.",
 };
 
 export default function RootLayout({
