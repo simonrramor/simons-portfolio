@@ -293,6 +293,7 @@ interface Card {
   grainOnly?: boolean;
   noOverlay?: boolean;
   videoScale?: number;
+  nativeLoop?: boolean;
   showControls?: boolean;
   hasBorder?: boolean;
   darkText?: boolean;
@@ -313,6 +314,20 @@ interface CardSliderProps {
 }
 
 const defaultCards: Card[] = [
+  {
+    id: 16,
+    title: 'Vino Della Casa',
+    video: '/videos/vino-della-casa-clapping.mp4',
+    poster: '/posters/vino-della-casa-clapping.webp',
+    label: 'Vino Della Casa',
+    description: 'A looping 3D animation of cartoon hands clapping over Vino Della Casa poster artwork, made in Blender.',
+    videoScale: 1,
+    nativeLoop: true,
+    noOverlay: true,
+    hasBorder: true,
+    darkText: true,
+    backgroundColor: '#ffffff',
+  },
   {
     id: 14,
     title: 'Oil-pastel flowers',
@@ -1031,7 +1046,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
                         (e.target as HTMLVideoElement).playbackRate = 0.5;
                       }
                     }}
-                    onTimeUpdate={expanded && mediaView > 0 && selectedCard?.gallery ? undefined : (e) => {
+                    onTimeUpdate={card.nativeLoop || (expanded && mediaView > 0 && selectedCard?.gallery) ? undefined : (e) => {
                       const video = e.target as HTMLVideoElement;
                       // Seamless loop: seek to start before video ends
                       if (video.duration - video.currentTime < 0.1) {
