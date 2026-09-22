@@ -65,7 +65,28 @@
   pointer-events: none;
 }
 
-.label { top: 24px; left: 24px; }
+.label {
+  top: 24px;
+  left: 24px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .phoneCard:hover .label,
+  .phoneCard:focus-visible .label {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (hover: none) {
+  .label {
+    opacity: 1;
+    transform: none;
+  }
+}
 
 .caption {
   left: 24px;

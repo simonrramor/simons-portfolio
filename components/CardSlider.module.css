@@ -302,6 +302,9 @@
   font-weight: 500;
   font-family: var(--font-roboto-mono), monospace;
   text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 160ms ease, transform 160ms ease;
 }
 
 .cardLabelDark {
@@ -315,7 +318,27 @@
   width: auto;
   height: 32px;
   object-fit: contain;
-  opacity: 0.8;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .cardLabel,
+  .card:hover .cardLogo,
+  .card:focus-visible .cardLabel,
+  .card:focus-visible .cardLogo {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (hover: none) {
+  .cardLabel,
+  .cardLogo {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .videoControls {
