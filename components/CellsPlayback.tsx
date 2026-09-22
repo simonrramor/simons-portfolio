@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import styles from './CellsCard.module.css';
+import { isConstrainedConnection } from './network';
 
 interface CellsPlayer {
   getVideo: () => HTMLVideoElement | null;
@@ -14,10 +15,11 @@ const CellsContext = createContext<CellsPlayer | null>(null);
 export function CellsPlaybackProvider({ children }: { children: ReactNode }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const visibleCards = useRef(new Set<symbol>());
+  const constrained = useRef(isConstrainedConnection());
   const [loaded, setLoaded] = useState(false);
   const getVideo = useCallback(() => videoRef.current, []);
 
-  const resume = useCallback(() => {
+  const syncPlayback = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
     if (visibleCards.current.size > 0 && !document.hidden && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -27,22 +29,34 @@ export function CellsPlaybackProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const resume = useCallback(() => {
+    setLoaded(true);
+    requestAnimationFrame(syncPlayback);
+  }, [syncPlayback]);
+
   const setVisible = useCallback((card: symbol, visible: boolean) => {
     if (visible) {
       visibleCards.current.add(card);
-      setLoaded(true);
+      if (!constrained.current) setLoaded(true);
     } else {
       visibleCards.current.delete(card);
     }
-    resume();
-  }, [resume]);
+    syncPlayback();
+  }, [syncPlayback]);
+
+  useEffect(() => {
+    if (loaded) syncPlayback();
+  }, [loaded, syncPlayback]);
 
   useEffect(() => {
     const query = window.matchMedia('(prefers-reduced-motion: reduce)');
-    query.addEventListener('change', resume);
-    document.addEventListener('visibilitychange', resume);
-    return () => { query.removeEventListener('change', resume); document.removeEventListener('visibilitychange', resume); };
-  }, [resume]);
+    query.addEventListener('change', syncPlayback);
+    document.addEventListener('visibilitychange', syncPlayback);
+    return () => {
+      query.removeEventListener('change', syncPlayback);
+      document.removeEventListener('visibilitychange', syncPlayback);
+    };
+  }, [syncPlayback]);
 
   const player = useMemo(() => ({ getVideo, setVisible, resume }), [getVideo, setVisible, resume]);
 
@@ -54,7 +68,7 @@ export function CellsPlaybackProvider({ children }: { children: ReactNode }) {
         ref={videoRef}
         className={styles.source}
         src={loaded ? '/videos/cells-styles-xray-sync.mp4' : undefined}
-        preload="auto"
+        preload={loaded ? 'metadata' : 'none'}
         muted
         playsInline
         loop

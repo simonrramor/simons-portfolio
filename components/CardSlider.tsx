@@ -343,7 +343,7 @@ const defaultCards: Card[] = [
     description: 'A still life combining 2D and 3D, made in Blender. Flat, oil-pastel-style flowers sit in a realistic, half-glazed ceramic vase—bringing loose, colourful marks into a three-dimensional scene.',
   },
   {
-    id: 13, title: 'Morse Card', video: '/videos/morse-card.mp4', poster: '/posters/morse-card.png', label: 'Morse Card', logo: '/icons/morse-logo.png', logoHeight: 32, noOverlay: true, videoScale: 1, backgroundColor: '#000000', hasBorder: true,
+    id: 13, title: 'Morse Card', video: '/videos/morse-card.mp4', poster: '/posters/morse-card.webp', label: 'Morse Card', logo: '/icons/morse-logo.png', logoHeight: 32, noOverlay: true, videoScale: 1, backgroundColor: '#000000', hasBorder: true,
     description: 'A rotating 3D study of the Morse card in black and white, playing with materials and light.',
     synchronizedGallery: true,
     gallery: [{
@@ -356,11 +356,11 @@ const defaultCards: Card[] = [
   { id: 12, iphoneFold: true, title: 'iPhone Fold', label: 'iPhone Fold', description: 'A folding iPhone concept with a worn aluminium finish and a central hinge.' },
   { id: 11, cells: true, title: 'Cells', label: 'Cells', description: 'An animated study of cells in four styles: heat map, infrared, X-ray and microscopy.' },
   {
-    id: 9, title: 'Mostly working', video: '/videos/card_9_video.mp4', label: 'Mostly working', noOverlay: true, videoScale: 0.7, showRotation: true, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true,
+    id: 9, title: 'Mostly working', video: '/videos/card_9_video.mp4', poster: '/posters/card_9_poster.webp', label: 'Mostly working', noOverlay: true, videoScale: 0.7, showRotation: true, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true,
     description: 'A monthly(ish) meetup for London designers to try AI tools and talk about how they’re changing design. When I have time, I make fun artwork for the events.',
     gallery: [{
       video: '/videos/mostly-working-christine-rode.mp4',
-      poster: '/posters/mostly-working-christine-rode.png',
+      poster: '/posters/mostly-working-christine-rode.webp',
       title: 'Christine Røde speaker animation',
     }],
     speakers: [
@@ -377,12 +377,12 @@ const defaultCards: Card[] = [
   },
   { id: 0, title: 'Captr', image: '/images/captr-detail.webp', label: 'Captr', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom', description: 'A screen capture tool for grabbing, annotating and sharing what’s on your screen.' },
   { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28, description: 'A visual identity built from pixel patterns that grow and change over time.' },
-  { id: 1, title: '咲く花', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.png', label: '咲く花', logo: '/icons/stars-icon.svg', description: 'An animation experiment with organic forms that grow and bloom.' },
+  { id: 1, title: '咲く花', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.webp', label: '咲く花', logo: '/icons/stars-icon.svg', description: 'An animation experiment with organic forms that grow and bloom.' },
   { id: 2, title: 'Sling', image: '/images/card_2_image.jpg', label: 'Sling', logo: '/icons/sling-logo.png', expandedImagePosition: 'center 10%', description: 'A way to send and receive digital dollars and euros around the world.' },
-  { id: 3, title: 'Face tracking', video: '/videos/card_3_video.webm', label: 'Face tracking', grainOnly: true, logo: '/icons/qr-code-icon.svg', description: 'A browser experiment that follows facial features as you move.' },
+  { id: 3, title: 'Face tracking', video: '/videos/card_3_video.mp4', poster: '/posters/card_3_poster.webp', label: 'Face tracking', grainOnly: true, logo: '/icons/qr-code-icon.svg', description: 'A browser experiment that follows facial features as you move.' },
   { id: 4, title: 'Group Sessions', image: '/images/spotify-group-sessions.webp', label: 'Group Sessions', logo: '/icons/spotify-logo.png', description: 'Listen to music together with shared sessions on Spotify.' },
   { id: 5, title: 'Enhance', image: '/images/spotify-enhance.webp', label: 'Enhance', imagePosition: 'top', logo: '/icons/spotify-logo.png', description: 'Song recommendations that fit the mood of your Spotify playlists, helping you find something new among your favourites.' },
-  { id: 6, title: 'Neome', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.png', label: 'Neome', showControls: true, logo: '/icons/neome-icon.png', description: 'A smart speaker you can control with your voice.' },
+  { id: 6, title: 'Neome', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.webp', label: 'Neome', showControls: true, logo: '/icons/neome-icon.png', description: 'A smart speaker you can control with your voice.' },
   { id: 7, title: 'Shared tabs', image: '/images/monzo-shared-tabs.webp', label: 'Shared tabs', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'A way to keep track of shared expenses in Monzo, so friends can see what they owe and settle up.' },
   { id: 8, title: 'Golden Tickets', image: '/images/monzo-golden-tickets.webp', label: 'Golden Tickets', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Invite friends to Monzo with a Golden Ticket and earn a reward when they join.' },
   {
@@ -1026,6 +1026,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
                   ) : <CardVideo
                     key={card.video}
                     enabled={expanded || (showWork && !selectedCard && !exiting)}
+                    forceLoad={expanded}
                     className={styles.cardVideo}
                     src={card.video}
                     poster={card.poster}
