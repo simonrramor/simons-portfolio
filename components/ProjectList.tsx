@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import CardVideo from './CardVideo';
 import { projectTitles, type ProjectCategory, type ProjectListItem } from './CardSlider';
 import styles from './ProjectList.module.css';
 
@@ -60,6 +61,14 @@ export default function ProjectList({ category }: { category: ProjectCategory })
                 </svg>
               </span>
             </div>
+          ) : active.previewVideo ? (
+            active.previewVideoAtlas ? (
+              <div className={styles.videoAtlasFrame}>
+                <CardVideo enabled forceLoad src={active.previewVideo} poster={active.preview} autoPlay muted loop playsInline aria-label={active.title} className={styles.videoAtlas} />
+              </div>
+            ) : (
+              <CardVideo enabled forceLoad src={active.previewVideo} poster={active.preview} autoPlay muted loop playsInline aria-label={active.title} className={styles.previewVideo} />
+            )
           ) : (
             <Image src={active.preview} alt={active.title} fill sizes="(max-width: 768px) 28vw, 36vw" className={styles.previewImage} />
           )}

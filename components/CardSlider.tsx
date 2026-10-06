@@ -413,13 +413,15 @@ export interface ProjectListItem {
   title: string;
   category: string;
   preview?: string;
+  previewVideo?: string;
+  previewVideoAtlas?: boolean;
   blurPreview?: boolean;
   previewAspectRatio?: string;
 }
 
 export const projectTitles: ProjectListItem[] = [
   ...defaultCards.flatMap(card => card.id === 13 ? [
-    { id: card.id, title: 'Morse - Card', category: 'work', preview: card.poster },
+    { id: card.id, title: 'Morse - Card', category: 'work', preview: card.poster, previewVideo: card.video },
     { id: 22, title: 'Morse - Investments', category: 'work', preview: '/images/morse-investments.png' },
     { id: 23, title: 'Morse - Savings', category: 'work', preview: '/images/morse-savings.png' },
     { id: 24, title: 'Morse - Bill Splits', category: 'work', preview: '/images/morse-bill-splits.png' },
@@ -432,6 +434,8 @@ export const projectTitles: ProjectListItem[] = [
       : card.id === 2 ? 'Sling - International payments'
       : card.title ?? card.label ?? '',
     category: card.category ?? 'fun',
+    previewVideo: card.video ?? (card.cells ? '/videos/cells-styles-xray-sync.mp4' : undefined),
+    previewVideoAtlas: card.cells,
     preview: card.image ?? card.poster
       ?? (card.iphoneFold ? IPHONE_FOLD_VIEWS[0].src : undefined)
       ?? (card.cells ? '/posters/cells-heat-map.jpg' : undefined)

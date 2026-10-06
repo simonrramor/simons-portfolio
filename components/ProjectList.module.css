@@ -93,6 +93,33 @@
   object-position: center;
 }
 
+.previewVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.videoAtlasFrame {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.videoAtlas {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  max-width: none;
+  height: 200%;
+  object-fit: fill;
+}
+
 .blurredFrame {
   position: relative;
   top: 50%;
