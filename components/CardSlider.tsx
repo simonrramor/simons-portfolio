@@ -443,6 +443,7 @@ export const projectTitles: ProjectListItem[] = [
   ] : [])]),
   { id: 19, title: 'Monzo - Get paid early', category: 'work', preview: '/images/monzo-get-paid-early.png' },
   { id: 20, title: 'Monzo - Bills Pots', category: 'work' },
+  { id: 34, title: 'Monzo - Premium paid account', category: 'work', preview: '/images/monzo-premium-paid-account.png' },
   { id: 26, title: 'Google - Ticketing system for Google IO', category: 'work', preview: '/images/google-io-ticketing.jpg', blurPreview: true, previewAspectRatio: '2041 / 2160' },
   { id: 27, title: 'Google - Grow with Google', category: 'work', preview: '/images/google-grow-with-google.jpg', blurPreview: true, previewAspectRatio: '2181 / 2160' },
   { id: 28, title: 'Android - Developer portal', category: 'work', preview: '/images/android-developer-portal.jpg', blurPreview: true, previewAspectRatio: '2367 / 2160' },
