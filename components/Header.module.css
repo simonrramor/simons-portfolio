@@ -194,6 +194,10 @@
 @media (prefers-reduced-motion: reduce) { .header, .headerExiting { transition: none; } }
 
 .projectControls {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  white-space: nowrap;
   position: absolute;
   left: 50%;
   top: -13px;
@@ -204,7 +208,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
+}
+
+.categoryButton + .categoryButton::before {
+  content: "-";
+  margin-right: 8px;
+  color: var(--color-text-muted);
 }
 
 .categoryButton {
@@ -238,7 +248,7 @@
 }
 
 @media (min-width: 769px) {
-  .bio { max-width: min(500px, calc(50% - 90px)); }
+  .bio { max-width: min(500px, calc(50% - 154px)); }
 }
 
 @media (min-width: 769px) and (max-width: 1279px) {
@@ -250,5 +260,6 @@
 }
 
 @media (max-width: 768px) {
+  .projectControls { top: 24px; }
   .headerWithViews .bio { margin-top: 44px; }
 }
