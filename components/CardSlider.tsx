@@ -440,6 +440,7 @@ export const projectTitles: ProjectListItem[] = [
   }, ...(card.id === 5 ? [
     { id: 17, title: 'Spotify - Global privacy controls', category: 'work' },
     { id: 18, title: 'Spotify - Local file upload and offline listening', category: 'work' },
+    { id: 33, title: 'Spotify - Music discover using short form video', category: 'work', preview: '/images/spotify-short-form-video.png' },
   ] : [])]),
   { id: 19, title: 'Monzo - Get paid early', category: 'work' },
   { id: 20, title: 'Monzo - Bills Pots', category: 'work' },
