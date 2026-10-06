@@ -212,7 +212,7 @@
 }
 
 .categoryButton + .categoryButton::before {
-  content: "-";
+  content: "/";
   margin-right: 8px;
   color: var(--color-text-muted);
 }
