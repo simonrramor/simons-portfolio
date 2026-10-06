@@ -32,7 +32,7 @@
   .bg { position: absolute; inset: 0; overflow: hidden; background: #000; }
   .bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; max-width: none; }
   .bg iframe { position: absolute; left: 50%; top: 50%; width: 1080px; height: 608px; border: 0;
-    transform: translate(-50%, -50%); pointer-events: none; opacity: 0; transition: opacity .6s ease; }
+    transform: translate(-50%, -50%); pointer-events: none; opacity: 0; }
   .bg iframe.on { opacity: 1; }
   .card .shade { position: absolute; left: 0; right: 0; bottom: 0; height: 263px;
     background: linear-gradient(to top, #2a2a2a 0%, rgba(42,42,42,0) 100%); }
@@ -215,12 +215,28 @@ function mount(card, m) {
   f.addEventListener("load", () => {
     f.contentWindow?.postMessage(JSON.stringify({ event: "listening" }), "*");
     [300, 900, 1800, 3500].forEach(t => setTimeout(() => { cmd("unloadModule", ["captions"]); cmd("unloadModule", ["cc"]); }, t));
-    f.classList.add("on");
+    cmd("addEventListener", ["onReady"]);
+    cmd("addEventListener", ["onStateChange"]);
     cmd(previewActive ? "playVideo" : "pauseVideo");
   });
   card.querySelector(".bg").appendChild(f);
   return f;
 }
+
+
+// Keep the thumbnail visible while paused or buffering so YouTube's
+// central playback controls never appear in the portfolio preview.
+addEventListener("message", e => {
+  const st = state.find(item => item.frame?.contentWindow === e.source);
+  if (!st?.frame || e.origin !== "https://www.youtube-nocookie.com") return;
+  let data;
+  try { data = typeof e.data === "string" ? JSON.parse(e.data) : e.data; } catch { return; }
+  if (data?.event === "onReady") {
+    st.frame.contentWindow?.postMessage(JSON.stringify({ event: "command", func: st.playing ? "playVideo" : "pauseVideo", args: [] }), e.origin);
+  }
+  const playerState = data?.event === "onStateChange" ? data.info : data?.info?.playerState;
+  if (typeof playerState === "number") st.frame.classList.toggle("on", previewActive && st.playing && playerState === 1);
+});
 
 function layout() {
   cards.forEach((c, i) => {
@@ -233,6 +249,7 @@ function layout() {
     const play = previewActive && near < STEP * 1.2;
     if (st.frame && play !== st.playing) {
       st.playing = play;
+      if (!play) st.frame.classList.remove("on");
       st.frame.contentWindow?.postMessage(JSON.stringify({ event: "command", func: play ? "playVideo" : "pauseVideo", args: [] }), "*");
     }
   });
