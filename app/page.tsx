@@ -23,9 +23,6 @@ export default function Home() {
 
   return (
     <main className={styles.main} style={{ '--gallery-duration': `${GALLERY_MOTION.duration}ms`, '--header-delay': `${GALLERY_MOTION.headerDelay}ms`, '--gallery-enter': GALLERY_MOTION.enterEase, '--gallery-exit': GALLERY_MOTION.exitEase } as CSSProperties}>
-      <div className={styles.columnGrid} aria-hidden="true">
-        {Array.from({ length: 12 }, (_, column) => <span key={column} />)}
-      </div>
       <Header view={view} onViewChange={setView} category={category} onCategoryChange={setCategory} showWork={showWork} exiting={exiting} onViewWork={handleViewWork} onReset={() => { if (showWork) { if (view === 'list') finishExit(); else setExiting(true); } }} />
       {showWork && view === 'list' && (
         <ProjectList key={category} category={category} />
