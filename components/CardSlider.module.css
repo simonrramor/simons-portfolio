@@ -772,7 +772,6 @@ button.expandedCard:focus-visible {
   background: #fff;
 }
 
-.soundToggle { position: fixed; right: 20px; bottom: 16px; z-index: 110; background: white; border: 0; padding: 8px; font: inherit; font-size: 11px; text-transform: uppercase; color: #6b7280; cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   .cardAnimate { animation: none; opacity: 1; transform: none; }
   .card:hover { translate: none; }

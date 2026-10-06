@@ -272,6 +272,7 @@ function ProgressiveImage({
 
 interface Card {
   id: number;
+  category?: ProjectCategory;
   cells?: boolean;
   iphoneFold?: boolean;
   title?: string;
@@ -306,7 +307,12 @@ interface Card {
   speakers?: { name: string; company: string }[];
 }
 
+export type ProjectView = 'list' | 'card';
+
+export type ProjectCategory = 'work' | 'fun';
+
 interface CardSliderProps {
+  category?: ProjectCategory;
   cards?: Card[];
   showWork?: boolean;
   exiting?: boolean;
@@ -343,7 +349,7 @@ const defaultCards: Card[] = [
     description: 'A still life combining 2D and 3D, made in Blender. Flat, oil-pastel-style flowers sit in a realistic, half-glazed ceramic vase—bringing loose, colourful marks into a three-dimensional scene.',
   },
   {
-    id: 13, title: 'Morse Card', video: '/videos/morse-card.mp4', poster: '/posters/morse-card.webp', label: 'Morse Card', logo: '/icons/morse-logo.png', logoHeight: 32, noOverlay: true, videoScale: 1, backgroundColor: '#000000', hasBorder: true,
+    id: 13, category: 'work', title: 'Morse Card', video: '/videos/morse-card.mp4', poster: '/posters/morse-card.webp', label: 'Morse Card', logo: '/icons/morse-logo.png', logoHeight: 32, noOverlay: true, videoScale: 1, backgroundColor: '#000000', hasBorder: true,
     description: 'A rotating 3D study of the Morse card in black and white, playing with materials and light.',
     synchronizedGallery: true,
     gallery: [{
@@ -378,15 +384,16 @@ const defaultCards: Card[] = [
   { id: 0, title: 'Captr', image: '/images/captr-detail.webp', label: 'Captr', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom', description: 'A screen capture tool for grabbing, annotating and sharing what’s on your screen.' },
   { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28, description: 'A visual identity built from pixel patterns that grow and change over time.' },
   { id: 1, title: '咲く花', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.webp', label: '咲く花', logo: '/icons/stars-icon.svg', description: 'An animation experiment with organic forms that grow and bloom.' },
-  { id: 2, title: 'Sling', image: '/images/card_2_image.jpg', label: 'Sling', logo: '/icons/sling-logo.png', expandedImagePosition: 'center 10%', description: 'A way to send and receive digital dollars and euros around the world.' },
+  { id: 2, category: 'work', title: 'Sling', image: '/images/card_2_image.jpg', label: 'Sling', logo: '/icons/sling-logo.png', expandedImagePosition: 'center 10%', description: 'A way to send and receive digital dollars and euros around the world.' },
   { id: 3, title: 'Face tracking', video: '/videos/card_3_video.mp4', poster: '/posters/card_3_poster.webp', label: 'Face tracking', grainOnly: true, logo: '/icons/qr-code-icon.svg', description: 'A browser experiment that follows facial features as you move.' },
-  { id: 4, title: 'Group Sessions', image: '/images/spotify-group-sessions.webp', label: 'Group Sessions', logo: '/icons/spotify-logo.png', description: 'Listen to music together with shared sessions on Spotify.' },
-  { id: 5, title: 'Enhance', image: '/images/spotify-enhance.webp', label: 'Enhance', imagePosition: 'top', logo: '/icons/spotify-logo.png', description: 'Song recommendations that fit the mood of your Spotify playlists, helping you find something new among your favourites.' },
+  { id: 4, category: 'work', title: 'Group Sessions', image: '/images/spotify-group-sessions.webp', label: 'Group Sessions', logo: '/icons/spotify-logo.png', description: 'Listen to music together with shared sessions on Spotify.' },
+  { id: 5, category: 'work', title: 'Enhance', image: '/images/spotify-enhance.webp', label: 'Enhance', imagePosition: 'top', logo: '/icons/spotify-logo.png', description: 'Song recommendations that fit the mood of your Spotify playlists, helping you find something new among your favourites.' },
   { id: 6, title: 'Neome', video: '/videos/card_6_video.mp4', poster: '/posters/card_6_poster.webp', label: 'Neome', showControls: true, logo: '/icons/neome-icon.png', description: 'A smart speaker you can control with your voice.' },
-  { id: 7, title: 'Shared tabs', image: '/images/monzo-shared-tabs.webp', label: 'Shared tabs', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'A way to keep track of shared expenses in Monzo, so friends can see what they owe and settle up.' },
-  { id: 8, title: 'Golden Tickets', image: '/images/monzo-golden-tickets.webp', label: 'Golden Tickets', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Invite friends to Monzo with a Golden Ticket and earn a reward when they join.' },
+  { id: 7, category: 'work', title: 'Shared tabs', image: '/images/monzo-shared-tabs.webp', label: 'Shared tabs', imagePosition: 'left', logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'A way to keep track of shared expenses in Monzo, so friends can see what they owe and settle up.' },
+  { id: 8, category: 'work', title: 'Golden Tickets', image: '/images/monzo-golden-tickets.webp', label: 'Golden Tickets', imageScale: 1.2, logo: '/icons/monzo-logo.png', logoHeight: 24, description: 'Invite friends to Monzo with a Golden Ticket and earn a reward when they join.' },
   {
     id: 15,
+    category: 'work',
     title: 'Salary sorter',
     image: '/images/monzo-salary-sorter-screen.webp',
     imageAlt: 'A phone displaying Monzo’s Salary sorter, clipped to a yellow bag against a white shirt.',
@@ -401,7 +408,48 @@ const defaultCards: Card[] = [
 ];
 
 
-export default function CardSlider({ cards = defaultCards, showWork = true, exiting = false, onExitComplete }: CardSliderProps) {
+export interface ProjectListItem {
+  id: number;
+  title: string;
+  category: string;
+  preview?: string;
+  blurPreview?: boolean;
+  previewAspectRatio?: string;
+}
+
+export const projectTitles: ProjectListItem[] = [
+  ...defaultCards.flatMap(card => card.id === 13 ? [
+    { id: card.id, title: 'Morse - Card', category: 'work', preview: card.poster },
+    { id: 22, title: 'Morse - Investments', category: 'work' },
+    { id: 23, title: 'Morse - Savings', category: 'work' },
+    { id: 24, title: 'Morse - Bill Splits', category: 'work' },
+    { id: 25, title: 'Morse - Referral', category: 'work' },
+  ] : [{
+    id: card.id,
+    title: [7, 8, 15].includes(card.id) ? `Monzo - ${card.title}`
+      : [4, 5].includes(card.id) ? `Spotify - ${card.title}`
+      : card.id === 2 ? 'Sling - International payments'
+      : card.title ?? card.label ?? '',
+    category: card.category ?? 'fun',
+    preview: card.image ?? card.poster
+      ?? (card.iphoneFold ? IPHONE_FOLD_VIEWS[0].src : undefined)
+      ?? (card.cells ? '/posters/cells-heat-map.jpg' : undefined)
+      ?? (card.showGlyph ? '/icons/glyph-reference.png' : undefined),
+  }, ...(card.id === 5 ? [
+    { id: 17, title: 'Spotify - Global privacy controls', category: 'work' },
+    { id: 18, title: 'Spotify - Local file upload and offline listening', category: 'work' },
+  ] : [])]),
+  { id: 19, title: 'Monzo - Get paid early', category: 'work' },
+  { id: 20, title: 'Monzo - Bills Pots', category: 'work' },
+  { id: 26, title: 'Google - Ticketing system for Google IO', category: 'work', preview: '/images/google-io-ticketing.jpg', blurPreview: true, previewAspectRatio: '2041 / 2160' },
+  { id: 27, title: 'Google - Grow with Google', category: 'work', preview: '/images/google-grow-with-google.jpg', blurPreview: true, previewAspectRatio: '2181 / 2160' },
+  { id: 28, title: 'Android - Developer portal', category: 'work', preview: '/images/android-developer-portal.jpg', blurPreview: true, previewAspectRatio: '2367 / 2160' },
+  { id: 29, title: 'Natwest - Cyber security education', category: 'work', preview: '/images/natwest-cyber-security.jpg', blurPreview: true, previewAspectRatio: '1960 / 2160' },
+  { id: 30, title: 'ATIS - High throughput AI particle tracking for researchers', category: 'work', preview: '/images/aits.jpg', blurPreview: true, previewAspectRatio: '2259 / 2160' },
+];
+
+export default function CardSlider({ cards: sourceCards = defaultCards, category, showWork = true, exiting = false, onExitComplete }: CardSliderProps) {
+  const cards = useMemo(() => category ? sourceCards.filter(card => (card.category ?? 'fun') === category) : sourceCards, [sourceCards, category]);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [mediaView, setMediaView] = useState(0);
   const galleryStartTimeRef = useRef(0);
@@ -704,7 +752,7 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
     return () => { cancelAnimationFrame(frame); query.removeEventListener('change', update); };
   }, []);
 
-  const { playSound: playHoverSound, muted, toggleMuted } = useCardHoverSound();
+  const { playSound: playHoverSound } = useCardHoverSound();
   useEffect(() => {
     if (!exiting) return;
     const visible = Array.from(cardsRef.current?.children ?? []).filter((element): element is HTMLElement => {
@@ -1116,7 +1164,6 @@ export default function CardSlider({ cards = defaultCards, showWork = true, exit
 
   return (
     <CellsPlaybackProvider>
-      <button type="button" className={styles.soundToggle} aria-pressed={muted} onClick={toggleMuted}>{muted ? 'Sound off' : 'Sound on'}</button>
       {!isTouchDevice && (
         <>
           <div

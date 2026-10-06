@@ -11,3 +11,24 @@
     --gallery-viewport-height: 100dvh;
   }
 }
+
+.columnGrid {
+  position: fixed;
+  inset: 0 48px;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 24px;
+  pointer-events: none;
+}
+
+.columnGrid span {
+  background: #ffffff;
+  border-inline: 1px solid #eeeeee;
+}
+
+@media (max-width: 768px) {
+  .columnGrid {
+    inset-inline: 24px;
+    gap: 8px;
+  }
+}
