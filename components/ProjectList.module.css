@@ -34,11 +34,12 @@
 .rowContent {
   display: inline-block;
   position: relative;
-  transition: transform 180ms ease, color 180ms ease;
+  left: 0;
+  transition: left 180ms ease, color 180ms ease;
 }
 
 .row[data-active="true"] .rowContent {
-  transform: translateX(16px);
+  left: 16px;
   color: var(--color-text);
 }
 

@@ -6,7 +6,14 @@ import { projectTitles, type ProjectCategory, type ProjectListItem } from './Car
 import styles from './ProjectList.module.css';
 
 export default function ProjectList({ category }: { category: ProjectCategory }) {
-  const [active, setActive] = useState<ProjectListItem | null>(null);
+  const [hovered, setActive] = useState<ProjectListItem | null>(null);
+  const [previousCategory, setPreviousCategory] = useState(category);
+  const active = hovered?.category === category ? hovered : null;
+
+  if (previousCategory !== category) {
+    setPreviousCategory(category);
+    setActive(null);
+  }
 
   return (
     <section className={styles.projectList} aria-label={`${category} projects`}>
