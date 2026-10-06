@@ -23,7 +23,7 @@ function PrototypePreview({ project, active }: { project: ProjectListItem; activ
           src={`${project.previewEmbed}?preview=1`}
           title={project.title}
           className={`${styles.prototypePreview} ${!ready ? styles.loadingPrototype : ''}`}
-          sandbox="allow-scripts"
+          sandbox="allow-scripts allow-same-origin"
           allow="autoplay"
           tabIndex={-1}
           onLoad={() => {
