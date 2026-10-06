@@ -442,7 +442,7 @@ export const projectTitles: ProjectListItem[] = [
     { id: 33, title: 'Spotify - Music discover using short form video', category: 'work', preview: '/images/spotify-short-form-video-updated.png' },
   ] : [])]),
   { id: 19, title: 'Monzo - Get paid early', category: 'work', preview: '/images/monzo-get-paid-early.png' },
-  { id: 20, title: 'Monzo - Bills Pots', category: 'work' },
+  { id: 20, title: 'Monzo - Bills Pots', category: 'work', preview: '/images/monzo-bills-pots.png' },
   { id: 34, title: 'Monzo - Premium paid account', category: 'work', preview: '/images/monzo-premium-paid-account.png' },
   { id: 26, title: 'Google - Ticketing system for Google IO', category: 'work', preview: '/images/google-io-ticketing.jpg', blurPreview: true, previewAspectRatio: '2041 / 2160' },
   { id: 27, title: 'Google - Grow with Google', category: 'work', preview: '/images/google-grow-with-google.jpg', blurPreview: true, previewAspectRatio: '2181 / 2160' },
