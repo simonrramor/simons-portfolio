@@ -198,7 +198,7 @@ document.fonts.ready.then(() => cards.forEach(c => {
 // so scrolling past the last card leads straight into the first.
 const L = N * STEP, mod = (a, b) => ((a % b) + b) % b;
 let offset = 0, target = 0, active = -1, held = false, last = performance.now();
-const state = cards.map(() => ({ frame: null, playing: null }));
+const state = cards.map(() => ({ frame: null, playing: null, revealTimer: null }));
 
 // Official YouTube embed, muted and looping, scaled up so the 16:9 frame covers the card and the player chrome is cropped away.
 function mount(card, m) {
@@ -225,7 +225,7 @@ function mount(card, m) {
 
 
 // Keep the thumbnail visible while paused or buffering so YouTube's
-// central playback controls never appear in the portfolio preview.
+// startup controls stay hidden until they have faded during playback.
 addEventListener("message", e => {
   const st = state.find(item => item.frame?.contentWindow === e.source);
   if (!st?.frame || e.origin !== "https://www.youtube-nocookie.com") return;
@@ -235,7 +235,21 @@ addEventListener("message", e => {
     st.frame.contentWindow?.postMessage(JSON.stringify({ event: "command", func: st.playing ? "playVideo" : "pauseVideo", args: [] }), e.origin);
   }
   const playerState = data?.event === "onStateChange" ? data.info : data?.info?.playerState;
-  if (typeof playerState === "number") st.frame.classList.toggle("on", previewActive && st.playing && playerState === 1);
+  if (typeof playerState !== "number") return;
+  if (previewActive && st.playing && playerState === 1) {
+    if (!st.frame.classList.contains("on") && st.revealTimer === null) {
+      const frame = st.frame;
+      // YouTube briefly shows its center controls even with controls=0.
+      // Reveal only after uninterrupted playback has let that overlay fade.
+      st.revealTimer = setTimeout(() => {
+        st.revealTimer = null;
+        if (st.frame === frame && previewActive && st.playing) frame.classList.add("on");
+      }, 4000);
+    }
+  } else {
+    clearTimeout(st.revealTimer); st.revealTimer = null;
+    st.frame.classList.remove("on");
+  }
 });
 
 function layout() {
@@ -244,12 +258,12 @@ function layout() {
     c.style.transform = `translate3d(0, ${TOP + d}px, 0)`;
     c.style.visibility = Math.abs(d) < 900 ? "visible" : "hidden";
     const st = state[i], near = Math.abs(d);
-    if (near < STEP * 1.3 && !st.frame) st.frame = mount(c, MIXES[i]);
-    else if (near > STEP * 1.9 && st.frame) { st.frame.remove(); st.frame = null; st.playing = null; }
-    const play = previewActive && near < STEP * 1.2;
+    if (near < STEP * 2.2 && !st.frame) st.frame = mount(c, MIXES[i]);
+    else if (near > STEP * 2.9 && st.frame) { clearTimeout(st.revealTimer); st.revealTimer = null; st.frame.remove(); st.frame = null; st.playing = null; }
+    const play = previewActive;
     if (st.frame && play !== st.playing) {
       st.playing = play;
-      if (!play) st.frame.classList.remove("on");
+      if (!play) { clearTimeout(st.revealTimer); st.revealTimer = null; st.frame.classList.remove("on"); }
       st.frame.contentWindow?.postMessage(JSON.stringify({ event: "command", func: play ? "playVideo" : "pauseVideo", args: [] }), "*");
     }
   });
