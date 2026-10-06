@@ -1,10 +1,40 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import CardVideo from './CardVideo';
 import { projectTitles, type ProjectCategory, type ProjectListItem } from './CardSlider';
 import styles from './ProjectList.module.css';
+
+function PrototypePreview({ project, active }: { project: ProjectListItem; active: boolean }) {
+  const frame = useRef<HTMLIFrameElement>(null);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    frame.current?.contentWindow?.postMessage({ type: 'portfolio-preview', active }, '*');
+  }, [active]);
+
+  return (
+    <div className={`${styles.preview} ${!active ? styles.inactivePreview : ''}`} aria-hidden={!active}>
+      <div className={styles.prototypeSquare}>
+        {!ready && project.preview && <Image src={project.preview} alt={project.title} fill sizes="(max-width: 768px) 28vw, 36vw" className={styles.previewImage} />}
+        <iframe
+          ref={frame}
+          src={`${project.previewEmbed}?preview=1`}
+          title={project.title}
+          className={`${styles.prototypePreview} ${!ready ? styles.loadingPrototype : ''}`}
+          sandbox="allow-scripts"
+          allow="autoplay"
+          tabIndex={-1}
+          onLoad={() => {
+            setReady(true);
+            frame.current?.contentWindow?.postMessage({ type: 'portfolio-preview', active }, '*');
+          }}
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function ProjectList({ category }: { category: ProjectCategory }) {
   const [hovered, setActive] = useState<ProjectListItem | null>(null);
@@ -48,7 +78,10 @@ export default function ProjectList({ category }: { category: ProjectCategory })
           </li>
         ))}
       </ul>
-      {active?.preview && (
+      {projectTitles.filter(project => project.previewEmbed).map(project => (
+        <PrototypePreview key={project.id} project={project} active={active?.id === project.id} />
+      ))}
+      {active?.preview && !active.previewEmbed && (
         <div className={styles.preview} key={active.id}>
           {active.blurPreview ? (
             <div className={styles.blurredFrame} style={{ aspectRatio: active.previewAspectRatio }}>
@@ -61,15 +94,6 @@ export default function ProjectList({ category }: { category: ProjectCategory })
                 </svg>
               </span>
             </div>
-          ) : active.previewEmbed ? (
-            <iframe
-              src={active.previewEmbed}
-              title={active.title}
-              className={styles.prototypePreview}
-              sandbox="allow-scripts"
-              allow="autoplay"
-              tabIndex={-1}
-            />
           ) : active.previewVideo ? (
             active.previewVideoAtlas ? (
               <div className={styles.videoAtlasFrame}>

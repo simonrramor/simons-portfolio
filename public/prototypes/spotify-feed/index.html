@@ -2,10 +2,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Splits Canvas Feed</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
 <style>
+  @font-face { font-family: Inter; font-style: normal; font-weight: 100 900; font-display: swap; src: url("inter.woff2") format("woff2"); }
   /* Square Spotify-green stage, frameless 375×812 screen centred and scaled to fit, vertical snap feed of Canvas cards */
   :root {
     --stage: #1ED760;
@@ -20,11 +18,11 @@
   html, body { height: 100%; }
   body { background: var(--stage); overflow: hidden; font-family: var(--font); -webkit-font-smoothing: antialiased; }
 
-  .stage { position: fixed; inset: 0; display: grid; place-items: center; }
+  .stage { position: fixed; inset: 0; }
   .screen {
-    position: relative; width: 375px; height: 812px; flex: none;
+    position: absolute; left: 50%; top: 50%; width: 375px; height: 812px;
     border-radius: 46px; overflow: hidden; background: var(--screen);
-    transform-origin: center; transform: scale(var(--s, 1));
+    transform-origin: center; transform: translate(-50%, -50%) scale(var(--s, 1));
     isolation: isolate;
   }
 
@@ -146,6 +144,8 @@ const MIXES = [
   { title: "Classical<br>Mix", media: "classical", accent: "#F1ECDD", now: "Max Richter - On the Nature of Daylight",
     artists: "Max Richter, Ólafur Arnalds, Ludovico Einaudi, Hania Rani, Yiruma, Nils Frahm, Joep Beving" },
 ];
+let previewActive = !new URLSearchParams(location.search).has("preview");
+let animationFrame;
 const N = MIXES.length;
 const STEP = 467, TOP = 181, HOLD = 4200;
 
@@ -220,18 +220,19 @@ function layout() {
     c.style.transform = `translate3d(0, ${TOP + d}px, 0)`;
     c.style.visibility = Math.abs(d) < 900 ? "visible" : "hidden";
     const v = c.querySelector("video"), st = state[i], near = Math.abs(d);
-    if (near < STEP * 2.2 && !st.loaded) { v.src = v.dataset.src; v.preload = "auto"; st.loaded = true; }
-    const play = near < STEP * 1.2;
+    if (near < STEP * 1.3 && !st.loaded) { v.src = v.dataset.src; v.preload = "auto"; st.loaded = true; }
+    const play = previewActive && near < STEP * 1.2;
     if (play !== st.playing) { st.playing = play; play ? v.play().catch(() => {}) : v.pause(); }
   });
   const a = mod(Math.round(offset / STEP), N);
   if (a !== active) { cards[active]?.classList.remove("active"); cards[a].classList.add("active"); active = a; }
 }
 function tick(now) {
+  if (!previewActive) return;
   const dt = Math.min(64, now - last); last = now;
   if (!held) offset += (target - offset) * (1 - Math.exp(-dt / 150));
   layout();
-  requestAnimationFrame(tick);
+  animationFrame = requestAnimationFrame(tick);
 }
 const snap = (o) => Math.round(o / STEP) * STEP;
 function step(n) { target = snap(target) + n * STEP; }
@@ -239,7 +240,7 @@ function nearestDelta(i) { let d = mod(i - active, N); if (d > N / 2) d -= N; re
 
 // auto-scroll for recording
 let auto = true, timer;
-function schedule() { clearTimeout(timer); if (auto) timer = setTimeout(() => { step(1); schedule(); }, HOLD); }
+function schedule() { clearTimeout(timer); if (auto && previewActive) timer = setTimeout(() => { step(1); schedule(); }, HOLD); }
 function pauseAuto() { auto = false; clearTimeout(timer); }
 function toggleAuto() { auto = !auto; schedule(); }
 
@@ -294,5 +295,14 @@ addEventListener("resize", fit); fit();
 const hint = document.getElementById("hint");
 setTimeout(() => hint.classList.add("gone"), 5000);
 
-layout(); requestAnimationFrame(tick); schedule();
+addEventListener("message", e => {
+  if (e.source !== parent || e.data?.type !== "portfolio-preview") return;
+  const wasActive = previewActive;
+  previewActive = e.data.active === true;
+  if (!previewActive) cancelAnimationFrame(animationFrame);
+  layout();
+  schedule();
+  if (previewActive && !wasActive) { last = performance.now(); animationFrame = requestAnimationFrame(tick); }
+});
+layout(); if (previewActive) animationFrame = requestAnimationFrame(tick); schedule();
 </script>
