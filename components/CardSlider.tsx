@@ -421,7 +421,7 @@ export const projectTitles: ProjectListItem[] = [
   ...defaultCards.flatMap(card => card.id === 13 ? [
     { id: card.id, title: 'Morse - Card', category: 'work', preview: card.poster },
     { id: 22, title: 'Morse - Investments', category: 'work', preview: '/images/morse-investments.png' },
-    { id: 23, title: 'Morse - Savings', category: 'work' },
+    { id: 23, title: 'Morse - Savings', category: 'work', preview: '/images/morse-savings.png' },
     { id: 24, title: 'Morse - Bill Splits', category: 'work' },
     { id: 32, title: 'Morse - Bill Pay', category: 'work', preview: '/images/morse-bill-pay.png' },
     { id: 25, title: 'Morse - Referral', category: 'work' },
