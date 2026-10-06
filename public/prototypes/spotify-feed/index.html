@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Splits Canvas Feed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+<style>
+  /* Square Spotify-green stage, frameless 375×812 screen centred and scaled to fit, vertical snap feed of Canvas cards */
+  :root {
+    --stage: #1ED760;
+    --screen: #121212;
+    --text: #FFFFFF;
+    --subdued: rgba(255,255,255,.62);
+    --bright: #1ED760;
+    --hint: rgba(0,0,0,.55);
+    --font: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color-scheme: dark;
+  }
+  html, body { height: 100%; }
+  body { background: var(--stage); overflow: hidden; font-family: var(--font); -webkit-font-smoothing: antialiased; }
+
+  .stage { position: fixed; inset: 0; display: grid; place-items: center; }
+  .screen {
+    position: relative; width: 375px; height: 812px; flex: none;
+    border-radius: 46px; overflow: hidden; background: var(--screen);
+    transform-origin: center; transform: scale(var(--s, 1));
+    isolation: isolate;
+  }
+
+  /* feed */
+  .track { position: absolute; left: 16px; top: 0; width: 343px; touch-action: none; }
+  .screen { touch-action: none; user-select: none; -webkit-user-select: none; }
+  .card { position: absolute; left: 0; top: 0; will-change: transform; width: 343px; height: 451px; border-radius: 16px; overflow: hidden;
+    background: #2a2a2a; cursor: pointer; }
+  .card video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .card .shade { position: absolute; left: 0; right: 0; bottom: 0; height: 263px;
+    background: linear-gradient(to top, #2a2a2a 0%, rgba(42,42,42,0) 100%); }
+  .ui, .card .shade { opacity: 0; transition: opacity 420ms ease 120ms; }
+  .card.active .ui, .card.active .shade { opacity: 1; }
+  .card.active { cursor: default; }
+
+  .top { position: absolute; left: 16px; right: 16px; top: 16px; height: 32px; }
+  .np { position: absolute; left: 0; top: 7px; display: flex; gap: 6px; align-items: center;
+    font-size: 11px; font-weight: 300; line-height: 16px; color: var(--subdued); white-space: nowrap; }
+  .eq { display: flex; align-items: flex-end; gap: 2px; width: 13px; height: 12px; margin: 0 2px; }
+  .eq b { flex: 1; height: 100%; background: var(--bright); border-radius: 1px; transform-origin: bottom;
+    animation: eq 1s ease-in-out infinite alternate; }
+  .eq b:nth-child(1) { animation-duration: .9s; animation-delay: -.3s; }
+  .eq b:nth-child(2) { animation-duration: .7s; animation-delay: -.6s; }
+  .eq b:nth-child(3) { animation-duration: 1.1s; animation-delay: -.1s; }
+  @keyframes eq { 0% { transform: scaleY(.3); } 100% { transform: scaleY(1); } }
+  .round { position: absolute; right: 0; top: 0; width: 32px; height: 32px; border-radius: 50%; border: 0; padding: 0;
+    background: rgba(0,0,0,.3); display: grid; place-items: center; cursor: pointer; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+
+  .header { position: absolute; left: 16px; right: 16px; bottom: 16px; display: flex; flex-direction: column; gap: 16px; }
+  .data { position: relative; height: 133px; }
+  .title { position: absolute; left: -2px; bottom: 37px; margin: 0; color: var(--text);
+    font-size: 48px; line-height: 48px; font-weight: 700; letter-spacing: -1.92px; }
+  .artists { position: absolute; left: 0; right: 0; bottom: 16px; height: 17px; overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, #000 82%, transparent); mask-image: linear-gradient(to right, #000 82%, transparent); }
+  .artists span { display: inline-block; white-space: nowrap; font-size: 13px; line-height: 16px; font-weight: 300; color: var(--subdued); }
+  .card.active .artists span { animation: marquee var(--mq, 18s) linear 1.6s infinite; }
+  @keyframes marquee { 0%, 8% { transform: translateX(0); } 92%, 100% { transform: translateX(var(--mx, -200px)); } }
+  .bar { position: absolute; left: 0; top: 129px; width: 56px; height: 4px; background: var(--accent); }
+
+  .actions { position: relative; height: 32px; display: flex; align-items: center; justify-content: space-between; }
+  .left { display: flex; gap: 24px; }
+  .icon { width: 24px; height: 24px; padding: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
+  .icon svg, .round svg { display: block; }
+  .heart.on path { fill: var(--bright); stroke: var(--bright); }
+  .heart:active, .play:active { transform: scale(.9); }
+  .play { width: 32px; height: 32px; border-radius: 50%; border: 0; padding: 0; background: var(--text); cursor: pointer; display: grid; place-items: center; transition: transform .15s; }
+
+  button:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+
+  /* chrome */
+  .status { position: absolute; left: 0; right: 0; top: 0; height: 44px; pointer-events: none; z-index: 2; }
+  .time { position: absolute; left: 21px; top: 14px; width: 54px; text-align: center; color: var(--text);
+    font-size: 15px; font-weight: 900; letter-spacing: -.3px; }
+  .sys { position: absolute; right: 15px; top: 17px; display: flex; gap: 5px; align-items: center; }
+  .home { position: absolute; left: 50%; bottom: 8px; width: 134px; height: 5px; margin-left: -67px; border-radius: 100px; background: var(--text); z-index: 2; pointer-events: none; }
+
+  .hint { position: fixed; left: 16px; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); font: 400 12px/1.4 var(--font); color: var(--hint);
+    transition: opacity .6s; }
+  .hint.gone { opacity: 0; }
+  kbd { font: inherit; font-weight: 700; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card.active .artists span, .eq b { animation: none; }
+  }
+  .hint { display: none; }
+</style>
+
+<div class="stage">
+  <div class="screen" id="screen">
+    <div class="track" id="track"></div>
+
+    <div class="status">
+      <div class="time">9:41</div>
+      <div class="sys">
+        <svg width="18" height="11" viewBox="0 0 18 11" fill="#fff" aria-hidden="true"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="6" rx="1"/><rect x="10" y="2.5" width="3" height="8.5" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+        <svg width="16" height="11" viewBox="0 0 16 11" fill="#fff" aria-hidden="true"><path d="M8 2.2c2.3 0 4.4.9 6 2.4l1.1-1.1A10 10 0 0 0 8 .6 10 10 0 0 0 .9 3.5L2 4.6a8.5 8.5 0 0 1 6-2.4Z"/><path d="M8 5.4c1.4 0 2.7.5 3.7 1.4l1.1-1.1A7 7 0 0 0 8 3.8a7 7 0 0 0-4.8 1.9l1.1 1.1c1-.9 2.3-1.4 3.7-1.4Z"/><path d="M8 8.6c.5 0 1 .2 1.4.5L8 10.6 6.6 9.1c.4-.3.9-.5 1.4-.5Z"/></svg>
+        <svg width="27" height="13" viewBox="0 0 27 13" fill="none" aria-hidden="true"><rect x=".5" y=".5" width="22" height="11.3" rx="2.7" stroke="#fff" opacity=".35"/><rect x="2.5" y="2.5" width="18" height="7.3" rx="1.3" fill="#fff"/><path d="M24 4.2v4a2.2 2.2 0 0 0 0-4Z" fill="#fff" opacity=".4"/></svg>
+      </div>
+    </div>
+    <div class="home"></div>
+  </div>
+</div>
+<div class="hint" id="hint">Scroll or drag to browse · <kbd>Space</kbd> pause auto-scroll · <kbd>↑</kbd><kbd>↓</kbd> step · <kbd>H</kbd> hide this</div>
+
+<script>
+const MIXES = [
+  { title: "Chill<br>Mix",   media: "chill",   accent: "#F2A65A", now: "Clairo - Feel Something",
+    artists: "Clairo, Billie Eilish, Mitski, Phoebe Bridgers, Alvvays, Julia Jacklin, Faye Webster" },
+  { title: "House<br>Mix",   media: "house",   accent: "#F6DE06", now: "Dimitri Vegas - Say my name",
+    artists: "Dimitri Vegas & Like Mike, Me & My toothbrush, Galantis, JVKE, Fight Facilities, Miane, Chris Lake, Tiësto" },
+  { title: "Indie<br>Mix",   media: "indie",   accent: "#FF7A45", now: "Fleet Foxes - White Winter Hymnal",
+    artists: "Fleet Foxes, The National, Phoebe Bridgers, Alvvays, Big Thief, Bon Iver, Wye Oak" },
+  { title: "Ambient<br>Mix", media: "ambient", accent: "#C9C9C9", now: "Brian Eno - An Ending",
+    artists: "Brian Eno, Nils Frahm, Hammock, Stars of the Lid, Julianna Barwick, Grouper" },
+  { title: "Hype<br>Mix",    media: "hype",    accent: "#FF4632", now: "Fred again.. - Delilah",
+    artists: "Fred again.., Skrillex, Four Tet, Overmono, Barry Can't Swim, Peggy Gou, Chase & Status" },
+  { title: "Sunset<br>Mix",  media: "sunset",  accent: "#FFB03B", now: "Khruangbin - Time (You and I)",
+    artists: "Khruangbin, Tame Impala, Men I Trust, Glass Animals, Toro y Moi, Parcels, Poolside" },
+  { title: "Lo-fi<br>Mix",   media: "ocean",   accent: "#5CC8D7", now: "Tomppabeats - Monday Loop",
+    artists: "Tomppabeats, Nujabes, Jinsang, idealism, potsu, j'san, Kupla, Philanthrope" },
+  { title: "Pop<br>Mix",     media: "pop",     accent: "#FF5FB0", now: "Sabrina Carpenter - Espresso",
+    artists: "Sabrina Carpenter, Dua Lipa, Olivia Rodrigo, Chappell Roan, Charli xcx, Harry Styles, Tate McRae" },
+  { title: "Soul<br>Mix",    media: "soul",    accent: "#E58A3A", now: "Leon Bridges - River",
+    artists: "Leon Bridges, Michael Kiwanuka, Sault, Cleo Sol, Durand Jones & The Indications, Curtis Harding" },
+  { title: "Acoustic<br>Mix", media: "acoustic", accent: "#C9B6F2", now: "Novo Amor - Anchor",
+    artists: "Novo Amor, Bon Iver, Iron & Wine, Gregory Alan Isakov, Hozier, Lizzy McAlpine, Ben Howard" },
+  { title: "Tropical<br>Mix", media: "tropical", accent: "#3ED6B5", now: "Kygo - Firestone",
+    artists: "Kygo, Bakermat, Thomas Jack, Matoma, Sam Feldt, Lost Frequencies, Klingande" },
+  { title: "Folk<br>Mix",    media: "folk",    accent: "#E8D27A", now: "Big Thief - Not",
+    artists: "Big Thief, Adrianne Lenker, Fleet Foxes, Noah Kahan, The Lumineers, Watchhouse, Hozier" },
+  { title: "Afrobeats<br>Mix", media: "afro",  accent: "#4CC46A", now: "Tems - Free Mind",
+    artists: "Tems, Burna Boy, Rema, Wizkid, Ayra Starr, Asake, Davido, Tyla" },
+  { title: "Bedroom<br>Pop", media: "bedroom", accent: "#FF8FA3", now: "beabadoobee - Glue Song",
+    artists: "beabadoobee, Clairo, Rex Orange County, girl in red, Cavetown, Dayglow, Mac DeMarco" },
+  { title: "Focus<br>Mix",   media: "focus",   accent: "#8FD16B", now: "Tycho - Awake",
+    artists: "Tycho, Bonobo, Emancipator, Boards of Canada, Ott, Nightmares on Wax, Khruangbin" },
+  { title: "Summer<br>Mix",  media: "summer",  accent: "#6EC6FF", now: "Vampire Weekend - A-Punk",
+    artists: "Vampire Weekend, Phoenix, Two Door Cinema Club, Peach Pit, Surf Curse, The Kooks, MGMT" },
+  { title: "Classical<br>Mix", media: "classical", accent: "#F1ECDD", now: "Max Richter - On the Nature of Daylight",
+    artists: "Max Richter, Ólafur Arnalds, Ludovico Einaudi, Hania Rani, Yiruma, Nils Frahm, Joep Beving" },
+];
+const N = MIXES.length;
+const STEP = 467, TOP = 181, HOLD = 4200;
+
+const ICON = {
+  heart: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M16.76 2.42a6.03 6.03 0 0 1 3.98 1.77 6.06 6.06 0 0 1 0 8.5l-6.84 8.01a2.48 2.48 0 0 1-3.8 0l-6.86-8.04c-2.32-2.32-2.32-6.13.03-8.48a6.04 6.04 0 0 1 8.1-.37s.27.23.63.23c.35 0 .63-.22.64-.23a6.03 6.03 0 0 1 4.12-1.39Z" fill="none" stroke="#fff" stroke-width="1.1"/></svg>',
+  more:  '<svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><circle cx="4.5" cy="12.5" r="1.8"/><circle cx="12" cy="12.5" r="1.8"/><circle cx="19.5" cy="12.5" r="1.8"/></svg>',
+  play:  '<svg width="12" height="12" viewBox="0 0 12 12"><path d="M2.2 1.1v9.8c0 .6.6.95 1.15.65l8.1-4.7a.75.75 0 0 0 0-1.3l-8.1-4.7C2.8.15 2.2.5 2.2 1.1Z" fill="#121212"/></svg>',
+  pause: '<svg width="12" height="12" viewBox="0 0 12 12" fill="#121212"><rect x="2" y="1" width="3" height="10" rx=".8"/><rect x="7" y="1" width="3" height="10" rx=".8"/></svg>',
+  muted: '<svg width="16" height="16" viewBox="0 0 16.25 16" fill="#fff"><path d="M8.25 14 3.05 11H.25V5h2.8l5.2-3v12ZM3.32 6H1.25v4h2.07l3.93 2.27V3.73L3.32 6Zm12.55-.15L13.73 8l2.14 2.15-.7.7-2.15-2.14-2.15 2.14-.7-.7L12.31 8l-2.14-2.15.7-.7 2.15 2.15 2.15-2.15.7.7Z"/></svg>',
+  sound: '<svg width="16" height="16" viewBox="0 0 16 16" fill="#fff"><path d="M8.25 14 3.05 11H.25V5h2.8l5.2-3v12ZM3.32 6H1.25v4h2.07l3.93 2.27V3.73L3.32 6Z"/><path d="M10.6 5.2a4 4 0 0 1 0 5.6l-.7-.7a3 3 0 0 0 0-4.2l.7-.7Zm2.1-2.1a7 7 0 0 1 0 9.8l-.7-.7a6 6 0 0 0 0-8.4l.7-.7Z"/></svg>',
+};
+
+const track = document.getElementById("track"), screen = document.getElementById("screen");
+const cards = MIXES.map((m, i) => {
+  const el = document.createElement("article");
+  el.className = "card";
+  el.dataset.mix = i % N;
+  el.style.setProperty("--accent", m.accent);
+  el.innerHTML = `
+    <video data-src="media/${m.media}.mp4" poster="media/${m.media}.jpg" muted loop playsinline preload="none"></video>
+    <div class="shade"></div>
+    <div class="ui">
+      <div class="top">
+        <div class="np"><i class="eq" aria-hidden="true"><b></b><b></b><b></b></i><span>${m.now}</span></div>
+        <button class="round mute" id="mute-${i}" aria-label="Unmute preview">${ICON.muted}</button>
+      </div>
+      <div class="header">
+        <div class="data">
+          <h2 class="title">${m.title}</h2>
+          <div class="artists"><span>${m.artists}</span></div>
+          <div class="bar"></div>
+        </div>
+        <div class="actions">
+          <div class="left">
+            <button class="icon heart" id="heart-${i}" aria-label="Save mix" aria-pressed="false">${ICON.heart}</button>
+            <button class="icon" id="more-${i}" aria-label="More options">${ICON.more}</button>
+          </div>
+          <button class="play" id="play-${i}" aria-label="Play mix">${ICON.play}</button>
+        </div>
+      </div>
+    </div>`;
+  track.appendChild(el);
+
+  const copies = sel => document.querySelectorAll(`.card[data-mix="${i % N}"] ${sel}`);
+  el.querySelector(".heart").onclick = e => { e.stopPropagation(); const on = !e.currentTarget.classList.contains("on");
+    copies(".heart").forEach(b => { b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); }); };
+  el.querySelector(".play").onclick = e => { e.stopPropagation(); const on = e.currentTarget.dataset.on !== "1";
+    copies(".play").forEach(b => { b.dataset.on = on ? "1" : ""; b.innerHTML = on ? ICON.pause : ICON.play; b.setAttribute("aria-label", on ? "Pause mix" : "Play mix"); }); };
+  el.querySelector(".mute").onclick = e => { e.stopPropagation(); const on = e.currentTarget.dataset.on !== "1";
+    copies(".mute").forEach(b => { b.dataset.on = on ? "1" : ""; b.innerHTML = on ? ICON.sound : ICON.muted; b.setAttribute("aria-label", on ? "Mute preview" : "Unmute preview"); }); };
+  el.addEventListener("click", () => { if (dragMoved) return; if (i !== active) { step(nearestDelta(i)); pauseAuto(); } });
+  return el;
+});
+
+// marquee distance per card, measured once fonts load
+document.fonts.ready.then(() => cards.forEach(c => {
+  const s = c.querySelector(".artists span"), w = c.querySelector(".artists").clientWidth;
+  const d = Math.max(0, s.scrollWidth - w + 24);
+  s.style.setProperty("--mx", -d + "px");
+  s.style.setProperty("--mq", Math.max(8, d / 22) + "s");
+}));
+
+// Continuous loop: every card sits at its distance from the scroll offset, wrapped around the full feed length,
+// so scrolling past the last card leads straight into the first.
+const L = N * STEP, mod = (a, b) => ((a % b) + b) % b;
+let offset = STEP, target = STEP, active = -1, held = false, last = performance.now();
+const state = cards.map(() => ({ loaded: false, playing: false }));
+
+function layout() {
+  cards.forEach((c, i) => {
+    let d = mod(i * STEP - offset, L); if (d > L / 2) d -= L;
+    c.style.transform = `translate3d(0, ${TOP + d}px, 0)`;
+    c.style.visibility = Math.abs(d) < 900 ? "visible" : "hidden";
+    const v = c.querySelector("video"), st = state[i], near = Math.abs(d);
+    if (near < STEP * 2.2 && !st.loaded) { v.src = v.dataset.src; v.preload = "auto"; st.loaded = true; }
+    const play = near < STEP * 1.2;
+    if (play !== st.playing) { st.playing = play; play ? v.play().catch(() => {}) : v.pause(); }
+  });
+  const a = mod(Math.round(offset / STEP), N);
+  if (a !== active) { cards[active]?.classList.remove("active"); cards[a].classList.add("active"); active = a; }
+}
+function tick(now) {
+  const dt = Math.min(64, now - last); last = now;
+  if (!held) offset += (target - offset) * (1 - Math.exp(-dt / 150));
+  layout();
+  requestAnimationFrame(tick);
+}
+const snap = (o) => Math.round(o / STEP) * STEP;
+function step(n) { target = snap(target) + n * STEP; }
+function nearestDelta(i) { let d = mod(i - active, N); if (d > N / 2) d -= N; return d; }
+
+// auto-scroll for recording
+let auto = true, timer;
+function schedule() { clearTimeout(timer); if (auto) timer = setTimeout(() => { step(1); schedule(); }, HOLD); }
+function pauseAuto() { auto = false; clearTimeout(timer); }
+function toggleAuto() { auto = !auto; schedule(); }
+
+// keys
+addEventListener("keydown", e => {
+  if (e.key === " ") { e.preventDefault(); toggleAuto(); }
+  else if (e.key === "ArrowDown" || e.key === "ArrowRight") { e.preventDefault(); step(1); pauseAuto(); }
+  else if (e.key === "ArrowUp" || e.key === "ArrowLeft") { e.preventDefault(); step(-1); pauseAuto(); }
+  else if (e.key.toLowerCase() === "h") { hint.classList.toggle("gone"); }
+});
+
+// wheel / trackpad: move freely, settle on the nearest card once input stops
+let wheelIdle;
+addEventListener("wheel", e => {
+  e.preventDefault(); pauseAuto();
+  held = true;
+  const s = parseFloat(screen.style.getPropertyValue("--s")) || 1;
+  offset += (e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY) / s; target = offset;
+  clearTimeout(wheelIdle);
+  wheelIdle = setTimeout(() => { held = false; target = snap(offset); }, 140);
+}, { passive: false });
+
+// drag (mouse or touch) with a flick
+let dragY = null, dragMoved = false, vel = 0, lastY = 0, lastT = 0;
+screen.addEventListener("pointerdown", e => {
+  if (e.target.closest("button")) return;
+  dragY = lastY = e.clientY; lastT = performance.now(); vel = 0; dragMoved = false; held = true;
+});
+addEventListener("pointermove", e => {
+  if (dragY == null) return;
+  const s = parseFloat(screen.style.getPropertyValue("--s")) || 1, now = performance.now();
+  const dy = (lastY - e.clientY) / s;
+  if (Math.abs(e.clientY - dragY) > 6) { dragMoved = true; pauseAuto(); }
+  offset += dy; target = offset;
+  vel = 0.8 * vel + 0.2 * (dy / Math.max(1, now - lastT));
+  lastY = e.clientY; lastT = now;
+});
+addEventListener("pointerup", () => {
+  if (dragY == null) return; dragY = null; held = false;
+  target = snap(offset + Math.max(-1, Math.min(1, vel * 260 / STEP)) * STEP);
+  setTimeout(() => dragMoved = false, 0);
+});
+
+// fit the 375×812 screen to 78% of a square stage, like the reference composition
+function fit() {
+  const side = Math.min(innerWidth, innerHeight);
+  const s = Math.min((side * 0.783) / 812, (innerWidth - 32) / 375);
+  screen.style.setProperty("--s", s);
+}
+addEventListener("resize", fit); fit();
+
+const hint = document.getElementById("hint");
+setTimeout(() => hint.classList.add("gone"), 5000);
+
+layout(); requestAnimationFrame(tick); schedule();
+</script>

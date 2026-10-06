@@ -61,6 +61,15 @@ export default function ProjectList({ category }: { category: ProjectCategory })
                 </svg>
               </span>
             </div>
+          ) : active.previewEmbed ? (
+            <iframe
+              src={active.previewEmbed}
+              title={active.title}
+              className={styles.prototypePreview}
+              sandbox="allow-scripts"
+              allow="autoplay"
+              tabIndex={-1}
+            />
           ) : active.previewVideo ? (
             active.previewVideoAtlas ? (
               <div className={styles.videoAtlasFrame}>
