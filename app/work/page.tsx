@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import StructuredData from '@/components/StructuredData';
 import { workGroups, siteUrl, person, portfolioUpdated } from '@/lib/portfolio';
 import styles from './page.module.css';
 
@@ -11,10 +12,35 @@ export const metadata: Metadata = {
 };
 
 export default function WorkIndex() {
-  const schema = { '@context': 'https://schema.org', '@type': 'CollectionPage', url: `${siteUrl}/work`, name: 'Product design projects by Simon Amor', description, dateModified: portfolioUpdated, author: person,
-    mainEntity: { '@type': 'ItemList', itemListElement: workGroups.flatMap(group => group.projects.map(project => ({ '@type': 'CreativeWork', name: group.id === 'client-projects' ? project : `${group.name} — ${project}` }))) } };
+  const projects = workGroups.flatMap(group => group.projects.map(project => ({
+    '@type': 'CreativeWork', name: group.id === 'client-projects' ? project : `${group.name} — ${project}`,
+    url: `${siteUrl}/work#${group.id}`, about: { '@type': 'Thing', name: group.name },
+  })));
+  const schemas = [
+    person,
+    {
+      '@type': 'CollectionPage', '@id': `${siteUrl}/work#page`, url: `${siteUrl}/work`,
+      name: 'Product design projects by Simon Amor', description,
+      dateModified: portfolioUpdated, inLanguage: 'en', author: { '@id': person['@id'] },
+      isPartOf: { '@id': `${siteUrl}/#website` },
+      breadcrumb: { '@id': `${siteUrl}/work#breadcrumbs` },
+      mainEntity: { '@id': `${siteUrl}/work#projects` },
+    },
+    {
+      '@type': 'ItemList', '@id': `${siteUrl}/work#projects`, name: 'Simon Amor’s product design projects',
+      numberOfItems: projects.length, itemListOrder: 'https://schema.org/ItemListUnordered',
+      itemListElement: projects.map((project, index) => ({ '@type': 'ListItem', position: index + 1, item: project })),
+    },
+    {
+      '@type': 'BreadcrumbList', '@id': `${siteUrl}/work#breadcrumbs`,
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Portfolio', item: `${siteUrl}/` },
+        { '@type': 'ListItem', position: 2, name: 'Product design projects', item: `${siteUrl}/work` },
+      ],
+    },
+  ];
   return <main className={styles.page}>
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, '\u003c') }} />
+    <StructuredData schemas={schemas} />
     <Link href="/" className={styles.back}>Simon Amor / Interactive portfolio</Link>
     <h1>Product design projects by Simon Amor</h1>
     <p>Simon Amor is a designer and co-founder of Morse, previously at Spotify and Monzo. This index lists the public project titles in his Work collection. For images, videos and prototypes, explore the <Link href="/">interactive portfolio</Link> in List or Card view.</p>
