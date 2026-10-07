@@ -77,11 +77,11 @@ export default function Header({ view, onViewChange, category, onCategoryChange,
         )}
         
         <div className={styles.bio}>
-          <p className={styles.bioText}>
-            <span className={styles.bioLead}>
+          <div className={styles.bioText}>
+            <h1 className={styles.bioLead}>
               I’m a designer and co-founder of{' '}
               <CompanyLink href="https://morsemoney.com" label="Morse" logo="/icons/company/morse.svg" />
-            </span>
+            </h1>
             {' '}Previously, I worked at{' '}
             <CompanyLink href="https://spotify.com" label="Spotify" logo="/icons/company/spotify.svg" />
             {' '}and{' '}
@@ -95,7 +95,7 @@ export default function Header({ view, onViewChange, category, onCategoryChange,
             ,{' '}
             <CompanyLink href="https://natwest.com" label="NatWest" logo="/icons/company/natwest.svg" />
             {' '}and more
-          </p>
+          </div>
         </div>
       </div>
     </header>

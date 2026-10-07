@@ -1,0 +1,10 @@
+.page { max-width: 900px; padding: 48px; margin: 0 auto; font-family: "SF Mono", SFMono-Regular, ui-monospace, monospace; font-size: 14px; line-height: 1.7; color: var(--color-text-muted); user-select: text; cursor: auto; }
+.page a { cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.back { display: inline-block; margin-bottom: 64px; text-transform: uppercase; }
+.page h1, .page h2 { font: inherit; text-transform: uppercase; color: var(--color-text); margin-bottom: 20px; }
+.page h1 { font-size: 24px; line-height: 1.4; }
+.page p { margin-bottom: 24px; }
+.page nav { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 48px; }
+.page section { margin-bottom: 48px; scroll-margin-top: 32px; }
+.page li { padding: 4px 0; }
+@media(max-width:768px) { .page { padding: 24px; } .back { margin-bottom: 48px; } }

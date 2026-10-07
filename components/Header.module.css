@@ -263,3 +263,5 @@
   .projectControls { top: 24px; }
   .headerWithViews .bio { margin-top: 44px; }
 }
+
+.bioLead { display: inline; font: inherit; }

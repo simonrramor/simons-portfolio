@@ -1,0 +1,16 @@
+# Simon Amor
+
+> Simon Amor is a designer and co-founder of Morse, previously at Spotify and Monzo. This is his portfolio of product design work and creative experiments.
+
+## Portfolio
+
+- [Interactive portfolio](https://www.simonamor.design/): Work and Fun collections, with List and Card views. List rows show image, video or prototype previews on hover.
+- [Product design project index](https://www.simonamor.design/work): Public project titles grouped by Morse, Sling, Spotify, Monzo and client projects.
+- [Morse projects](https://www.simonamor.design/work#morse): Card, Investments, Savings, Bill Splits, Bill Pay and Growth.
+- [Spotify projects](https://www.simonamor.design/work#spotify): Group Sessions, Enhance, privacy controls, local files and offline listening, and short form video music discovery.
+- [Monzo projects](https://www.simonamor.design/work#monzo): Shared Tabs, Golden Tickets, Salary Sorter, Get paid early, Bills Pots and Premium paid account.
+- [Terminal experiment](https://www.simonamor.design/about): A personal interactive animation experiment, not a biographical About page.
+
+## Context
+
+Simon has built products for clients including Google, Android, YouTube and NatWest. Selected client projects also include AI particle tracking for researchers. Locked client previews are blurred; this portfolio does not publish their private case study details. Items awaiting media say Coming soon.

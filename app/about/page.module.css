@@ -209,3 +209,5 @@
 @media (prefers-reduced-motion: reduce) {
   .box { transition: none; }
 }
+
+.pageTitle { position: absolute; top: 16px; left: 16px; z-index: 2; padding: 6px 8px; background: #000; color: #aaa; font-family: ui-monospace, monospace; font-size: 12px; font-weight: 400; line-height: 1.4; }

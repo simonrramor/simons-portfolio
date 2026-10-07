@@ -217,6 +217,7 @@ export default function About() {
         '--anim-easing': `cubic-bezier(${bezier.join(',')})`,
       } as CSSProperties}
     >
+      <h1 className={styles.pageTitle}>Terminal animation experiment</h1>
       <div className={styles.scene} aria-hidden="true">
         {boxes.map((box) => (
           <div
