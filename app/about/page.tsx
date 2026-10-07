@@ -217,16 +217,17 @@ export default function About() {
         '--anim-easing': `cubic-bezier(${bezier.join(',')})`,
       } as CSSProperties}
     >
-      <PortfolioOverview />
-      <div ref={sceneRef} className={styles.scene} aria-hidden="true">
-        {boxes.map((box) => (
+      <div ref={sceneRef} className={styles.scene} data-ready={boxes.length > 0}>
+        {(boxes.length ? boxes : Array.from({ length: 14 }, (_, id): Partial<PaneBox> & { id: number } => ({ id }))).map((box) => (
           <div
             key={box.id}
             className={styles.box}
             data-pane={box.id}
-            style={{ top: box.top, left: box.left, width: box.width, height: box.height }}
+            style={boxes.length ? { top: box.top, left: box.left, width: box.width, height: box.height } : undefined}
           >
-            <TerminalPane id={box.id} running={running} />
+            {[0, 2, 3, 5, 6, 7, 8].includes(box.id) ? (
+              <PortfolioOverview id={box.id} />
+            ) : <div aria-hidden="true"><TerminalPane id={box.id} running={running} /></div>}
             <span className={`${styles.corner} ${styles.tl}`} />
             <span className={`${styles.corner} ${styles.tr}`} />
             <span className={`${styles.corner} ${styles.bl}`} />

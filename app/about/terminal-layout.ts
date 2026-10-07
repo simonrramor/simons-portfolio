@@ -13,7 +13,7 @@ type Tree =
 export type TerminalTree = Tree;
 
 export function paneCount(width: number) {
-  return width < 600 ? 8 : width < 1000 ? 11 : 14;
+  return width < 600 ? 9 : width < 1000 ? 11 : 14;
 }
 
 // Each split is shared by both neighbouring panels, including during a transition.

@@ -1,34 +1,23 @@
 .pane {
   position: absolute;
-  inset: 0 56% 0 0;
-  z-index: 2;
-  overflow-y: auto;
+  inset: 0;
+  overflow: auto;
+  padding: 10px 12px;
   background: #000;
-  border-right: 1px solid #363636;
   color: #d6d7d4;
-  font-family: "SF Mono", SFMono-Regular, ui-monospace, monospace;
-  font-size: 13px;
-  line-height: 1.6;
+  font-family: "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  line-height: 1.4;
   scrollbar-color: #363636 #000;
+  scrollbar-width: thin;
+  contain: layout paint;
 }
-.session { padding: 10px 20px; border-bottom: 1px solid #363636; color: #777c78; font-size: 11px; }
-.output { padding: 24px 28px; }
-.command { color: #9ace9c; margin-top: 26px; margin-bottom: 8px; }
-.command:first-child { margin-top: 0; }
-.pane h1 { font-size: 22px; font-weight: 400; color: #c5b2e0; margin: 0 0 8px; }
-.pane h2 { font-size: inherit; font-weight: 400; color: #c5b2e0; margin: 0 0 8px; }
-.pane p { margin: 0 0 12px; }
-.pane dl { margin: 0; }
-.pane dl > div { margin-bottom: 10px; }
-.pane dt { color: #a1bade; }
-.pane dd { margin: 0; }
-.pane nav { display: flex; flex-direction: column; gap: 6px; margin: 20px 0; }
-.pane a { color: #a1bade; text-decoration: none; width: fit-content; }
+.command { color: #9ace9c; margin-bottom: 8px; overflow-wrap: anywhere; }
+.pane h1, .pane h2 { font-size: inherit; font-weight: 400; color: #c5b2e0; margin: 0 0 8px; }
+.pane p { margin: 0 0 10px; }
+.pane nav { display: flex; flex-direction: column; gap: 6px; }
+.pane a { color: #a1bade; text-decoration: none; overflow-wrap: anywhere; }
 .pane a:hover { text-decoration: underline; }
-.pane a:focus-visible { outline: 1px solid #a1bade; outline-offset: 4px; }
-.prompt { color: #9ace9c; }
-@media (max-width: 699px) {
-  .pane { inset: 0 0 35%; border-right: 0; border-bottom: 1px solid #363636; font-size: 12px; }
-  .session { padding-right: 150px; }
-  .output { padding: 20px; }
-}
+.pane a:focus-visible { outline: 1px solid #a1bade; outline-offset: 2px; }
+.prompt { display: block; color: #9ace9c; margin-top: 10px; }
+@media (max-width: 599px) { .pane { padding: 6px 8px; font-size: 10px; } }
