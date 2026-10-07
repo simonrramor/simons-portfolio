@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, type ReactNode } from 'react';
+import { useState, useCallback } from 'react';
 import Header from '@/components/Header';
 import ProjectList from '@/components/ProjectList';
 import CardSlider, { type ProjectCategory, type ProjectView } from '@/components/CardSlider';
@@ -8,7 +8,7 @@ import styles from '@/app/page.module.css';
 import { GALLERY_MOTION } from '@/components/motion';
 import type { CSSProperties } from 'react';
 
-export default function HomeGallery({ overview }: { overview: ReactNode }) {
+export default function HomeGallery() {
   const [showWork, setShowWork] = useState(false);
   const [view, setView] = useState<ProjectView>('list');
   const [category, setCategory] = useState<ProjectCategory>('work');
@@ -27,7 +27,6 @@ export default function HomeGallery({ overview }: { overview: ReactNode }) {
       {showWork && view === 'list' && (
         <ProjectList category={category} />
       )}
-      {!showWork && overview}
       <CardSlider key={category} category={category} showWork={showWork && view === 'card'} exiting={exiting && view === 'card'} onExitComplete={finishExit} />
     </main>
   );

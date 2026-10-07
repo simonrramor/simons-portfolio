@@ -9,7 +9,7 @@
 - [Morse projects](https://www.simonamor.design/work#morse): Card, Investments, Savings, Bill Splits, Bill Pay and Growth.
 - [Spotify projects](https://www.simonamor.design/work#spotify): Group Sessions, Enhance, privacy controls, local files and offline listening, and short form video music discovery.
 - [Monzo projects](https://www.simonamor.design/work#monzo): Shared Tabs, Golden Tickets, Salary Sorter, Get paid early, Bills Pots and Premium paid account.
-- [Terminal experiment](https://www.simonamor.design/about): A personal interactive animation experiment, not a biographical About page.
+- [About Simon Amor](https://www.simonamor.design/about): Designer background and project context presented inside an interactive terminal animation experiment.
 
 ## Context
 

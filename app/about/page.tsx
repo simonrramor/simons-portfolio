@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
 import TerminalPane from './TerminalPane';
+import PortfolioOverview from '@/components/PortfolioOverview';
 import { advanceTree, createTree, layoutTree, paneCount, type PaneBox, type TerminalTree } from './terminal-layout';
 import styles from './page.module.css';
 
@@ -208,7 +209,6 @@ export default function About() {
 
   return (
     <main
-      ref={sceneRef}
       className={styles.container}
       data-running={running}
       aria-label="Animated terminal experiment"
@@ -217,8 +217,8 @@ export default function About() {
         '--anim-easing': `cubic-bezier(${bezier.join(',')})`,
       } as CSSProperties}
     >
-      <h1 className={styles.pageTitle}>Terminal animation experiment</h1>
-      <div className={styles.scene} aria-hidden="true">
+      <PortfolioOverview />
+      <div ref={sceneRef} className={styles.scene} aria-hidden="true">
         {boxes.map((box) => (
           <div
             key={box.id}

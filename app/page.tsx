@@ -1,7 +1,6 @@
 import HomeGallery from '@/components/HomeGallery';
-import PortfolioOverview from '@/components/PortfolioOverview';
 import StructuredData from '@/components/StructuredData';
-import { person, siteUrl, portfolioUpdated, portfolioQuestions, description } from '@/lib/portfolio';
+import { person, siteUrl, portfolioUpdated, description } from '@/lib/portfolio';
 
 export default function Home() {
   const schemas = [
@@ -18,17 +17,8 @@ export default function Home() {
       mainEntity: { '@id': person['@id'] }, author: { '@id': person['@id'] },
       isPartOf: { '@id': `${siteUrl}/#website` },
       image: `${siteUrl}/social-card.png`,
-      hasPart: [{ '@id': `${siteUrl}/#portfolio-questions` }, { '@id': `${siteUrl}/work#page` }],
-    },
-    {
-      '@type': 'FAQPage', '@id': `${siteUrl}/#portfolio-questions`, url: `${siteUrl}/`,
-      name: 'Questions about Simon Amor’s portfolio', inLanguage: 'en',
-      isPartOf: { '@id': `${siteUrl}/#profile` },
-      mainEntity: portfolioQuestions.map(({ question, answer }) => ({
-        '@type': 'Question', name: question,
-        acceptedAnswer: { '@type': 'Answer', text: answer },
-      })),
+      hasPart: [{ '@id': `${siteUrl}/about#page` }, { '@id': `${siteUrl}/work#page` }],
     },
   ];
-  return <><StructuredData schemas={schemas} /><HomeGallery overview={<PortfolioOverview />} /></>;
+  return <><StructuredData schemas={schemas} /><HomeGallery /></>;
 }
