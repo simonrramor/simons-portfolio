@@ -11,3 +11,7 @@
     --gallery-viewport-height: 100dvh;
   }
 }
+
+.softGrey {
+  background: radial-gradient(ellipse 60% 200% at bottom left, #efefef 0%, #f7f7f7 45%, #ffffff 80%);
+}
