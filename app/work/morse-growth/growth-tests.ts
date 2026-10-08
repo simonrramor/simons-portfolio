@@ -16,7 +16,7 @@ export const growthTests: GrowthTest[] = [
   { name: 'New-user checklist (referred users)', date: 'Sep 2026', effect: 'FTx +7.7% (p=0.25, not significant); claimed invites +44.9% (p=0.22, not significant).', effectLabel: 'FTx +7.7% · Claims +44.9%', status: 'Shipped' },
   { name: 'Invite friends during signup', date: 'Sep 2026', effect: 'Claimed invites +6.7% (p=0.75, not significant); invite share once per user +82.4%.', effectLabel: 'Claimed invites +6.7%', status: 'Shipped' },
   { name: 'Share receipt after paying someone', date: 'Aug 2026', effect: 'Claimed invites +25.7% (p=0.43, not significant); invite share +104%; share events +268%.', effectLabel: 'Claimed invites +25.7% · Shares +104%', status: 'Shipped' },
-  { name: 'Support card on USD account screen (Android)', date: 'Jul 2026', effect: 'Not recorded.', status: 'Shipped' },
+  { name: 'Support card on USD account screen (Android)', date: 'Jul 2026', effect: 'Primary support tap +54.45%; copy/share USD details +7.84%; USD third-party deposit +5.69%.', effectLabel: 'Support tap +54.45% · Copy/share +7.84% · USD deposit +5.69%', status: 'Shipped' },
   { name: 'Confirm button on country picker', date: 'Jul 2026', effect: 'No harm.', status: 'Not shipped' },
   { name: 'Invite tab in the tab bar (iOS)', date: 'Jul 2026', effect: 'Invite share +76.9% (p=0.030); invite screen views +249%.', effectLabel: 'Invite share +76.9% · Views +249%', status: 'Shipped' },
   { name: '“Earn $X” referral button (iOS)', date: 'Jul 2026', effect: 'Invite share started +78.4% (p=0.007); paid invite screen views +112%; first deposit +21.9%, not significant.', effectLabel: 'Invite share +78.4% · Views +112% · Deposit +21.9%', status: 'Shipped' },
