@@ -47,6 +47,8 @@ export default function GrowthCaseStudy() {
     );
   }
 
+  const activeScreenshots = activeTest === null ? [] : getGrowthScreenshots(growthTests[activeTest].name);
+
   return (
     <main className={styles.page}>
       <Link href="/" className={styles.back}>Simon Amor / Interactive portfolio</Link>
@@ -69,17 +71,15 @@ export default function GrowthCaseStudy() {
             ))}
           </ol>
         </div>
-        {activeTest !== null && (
+        {activeTest !== null && activeScreenshots.length > 0 && (
           <aside className={styles.preview} aria-live="polite">
-            {getGrowthScreenshots(growthTests[activeTest].name).length > 0 ? (
-              <div className={styles.previewImages}>
-                {getGrowthScreenshots(growthTests[activeTest].name).map((src, imageIndex) => (
-                  <div className={styles.previewImageFrame} key={src}>
-                    <Image src={src} alt={`${growthTests[activeTest].name} ${imageIndex + 1}`} fill sizes="(max-width: 800px) 100vw, 32vw" />
-                  </div>
-                ))}
-              </div>
-            ) : <div className={styles.noScreenshot}>Screenshot not attached</div>}
+            <div className={styles.previewImages}>
+              {activeScreenshots.map((src, imageIndex) => (
+                <div className={styles.previewImageFrame} key={src}>
+                  <Image src={src} alt={`${growthTests[activeTest].name} ${imageIndex + 1}`} fill sizes="(max-width: 800px) 100vw, 32vw" />
+                </div>
+              ))}
+            </div>
             <p>{growthTests[activeTest].name}</p>
           </aside>
         )}
