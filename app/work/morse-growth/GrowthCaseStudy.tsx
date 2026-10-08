@@ -6,6 +6,7 @@ import Image from 'next/image';
 import styles from './page.module.css';
 import { growthTests } from './growth-tests';
 import { getGrowthScreenshots } from './growth-screenshots';
+import { getStatsigUrl } from './statsig-links';
 
 const PASSWORD = 'morse-growth';
 
@@ -59,11 +60,11 @@ export default function GrowthCaseStudy() {
           <ol>
             {growthTests.map((test, index) => (
               <li key={test.name}>
-                <button type="button" className={styles.testRow} data-active={activeTest === index} onMouseEnter={() => setActiveTest(index)} onMouseLeave={() => setActiveTest(null)} onFocus={() => setActiveTest(index)} onBlur={() => setActiveTest(null)}>
+                <a className={styles.testRow} data-active={activeTest === index} href={getStatsigUrl(test.name)} target="_blank" rel="noreferrer" onMouseEnter={() => setActiveTest(index)} onMouseLeave={() => setActiveTest(null)} onFocus={() => setActiveTest(index)} onBlur={() => setActiveTest(null)}>
                   <span className={styles.testName}>{test.name}</span>
                   <span className={styles.testEffect}>{test.effect}</span>
                   <span className={`${styles.status} ${test.status === 'Shipped' ? styles.shipped : styles.notShipped}`}>{test.status}</span>
-                </button>
+                </a>
               </li>
             ))}
           </ol>
