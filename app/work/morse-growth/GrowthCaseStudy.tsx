@@ -55,7 +55,7 @@ export default function GrowthCaseStudy() {
         <p className={styles.intro}>A record of growth experiments across onboarding, referrals, payments and money movement.</p>
         <p className={styles.summary}>{growthTests.length} experiments</p>
         <div className={styles.archive}>
-          <div className={styles.archiveHeader} aria-hidden="true"><span>Experiment</span><span>Effect</span><span>Outcome</span><span>Date</span></div>
+          <div className={styles.archiveHeader} aria-hidden="true"><span>Experiment</span><span>Effect</span><span>Outcome</span></div>
           <ol>
             {growthTests.map((test, index) => (
               <li key={test.name}>
@@ -63,7 +63,6 @@ export default function GrowthCaseStudy() {
                   <span className={styles.testName}>{test.name}</span>
                   <span className={styles.testEffect}>{test.effect}</span>
                   <span className={`${styles.status} ${test.status === 'Shipped' ? styles.shipped : styles.notShipped}`}>{test.status}</span>
-                  <span className={styles.testDate}>{test.date}</span>
                 </button>
               </li>
             ))}
