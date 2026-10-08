@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import styles from './page.module.css';
 import { growthTests } from './growth-tests';
+import { getGrowthScreenshots } from './growth-screenshots';
 
 const PASSWORD = 'morse-growth';
 
@@ -70,7 +71,15 @@ export default function GrowthCaseStudy() {
         </div>
         {activeTest !== null && (
           <aside className={styles.preview} aria-live="polite">
-            {growthTests[activeTest].screenshot ? <Image src={growthTests[activeTest].screenshot} alt={`${growthTests[activeTest].name} experiment screenshot`} fill sizes="(max-width: 800px) 100vw, 32vw" /> : <div className={styles.noScreenshot}>Screenshot not attached</div>}
+            {getGrowthScreenshots(growthTests[activeTest].name).length > 0 ? (
+              <div className={styles.previewImages}>
+                {getGrowthScreenshots(growthTests[activeTest].name).map((src, imageIndex) => (
+                  <div className={styles.previewImageFrame} key={src}>
+                    <Image src={src} alt={`${growthTests[activeTest].name} ${imageIndex + 1}`} fill sizes="(max-width: 800px) 100vw, 32vw" />
+                  </div>
+                ))}
+              </div>
+            ) : <div className={styles.noScreenshot}>Screenshot not attached</div>}
             <p>{growthTests[activeTest].name}</p>
           </aside>
         )}
