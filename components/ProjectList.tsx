@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import CardVideo from './CardVideo';
 import { projectTitles, type ProjectCategory, type ProjectListItem } from './CardSlider';
 import styles from './ProjectList.module.css';
@@ -51,7 +52,11 @@ export default function ProjectList({ category }: { category: ProjectCategory })
       <ul>
         {projectTitles.filter(project => project.category === category).map(project => (
           <li key={project.id}>
-            <button
+            {project.href ? (
+              <Link href={project.href} className={styles.row} data-active={active?.id === project.id} onMouseEnter={() => setActive(project)} onMouseLeave={() => setActive(null)} onFocus={() => setActive(project)} onBlur={() => setActive(null)} aria-label={`${project.title}, password protected case study`}>
+                <span className={styles.rowContent}>{project.title}</span>
+              </Link>
+            ) : <button
               type="button"
               className={styles.row}
               data-active={active?.id === project.id}
@@ -74,7 +79,7 @@ export default function ProjectList({ category }: { category: ProjectCategory })
                   </svg>
                 ) : null}
               </span>
-            </button>
+            </button>}
           </li>
         ))}
       </ul>
