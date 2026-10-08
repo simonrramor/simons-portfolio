@@ -2,23 +2,23 @@ export type GrowthTest = {
   name: string;
   date: string;
   effect: string;
-  status: 'Shipped' | 'Not shipped';
+  status: 'Shipped' | 'Not shipped' | 'Running';
   screenshot?: string;
 };
 
 export const growthTests: GrowthTest[] = [
-  { name: 'Invite prompt after good money moments', date: 'Sep 2026', effect: 'Invites claimed −5%, not significant; group-balance warning.', status: 'Not shipped' },
-  { name: 'Referral reward in the activity feed', date: 'Aug 2026', effect: 'Not read yet.', status: 'Not shipped' },
-  { name: 'Receipt screen without a Done button (Android)', date: 'Sep 2026', effect: 'Shares +29.5% early; invites claimed +6%, not significant.', status: 'Not shipped' },
+  { name: 'Invite prompt after good money moments', date: 'Sep 2026', effect: 'Claimed invites +6.1% (p=0.53, not significant); invite share +16.8%; underpowered at roughly 27% power.', status: 'Not shipped' },
+  { name: 'Referral reward in the activity feed', date: 'Sep 2026', effect: 'FTx +7.1% (p=0.18, not significant); claimed invites +32%; referee signups +30%; card spend −7.7%.', status: 'Shipped' },
+  { name: 'Receipt screen without a Done button (Android)', date: 'Sep 2026', effect: 'Claimed invites +18.9% (p=0.35, not significant); never significant across 29 days.', status: 'Shipped' },
   { name: '“Double your salary” banner', date: 'Sep 2026', effect: 'No proven impact; early read was negative.', status: 'Shipped' },
   { name: 'New-user checklist (organic users)', date: 'Sep 2026', effect: 'First transaction +17–19%, significant.', status: 'Shipped' },
-  { name: 'New-user checklist (referred users)', date: 'Sep 2026', effect: 'Positive but not significant.', status: 'Not shipped' },
-  { name: 'Invite friends during signup', date: 'Aug 2026', effect: 'Not recorded.', status: 'Shipped' },
-  { name: 'Share receipt after paying someone', date: 'Aug 2026', effect: 'Shares up 2–4×; signups positive but not significant.', status: 'Not shipped' },
+  { name: 'New-user checklist (referred users)', date: 'Sep 2026', effect: 'FTx +7.7% (p=0.25, not significant); claimed invites +44.9% (p=0.22, not significant).', status: 'Shipped' },
+  { name: 'Invite friends during signup', date: 'Sep 2026', effect: 'Claimed invites +6.7% (p=0.75, not significant); invite share once per user +82.4%.', status: 'Shipped' },
+  { name: 'Share receipt after paying someone', date: 'Aug 2026', effect: 'Claimed invites +25.7% (p=0.43, not significant); invite share +104%; share events +268%.', status: 'Shipped' },
   { name: 'Support card on USD account screen (Android)', date: 'Jul 2026', effect: 'Not recorded.', status: 'Shipped' },
   { name: 'Confirm button on country picker', date: 'Jul 2026', effect: 'No harm.', status: 'Not shipped' },
-  { name: 'Invite tab in the tab bar (iOS)', date: 'Jul 2026', effect: 'Not recorded.', status: 'Not shipped' },
-  { name: '“Earn $X” referral button (iOS)', date: 'Jul 2026', effect: 'Not recorded.', status: 'Not shipped' },
+  { name: 'Invite tab in the tab bar (iOS)', date: 'Jul 2026', effect: 'Invite share +76.9% (p=0.030); invite screen views +249%.', status: 'Shipped' },
+  { name: '“Earn $X” referral button (iOS)', date: 'Jul 2026', effect: 'Invite share started +78.4% (p=0.007); paid invite screen views +112%; first deposit +21.9%, not significant.', status: 'Shipped' },
   { name: '“Converted to USD” labels on account details', date: 'Jul 2026', effect: 'No clear win; team will test the opposite instead.', status: 'Not shipped' },
   { name: 'USD account explainer', date: 'Jul 2026', effect: 'Not recorded.', status: 'Not shipped' },
   { name: 'Redesigned account details screen', date: 'Jul 2026', effect: 'Not recorded.', status: 'Shipped' },
@@ -43,11 +43,11 @@ export const growthTests: GrowthTest[] = [
   { name: '“Buy dollars” button', date: 'Oct 2025', effect: 'Very negative after two days.', status: 'Shipped' },
   { name: 'Push prompt on app launch', date: 'Oct 2025', effect: 'Analysed too early.', status: 'Shipped' },
   { name: '“Add money” prompt after signup', date: 'Aug 2025', effect: 'Not significant.', status: 'Not shipped' },
-  { name: 'Invite link in the home feed', date: 'Aug 2025', effect: 'Didn’t hit the +20% target.', status: 'Not shipped' },
+  { name: 'Invite link in the home feed', date: 'Aug 2025', effect: 'Reverted to control; no documented readout.', status: 'Not shipped' },
   { name: 'Why-we-need-your-ID copy', date: 'Aug 2025', effect: 'No impact after 71 days.', status: 'Not shipped' },
   { name: 'Push request after SMS step', date: 'Undated', effect: 'iOS bug and Android data issues.', status: 'Not shipped' },
   { name: 'Welcome gift', date: 'Undated', effect: 'Shipped, then wound down.', status: 'Shipped' },
-  { name: 'Paid referral programme (v1)', date: 'Sep 2025', effect: 'Shipped.', status: 'Shipped' },
+  { name: 'Paid referral programme (v1)', date: 'Aug 2025', effect: 'New-user P2P adoption +4.4pp (p=0.051); existing-user P2P adoption +9pp, significant; retention flat.', status: 'Shipped' },
   { name: 'Skippable contact sync at signup', date: 'Jan 2026', effect: 'Shipped.', status: 'Shipped' },
   { name: 'Mandatory contact sync at signup', date: 'Dec 2025', effect: 'Abandoned.', status: 'Not shipped' },
   { name: 'Card and account created at signup', date: 'Feb 2026', effect: 'Decided.', status: 'Not shipped' },
@@ -61,10 +61,13 @@ export const growthTests: GrowthTest[] = [
   { name: 'Feature interests before ID check', date: 'Jun 2026', effect: 'Shipped.', status: 'Shipped' },
   { name: '“Add money” when an investment buy is short', date: 'Jun 2026', effect: 'Shipped.', status: 'Shipped' },
   { name: 'Camera permission before ID check (Android)', date: 'Jun 2026', effect: 'Decided.', status: 'Not shipped' },
-  { name: 'Invite tab in the tab bar (Android)', date: 'Jul 2026', effect: 'Decided.', status: 'Not shipped' },
-  { name: '“Earn $X” referral button (Android)', date: 'Jul 2026', effect: 'Decided.', status: 'Not shipped' },
+  { name: 'Invite tab in the tab bar (Android)', date: 'Jul 2026', effect: 'Invite screen views +37.8% (p=0.011); invite share +46.5%, not significant.', status: 'Shipped' },
+  { name: '“Earn $X” referral button (Android)', date: 'Jul 2026', effect: 'Invite share +438.8% (p<0.001); invite screen views +209.6%; card spend flat.', status: 'Shipped' },
   { name: 'Highlight “No” on skip contact sync', date: 'Jul 2026', effect: 'Decided.', status: 'Not shipped' },
   { name: 'Help button during signup (Android)', date: 'Aug 2026', effect: 'Decided.', status: 'Not shipped' },
   { name: 'Selfie tips before ID check (v1)', date: 'Undated', effect: 'Replaced by v2.', status: 'Not shipped' },
   { name: 'Card creation timeline', date: 'Undated', effect: 'Archived.', status: 'Not shipped' },
+  { name: 'Hide paid referral banner for new users', date: 'Undated', effect: 'Set up in Statsig but never run.', status: 'Not shipped' },
+  { name: 'Contacts permission skip button colour', date: 'Jul 2026', effect: 'Contacts-permission grants −14%, not significant; signup completion +4.2% (p=0.037).', status: 'Not shipped' },
+  { name: 'Post-signup reward checklist', date: 'Oct 2026', effect: 'Still running; no readout yet.', status: 'Running' },
 ];

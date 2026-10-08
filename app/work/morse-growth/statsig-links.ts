@@ -40,6 +40,14 @@ const experimentSlugs: Record<string, string> = {
   'Invite link in the home feed': 'share_invite_link_on_home_feed',
   'Why-we-need-your-ID copy': 'idv_copy_change',
   'Push request after SMS step': 'notification_permission_after_sending_sms',
+  'Paid referral programme (v1)': 'referrals_v1',
+  'Skippable contact sync at signup': 'contact_sync_in_signup_skippable',
+  'Mandatory contact sync at signup': 'contact_sync_in_signup',
+  'Invite tab in the tab bar (Android)': 'home_invite_tab_android',
+  '“Earn $X” referral button (Android)': 'home_earn_referral_button_android',
+  'Hide paid referral banner for new users': 'hide_paid_referral_banner_for_new_users',
+  'Contacts permission skip button colour': 'contacts_skip_button_colour',
+  'Post-signup reward checklist': 'post_signup_reward_checklist',
 };
 
 export function getStatsigUrl(name: string) {
