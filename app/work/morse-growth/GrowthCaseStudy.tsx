@@ -64,7 +64,7 @@ export default function GrowthCaseStudy() {
               <li key={test.name}>
                 <a className={styles.testRow} data-active={activeTest === index} href={getStatsigUrl(test.name)} target="_blank" rel="noreferrer" onMouseEnter={() => setActiveTest(index)} onMouseLeave={() => setActiveTest(null)} onFocus={() => setActiveTest(index)} onBlur={() => setActiveTest(null)}>
                   <span className={styles.testName}>{test.name}</span>
-                  <span className={styles.testEffect}>{test.effect}</span>
+                  <span className={styles.testEffect} title={test.effect}>{test.effectLabel ?? test.effect}</span>
                   <span className={`${styles.status} ${test.status === 'Shipped' ? styles.shipped : test.status === 'Running' ? styles.running : styles.notShipped}`}>{test.status}</span>
                 </a>
               </li>
