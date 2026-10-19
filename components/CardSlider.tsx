@@ -383,7 +383,7 @@ const defaultCards: Card[] = [
       { name: 'Christine Røde', company: 'The Browser Company' },
     ],
   },
-  { id: 0, title: 'Captr', image: '/images/captr-detail.webp', label: 'Captr', logo: '/icons/captr-icon.png', backgroundColor: '#ff3b30', imageFit: 'contain', imagePosition: 'bottom', description: 'A screen capture tool for grabbing, annotating and sharing what’s on your screen.' },
+  { id: 0, title: 'Captr', image: '/images/captr-detail.webp', label: 'Captr', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom', description: 'A screen capture tool for grabbing, annotating and sharing what’s on your screen.' },
   { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28, description: 'A visual identity built from pixel patterns that grow and change over time.' },
   { id: 1, title: '咲く花', video: '/videos/card_1_video.mp4', poster: '/posters/card_1_poster.webp', label: '咲く花', logo: '/icons/stars-icon.svg', description: 'An animation experiment with organic forms that grow and bloom.' },
   { id: 2, category: 'work', title: 'Sling', image: '/images/card_2_image.jpg', label: 'Sling', logo: '/icons/sling-logo.png', expandedImagePosition: 'center 10%', description: 'A way to send and receive digital dollars and euros around the world.' },
@@ -426,11 +426,11 @@ export interface ProjectListItem {
 export const projectTitles: ProjectListItem[] = [
   ...defaultCards.flatMap(card => card.id === 13 ? [
     { id: card.id, title: 'Morse - Card', category: 'work', preview: card.poster, previewVideo: card.video },
-    { id: 22, title: 'Morse - Investments', category: 'work', preview: '/images/morse-investments-red.png' },
-    { id: 23, title: 'Morse - Savings', category: 'work', preview: '/images/morse-savings-red.png' },
-    { id: 24, title: 'Morse - Bill Splits', category: 'work', preview: '/images/morse-bill-splits-red.png' },
-    { id: 32, title: 'Morse - Bill Pay', category: 'work', preview: '/images/morse-bill-pay-red.png' },
-    { id: 31, title: 'Morse - Growth', category: 'work', href: '/work/morse-growth', preview: '/images/morse-growth-red.png' },
+    { id: 22, title: 'Morse - Investments', category: 'work', preview: '/images/morse-investments.png' },
+    { id: 23, title: 'Morse - Savings', category: 'work', preview: '/images/morse-savings.png' },
+    { id: 24, title: 'Morse - Bill Splits', category: 'work', preview: '/images/morse-bill-splits.png' },
+    { id: 32, title: 'Morse - Bill Pay', category: 'work', preview: '/images/morse-bill-pay.png' },
+    { id: 31, title: 'Morse - Growth', category: 'work', href: '/work/morse-growth', preview: '/images/morse-growth.png' },
   ] : [{
     id: card.id,
     title: [7, 8, 15].includes(card.id) ? `Monzo - ${card.title}`
@@ -445,12 +445,12 @@ export const projectTitles: ProjectListItem[] = [
       ?? (card.cells ? '/posters/cells-heat-map.jpg' : undefined)
       ?? (card.showGlyph ? '/icons/glyph-reference.png' : undefined),
   }, ...(card.id === 5 ? [
-    { id: 17, title: 'Spotify - Global privacy controls', category: 'work', preview: '/images/spotify-global-privacy-controls-red.png' },
-    { id: 18, title: 'Spotify - Local file upload and offline listening', category: 'work', preview: '/images/spotify-local-files-red.png' },
+    { id: 17, title: 'Spotify - Global privacy controls', category: 'work', preview: '/images/spotify-global-privacy-controls.png' },
+    { id: 18, title: 'Spotify - Local file upload and offline listening', category: 'work', preview: '/images/spotify-local-files.png' },
     { id: 33, title: 'Spotify - Music discover using short form video', category: 'work', preview: '/posters/spotify-short-form-video.jpg', previewVideo: '/videos/spotify-short-form-video.mp4' },
   ] : [])]),
-  { id: 19, title: 'Monzo - Get paid early', category: 'work', preview: '/images/monzo-get-paid-early-red.png' },
-  { id: 20, title: 'Monzo - Bills Pots', category: 'work', preview: '/images/monzo-bills-pots-red.png' },
+  { id: 19, title: 'Monzo - Get paid early', category: 'work', preview: '/images/monzo-get-paid-early.png' },
+  { id: 20, title: 'Monzo - Bills Pots', category: 'work', preview: '/images/monzo-bills-pots.png' },
   { id: 34, title: 'Monzo - Premium paid account', category: 'work', preview: '/images/monzo-premium-paid-account.png' },
   { id: 26, title: 'Google - Ticketing system for Google IO', category: 'work', preview: '/images/google-io-ticketing.jpg', blurPreview: true, previewAspectRatio: '2041 / 2160' },
   { id: 27, title: 'Google - Grow with Google', category: 'work', preview: '/images/google-grow-with-google.jpg', blurPreview: true, previewAspectRatio: '2181 / 2160' },
