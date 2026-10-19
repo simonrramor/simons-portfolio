@@ -177,8 +177,10 @@
 
 @media (max-width: 768px) {
   .projectList { inset: 240px 24px 24px; }
-  .projectList ul { width: 66%; padding-right: 24px; }
-  .preview { top: 240px; bottom: 24px; right: 24px; width: 28vw; }
+  .projectList ul { width: 100%; padding-right: 0; }
+  .row { min-height: 44px; padding: 10px 0; }
+  .rowContent { max-width: calc(100% - 16px); }
+  .preview { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

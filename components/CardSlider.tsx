@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo, useImperativeHandle, type Ref } from 'react';
 import Image from 'next/image';
 import styles from './CardSlider.module.css';
 import CardLogo from './CardLogo';
@@ -314,7 +314,12 @@ export type ProjectView = 'list' | 'card';
 
 export type ProjectCategory = 'work' | 'fun';
 
+export interface CardSliderHandle {
+  openProject: (projectId: number) => void;
+}
+
 interface CardSliderProps {
+  ref?: Ref<CardSliderHandle>;
   category?: ProjectCategory;
   cards?: Card[];
   showWork?: boolean;
@@ -450,15 +455,15 @@ export const projectTitles: ProjectListItem[] = [
   }, ...(card.id === 5 ? [
     { id: 17, title: 'Spotify - Global privacy controls', category: 'work', preview: '/images/spotify-privacy-screen.png', previewBackground: '#1ed760' },
     { id: 18, title: 'Spotify - Local file upload and offline listening', category: 'work', preview: '/images/spotify-local-files-screen.png', previewBackground: '#1ed760' },
-    { id: 33, title: 'Spotify - Music discover using short form video', category: 'work', preview: '/images/spotify-short-form-screen.png', previewBackground: '#1ed760' },
+    { id: 33, title: 'Spotify - Music discovery using short form video', category: 'work', preview: '/images/spotify-short-form-screen.png', previewBackground: '#1ed760' },
   ] : [])]),
   { id: 19, title: 'Monzo - Get paid early', category: 'work', preview: '/images/monzo-get-paid-early-screen-v2.png', previewBackground: '#bbcce8' },
   { id: 20, title: 'Monzo - Bills Pots', category: 'work', preview: '/images/monzo-bills-pots-screen.png', previewBackground: '#bbcce8' },
-  { id: 34, title: 'Monzo - Premium paid account', category: 'work', preview: '/images/monzo-premium-screen.png', previewBackground: 'linear-gradient(135deg, #b8e7e7 0%, #e3edcc 52%, #e2e4df 100%)' },
+  { id: 34, title: 'Monzo - Plus paid account', category: 'work', preview: '/images/monzo-premium-screen.png', previewBackground: 'linear-gradient(135deg, #b8e7e7 0%, #e3edcc 52%, #e2e4df 100%)' },
   { id: 26, title: 'Google - Ticketing system for Google IO', category: 'work', preview: '/images/google-io-ticketing.jpg', blurPreview: true, previewAspectRatio: '2041 / 2160' },
   { id: 27, title: 'Google - Grow with Google', category: 'work', preview: '/images/google-grow-with-google.jpg', blurPreview: true, previewAspectRatio: '2181 / 2160' },
   { id: 28, title: 'Android - Developer portal', category: 'work', preview: '/images/android-developer-portal.jpg', blurPreview: true, previewAspectRatio: '2367 / 2160' },
-  { id: 29, title: 'Natwest - Cyber security education', category: 'work', preview: '/images/natwest-cyber-security.jpg', blurPreview: true, previewAspectRatio: '1960 / 2160' },
+  { id: 29, title: 'NatWest - Cyber security education', category: 'work', preview: '/images/natwest-cyber-security.jpg', blurPreview: true, previewAspectRatio: '1960 / 2160' },
   { id: 30, title: 'ATIS - High throughput AI particle tracking for researchers', category: 'work', preview: '/images/aits.jpg', blurPreview: true, previewAspectRatio: '2259 / 2160' },
 ];
 
@@ -481,7 +486,7 @@ export const portfolioCards: Card[] = projectTitles.map(project => cardsById.get
   noOverlay: true,
 });
 
-export default function CardSlider({ cards: sourceCards = portfolioCards, category, showWork = true, exiting = false, onExitComplete }: CardSliderProps) {
+export default function CardSlider({ ref, cards: sourceCards = portfolioCards, category, showWork = true, exiting = false, onExitComplete }: CardSliderProps) {
   const cards = useMemo(() => category ? sourceCards.filter(card => (card.category ?? 'fun') === category) : sourceCards, [sourceCards, category]);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [mediaView, setMediaView] = useState(0);
@@ -509,6 +514,20 @@ export default function CardSlider({ cards: sourceCards = portfolioCards, catego
     setSelectedCard(card);
     setIsOverCard(false);
   };
+
+  useImperativeHandle(ref, () => ({
+    openProject(projectId) {
+      const card = cards.find(item => item.id === projectId);
+      if (!card) return;
+      // List rows open the same dialog without morphing from a hidden card.
+      sourceCardRef.current = null;
+      openingRectRef.current = null;
+      galleryStartTimeRef.current = 0;
+      closingRef.current = false;
+      setMediaView(0);
+      setSelectedCard(card);
+    },
+  }));
 
   const animateBackground = useCallback((opening: boolean) => {
     const dialog = dialogRef.current;
@@ -595,13 +614,15 @@ export default function CardSlider({ cards: sourceCards = portfolioCards, catego
     const source = openingRectRef.current;
     const sourceElement = sourceCardRef.current;
     let resizeObserver: ResizeObserver | undefined;
-    if (card && media && source) {
-      // Morph the frame into a square; object-fit keeps the media proportional.
+    if (card && media) {
+      // Keep phone previews tall on mobile; other media retains the square frame.
       const sizeMedia = () => {
         const bounds = media.getBoundingClientRect();
         const width = Math.min(bounds.width, bounds.height);
         card.style.width = `${width}px`;
-        card.style.height = `${width}px`;
+        const portrait = selectedCard.background && selectedCard.imageFit === 'contain'
+          && window.matchMedia('(max-width: 700px)').matches;
+        card.style.height = `${portrait ? bounds.height : width}px`;
         const controls = media.querySelector<HTMLElement>('[data-gallery-controls]');
         if (controls) { controls.style.width = `${width}px`; controls.style.height = `${width}px`; }
       };
@@ -610,7 +631,7 @@ export default function CardSlider({ cards: sourceCards = portfolioCards, catego
       resizeObserver.observe(media);
       const destination = card.getBoundingClientRect();
       if (sourceElement) sourceElement.style.visibility = 'hidden';
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      if (source && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         panel?.setAttribute('data-transitioning', '');
         const animation = card.animate([
           { transform: `translate(${source.x + source.width / 2 - destination.x - destination.width / 2}px, ${source.y + source.height / 2 - destination.y - destination.height / 2}px) `, width: `${source.width}px`, height: `${source.height}px` },
@@ -1052,7 +1073,7 @@ export default function CardSlider({ cards: sourceCards = portfolioCards, catego
               key={`${card.id}-${index}`}
               className={`${styles.card} ${expanded ? styles.expandedCard : showWork ? styles.cardAnimate : ''}`}
               style={!expanded && showWork ? { animationDelay: `${(index % cards.length) * GALLERY_MOTION.stagger / 1000}s` } : {}}
-              enabled={showWork}
+              enabled={expanded || showWork}
               expanded={expanded}
               viewIndex={phoneView}
               onToggle={expanded ? togglePhoneView : () => openCard(card, index)}
@@ -1064,7 +1085,7 @@ export default function CardSlider({ cards: sourceCards = portfolioCards, catego
               key={`${card.id}-${index}`}
               className={`${styles.card} ${expanded ? styles.expandedCard : showWork ? styles.cardAnimate : ''}`}
               style={!expanded && showWork ? { animationDelay: `${(index % cards.length) * GALLERY_MOTION.stagger / 1000}s` } : {}}
-              enabled={showWork}
+              enabled={expanded || showWork}
               expanded={expanded}
               variantIndex={cellsVariant}
               onToggle={expanded ? toggleCellsView : () => openCard(card, index)}
@@ -1087,7 +1108,7 @@ export default function CardSlider({ cards: sourceCards = portfolioCards, catego
                 }
               }}
               key={`${card.id}-${index}`}
-              className={`${styles.card} ${expanded ? styles.expandedCard : showWork ? styles.cardAnimate : ''} ${card.hasBorder ? styles.cardWithBorder : ''} ${card.blurPreview ? styles.lockedCard : ''} ${expanded && synchronizedVideos ? styles.centeredCardMedia : ''}`}
+              className={`${styles.card} ${expanded ? styles.expandedCard : showWork ? styles.cardAnimate : ''} ${card.hasBorder ? styles.cardWithBorder : ''} ${card.background && card.imageFit === 'contain' ? styles.screenCard : ''} ${card.blurPreview ? styles.lockedCard : ''} ${expanded && synchronizedVideos ? styles.centeredCardMedia : ''}`}
               style={{
                 ...(!expanded && showWork ? { animationDelay: `${(index % cards.length) * GALLERY_MOTION.stagger / 1000}s` } : {}),
                 ...(card.backgroundColor ? { backgroundColor: card.backgroundColor } : {}),
@@ -1164,7 +1185,7 @@ export default function CardSlider({ cards: sourceCards = portfolioCards, catego
                     extendBackground={card.extendImageBackground}
                     backgroundSrc={card.imageBackgroundSrc}
                     backgroundGrain={card.imageBackgroundGrain}
-                    scale={card.imageScale}
+                    scale={expanded && card.background && card.imageFit === 'contain' ? 0.94 : card.imageScale}
                     priority={expanded || index === 0 || card.id <= 4}
                   />
                   {card.blurPreview && (

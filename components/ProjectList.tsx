@@ -37,7 +37,7 @@ function PrototypePreview({ project, active }: { project: ProjectListItem; activ
   );
 }
 
-export default function ProjectList({ category }: { category: ProjectCategory }) {
+export default function ProjectList({ category, onOpenProject }: { category: ProjectCategory; onOpenProject: (id: number) => void }) {
   const [hovered, setActive] = useState<ProjectListItem | null>(null);
   const [previousCategory, setPreviousCategory] = useState(category);
   const active = hovered?.category === category ? hovered : null;
@@ -64,7 +64,8 @@ export default function ProjectList({ category }: { category: ProjectCategory })
               onMouseLeave={() => setActive(null)}
               onFocus={() => setActive(project)}
               onBlur={() => setActive(null)}
-              onClick={() => setActive(project)}
+              onClick={() => { setActive(project); onOpenProject(project.id); }}
+              aria-haspopup="dialog"
               aria-label={!project.preview ? `${project.title}, preview unavailable` : project.blurPreview ? `${project.title}, locked` : project.title}
             >
               <span className={styles.rowContent}>
