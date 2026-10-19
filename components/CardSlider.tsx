@@ -421,6 +421,7 @@ export interface ProjectListItem {
   previewVideoAtlas?: boolean;
   blurPreview?: boolean;
   previewAspectRatio?: string;
+  previewBackgroundColor?: string;
 }
 
 export const projectTitles: ProjectListItem[] = [
@@ -445,7 +446,7 @@ export const projectTitles: ProjectListItem[] = [
       ?? (card.cells ? '/posters/cells-heat-map.jpg' : undefined)
       ?? (card.showGlyph ? '/icons/glyph-reference.png' : undefined),
   }, ...(card.id === 5 ? [
-    { id: 17, title: 'Spotify - Global privacy controls', category: 'work', preview: '/images/spotify-global-privacy-controls.png' },
+    { id: 17, title: 'Spotify - Global privacy controls', category: 'work', preview: '/images/spotify-privacy-screen.png', previewBackgroundColor: '#ff3b30' },
     { id: 18, title: 'Spotify - Local file upload and offline listening', category: 'work', preview: '/images/spotify-local-files.png' },
     { id: 33, title: 'Spotify - Music discover using short form video', category: 'work', preview: '/posters/spotify-short-form-video.jpg', previewVideo: '/videos/spotify-short-form-video.mp4' },
   ] : [])]),
@@ -472,6 +473,9 @@ export const portfolioCards: Card[] = projectTitles.map(project => cardsById.get
   poster: project.previewVideo ? project.preview : undefined,
   href: project.href,
   blurPreview: project.blurPreview,
+  backgroundColor: project.previewBackgroundColor,
+  imageFit: project.previewBackgroundColor ? 'contain' : undefined,
+  imageScale: project.previewBackgroundColor ? 0.84 : undefined,
   noOverlay: true,
 });
 

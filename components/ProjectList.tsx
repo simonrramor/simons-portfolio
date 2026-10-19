@@ -107,6 +107,10 @@ export default function ProjectList({ category }: { category: ProjectCategory })
             ) : (
               <CardVideo enabled forceLoad src={active.previewVideo} poster={active.preview} autoPlay muted loop playsInline aria-label={active.title} className={styles.previewVideo} />
             )
+          ) : active.previewBackgroundColor ? (
+            <div className={styles.imageBackdrop} style={{ backgroundColor: active.previewBackgroundColor }}>
+              <Image src={active.preview} alt={active.title} fill sizes="(max-width: 768px) 28vw, 36vw" className={styles.insetPreviewImage} />
+            </div>
           ) : (
             <Image src={active.preview} alt={active.title} fill sizes="(max-width: 768px) 28vw, 36vw" className={styles.previewImage} />
           )}

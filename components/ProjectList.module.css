@@ -198,3 +198,16 @@
   color: var(--color-text-muted);
   text-align: center;
 }
+
+.imageBackdrop {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.insetPreviewImage {
+  object-fit: contain;
+  padding: 8%;
+}
