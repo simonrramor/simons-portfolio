@@ -458,7 +458,7 @@ export const projectTitles: ProjectListItem[] = [
     { id: 33, title: 'Spotify - Music discovery using short form video', category: 'work', preview: '/images/spotify-short-form-screen.png', previewBackground: '#1ed760' },
   ] : [])]),
   { id: 19, title: 'Monzo - Get paid early', category: 'work', preview: '/images/monzo-get-paid-early-screen-v2.png', previewBackground: '#bbcce8' },
-  { id: 20, title: 'Monzo - Bills Pots', category: 'work', preview: '/images/monzo-bills-pots-screen.png', previewBackground: '#bbcce8' },
+  { id: 20, title: 'Monzo - Bills Pots', category: 'work', preview: '/images/monzo-bills-pots-screen-v2.png', previewBackground: '#bbcce8' },
   { id: 34, title: 'Monzo - Plus paid account', category: 'work', preview: '/images/monzo-premium-screen.png', previewBackground: 'linear-gradient(135deg, #b8e7e7 0%, #e3edcc 52%, #e2e4df 100%)' },
   { id: 26, title: 'Google - Ticketing system for Google IO', category: 'work', preview: '/images/google-io-ticketing.jpg', blurPreview: true, previewAspectRatio: '2041 / 2160' },
   { id: 27, title: 'Google - Grow with Google', category: 'work', preview: '/images/google-grow-with-google.jpg', blurPreview: true, previewAspectRatio: '2181 / 2160' },
