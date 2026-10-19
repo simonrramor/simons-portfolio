@@ -780,3 +780,18 @@ button.expandedCard:focus-visible {
 }
 
 .projectLink { display: inline-block; margin-top: 24px; text-decoration: underline; cursor: pointer; color: #171717; }
+
+.lockedCard .cardImage {
+  filter: blur(20px);
+  transform: scale(1.1);
+}
+
+.previewLock {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  pointer-events: none;
+  z-index: 2;
+}

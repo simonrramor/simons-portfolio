@@ -272,6 +272,8 @@ function ProgressiveImage({
 
 interface Card {
   id: number;
+  href?: string;
+  blurPreview?: boolean;
   category?: ProjectCategory;
   cells?: boolean;
   iphoneFold?: boolean;
@@ -457,7 +459,23 @@ export const projectTitles: ProjectListItem[] = [
   { id: 30, title: 'ATIS - High throughput AI particle tracking for researchers', category: 'work', preview: '/images/aits.jpg', blurPreview: true, previewAspectRatio: '2259 / 2160' },
 ];
 
-export default function CardSlider({ cards: sourceCards = defaultCards, category, showWork = true, exiting = false, onExitComplete }: CardSliderProps) {
+// Derive card view from the complete list so additions appear in both views.
+// Keep bespoke renderers and media settings for the existing animated cards.
+const cardsById = new Map(defaultCards.map(card => [card.id, card]));
+export const portfolioCards: Card[] = projectTitles.map(project => cardsById.get(project.id) ?? {
+  id: project.id,
+  category: project.category as ProjectCategory,
+  title: project.title,
+  label: project.title,
+  image: project.previewVideo ? undefined : project.preview,
+  video: project.previewVideo,
+  poster: project.previewVideo ? project.preview : undefined,
+  href: project.href,
+  blurPreview: project.blurPreview,
+  noOverlay: true,
+});
+
+export default function CardSlider({ cards: sourceCards = portfolioCards, category, showWork = true, exiting = false, onExitComplete }: CardSliderProps) {
   const cards = useMemo(() => category ? sourceCards.filter(card => (card.category ?? 'fun') === category) : sourceCards, [sourceCards, category]);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [mediaView, setMediaView] = useState(0);
@@ -1051,7 +1069,7 @@ export default function CardSlider({ cards: sourceCards = defaultCards, category
 <div
               role={expanded ? undefined : 'button'}
               tabIndex={expanded || !showWork ? -1 : 0}
-              aria-label={expanded ? undefined : `Expand ${card.label || card.title}`}
+              aria-label={expanded ? undefined : `Expand ${card.label || card.title}${card.blurPreview ? ", locked" : ""}`}
               onPointerDown={(event) => { pointerStartRef.current = { x: event.clientX, y: event.clientY }; }}
               onClick={(event) => {
                 if (!expanded && (event.detail === 0 || Math.hypot(event.clientX - pointerStartRef.current.x, event.clientY - pointerStartRef.current.y) < 10)) openCard(card, index);
@@ -1063,7 +1081,7 @@ export default function CardSlider({ cards: sourceCards = defaultCards, category
                 }
               }}
               key={`${card.id}-${index}`}
-              className={`${styles.card} ${expanded ? styles.expandedCard : showWork ? styles.cardAnimate : ''} ${card.hasBorder ? styles.cardWithBorder : ''} ${expanded && synchronizedVideos ? styles.centeredCardMedia : ''}`}
+              className={`${styles.card} ${expanded ? styles.expandedCard : showWork ? styles.cardAnimate : ''} ${card.hasBorder ? styles.cardWithBorder : ''} ${card.blurPreview ? styles.lockedCard : ''} ${expanded && synchronizedVideos ? styles.centeredCardMedia : ''}`}
               style={{
                 ...(!expanded && showWork ? { animationDelay: `${(index % cards.length) * GALLERY_MOTION.stagger / 1000}s` } : {}),
                 ...(card.backgroundColor ? { backgroundColor: card.backgroundColor } : {}),
@@ -1142,6 +1160,15 @@ export default function CardSlider({ cards: sourceCards = defaultCards, category
                     scale={card.imageScale}
                     priority={expanded || index === 0 || card.id <= 4}
                   />
+                  {card.blurPreview && (
+                    <span className={styles.previewLock} role="img" aria-label="Locked project">
+                      <svg width="24" height="24" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="currentColor" strokeWidth="1.4" />
+                        <rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.4" />
+                        <path d="M8 10v1.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                      </svg>
+                    </span>
+                  )}
                   {card.label && <span className={`${styles.cardLabel} ${card.darkText ? styles.cardLabelDark : ''}`} style={{ color: card.labelColor }}>{card.label}</span>}
                   {card.logo && (
                     <CardLogo src={card.logo} height={card.logoHeight} />
@@ -1239,6 +1266,7 @@ export default function CardSlider({ cards: sourceCards = defaultCards, category
                     </ul>
                   </section>
                 )}
+                {selectedCard.href && <a className={styles.projectLink} href={selectedCard.href}>View case study ↗</a>}
                 {selectedCard.title === 'Morse Card' && <a className={styles.projectLink} href="https://morsemoney.com" target="_blank" rel="noopener noreferrer">Visit Morse ↗</a>}
               </div>
             </div>
