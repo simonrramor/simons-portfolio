@@ -1,11 +1,11 @@
 export const siteUrl = 'https://www.simonamor.design';
-export const portfolioUpdated = '2026-10-07';
+export const portfolioUpdated = '2026-10-19';
 export const description = 'Simon Amor is a designer and co-founder of Morse, previously at Spotify and Monzo. Explore product design work and creative experiments.';
 
 // Public project titles supplied by Simon. These summaries describe their subject,
 // rather than claiming outcomes, metrics or responsibilities not documented here.
 export const workGroups = [
-  { id: 'morse', name: 'Morse', description: 'Simon is a co-founder of Morse. The portfolio covers everyday money features: cards, investments, savings, splitting bills, paying bills and growth. These projects sit together in the Work collection, with previews of the product interfaces.', projects: ['Card', 'Investments', 'Savings', 'Bill Splits', 'Bill Pay', 'Growth'] },
+  { id: 'morse', name: 'Morse', description: 'Simon is a co-founder of Morse. The portfolio covers everyday money features: cards, investments, savings, peer-to-peer payments, splitting bills, paying bills and growth. These projects sit together in the Work collection, with previews of the product interfaces.', projects: ['Card', 'Investments', 'Savings', 'P2P', 'Bill Splits', 'Bill Pay', 'Growth'] },
   { id: 'sling', name: 'Sling', description: 'The Sling project focuses on international payments. It appears alongside the Morse projects in the portfolio, bringing the payments work into one place.', projects: ['International payments'] },
   { id: 'spotify', name: 'Spotify', description: 'Simon previously worked at Spotify. The portfolio includes ways to listen together, discover music, manage privacy, and listen to local files offline. The short form video project includes an individual song feed prototype that can be previewed in the interactive gallery.', projects: ['Group Sessions', 'Enhance', 'Global privacy controls', 'Local file upload and offline listening', 'Music discovery using short form video'] },
   { id: 'monzo', name: 'Monzo', description: 'Simon previously worked at Monzo. The collection spans shared spending, invitations, managing salary, getting paid early, setting money aside for bills and paid accounts. Together, these project subjects show the range of personal banking features included in the portfolio.', projects: ['Shared Tabs', 'Golden Tickets', 'Salary Sorter', 'Get paid early', 'Bills Pots', 'Premium paid account'] },
