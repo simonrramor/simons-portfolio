@@ -430,7 +430,7 @@ export const projectTitles: ProjectListItem[] = [
     { id: 22, title: 'Morse - Investments', category: 'work', preview: '/images/morse-investments.png' },
     { id: 23, title: 'Morse - Savings', category: 'work', preview: '/images/morse-savings.png' },
     { id: 24, title: 'Morse - Bill Splits', category: 'work', preview: '/images/morse-bill-splits.png' },
-    { id: 32, title: 'Morse - Bill Pay', category: 'work', preview: '/images/morse-bill-pay.png' },
+    { id: 32, title: 'Morse - Bill Pay', category: 'work', preview: '/images/morse-bill-pay-screen.png', previewBackgroundColor: '#e1e1e1' },
     { id: 31, title: 'Morse - Growth', category: 'work', href: '/work/morse-growth', preview: '/images/morse-growth-screen.png', previewBackgroundColor: '#e1e1e1' },
   ] : [{
     id: card.id,
