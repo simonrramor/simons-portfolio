@@ -446,9 +446,9 @@ export const projectTitles: ProjectListItem[] = [
       ?? (card.cells ? '/posters/cells-heat-map.jpg' : undefined)
       ?? (card.showGlyph ? '/icons/glyph-reference.png' : undefined),
   }, ...(card.id === 5 ? [
-    { id: 17, title: 'Spotify - Global privacy controls', category: 'work', preview: '/images/spotify-privacy-screen.png', previewBackgroundColor: '#ff3b30' },
-    { id: 18, title: 'Spotify - Local file upload and offline listening', category: 'work', preview: '/images/spotify-local-files-screen.png', previewBackgroundColor: '#ff3b30' },
-    { id: 33, title: 'Spotify - Music discover using short form video', category: 'work', preview: '/images/spotify-short-form-screen.png', previewBackgroundColor: '#ff3b30' },
+    { id: 17, title: 'Spotify - Global privacy controls', category: 'work', preview: '/images/spotify-privacy-screen.png', previewBackgroundColor: '#1ed760' },
+    { id: 18, title: 'Spotify - Local file upload and offline listening', category: 'work', preview: '/images/spotify-local-files-screen.png', previewBackgroundColor: '#1ed760' },
+    { id: 33, title: 'Spotify - Music discover using short form video', category: 'work', preview: '/images/spotify-short-form-screen.png', previewBackgroundColor: '#1ed760' },
   ] : [])]),
   { id: 19, title: 'Monzo - Get paid early', category: 'work', preview: '/images/monzo-get-paid-early.png' },
   { id: 20, title: 'Monzo - Bills Pots', category: 'work', preview: '/images/monzo-bills-pots.png' },
