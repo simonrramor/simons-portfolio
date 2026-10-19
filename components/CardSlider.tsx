@@ -301,6 +301,7 @@ interface Card {
   hasBorder?: boolean;
   darkText?: boolean;
   backgroundColor?: string;
+  background?: string;
   showGlyph?: boolean;
   showRotation?: boolean;
   description?: string;
@@ -421,17 +422,17 @@ export interface ProjectListItem {
   previewVideoAtlas?: boolean;
   blurPreview?: boolean;
   previewAspectRatio?: string;
-  previewBackgroundColor?: string;
+  previewBackground?: string;
 }
 
 export const projectTitles: ProjectListItem[] = [
   ...defaultCards.flatMap<ProjectListItem>(card => card.id === 13 ? [
     { id: card.id, title: 'Morse - Card', category: 'work', preview: card.poster, previewVideo: card.video },
-    { id: 22, title: 'Morse - Investments', category: 'work', preview: '/images/morse-investments-screen.png', previewBackgroundColor: '#e1e1e1' },
-    { id: 23, title: 'Morse - Savings', category: 'work', preview: '/images/morse-earn-screen.png', previewBackgroundColor: '#e1e1e1' },
-    { id: 24, title: 'Morse - Bill Splits', category: 'work', preview: '/images/morse-bill-splits-screen.png', previewBackgroundColor: '#e1e1e1' },
-    { id: 32, title: 'Morse - Bill Pay', category: 'work', preview: '/images/morse-bill-pay-screen.png', previewBackgroundColor: '#e1e1e1' },
-    { id: 31, title: 'Morse - Growth', category: 'work', href: '/work/morse-growth', preview: '/images/morse-growth-screen.png', previewBackgroundColor: '#e1e1e1' },
+    { id: 22, title: 'Morse - Investments', category: 'work', preview: '/images/morse-investments-screen.png', previewBackground: '#e1e1e1' },
+    { id: 23, title: 'Morse - Savings', category: 'work', preview: '/images/morse-earn-screen.png', previewBackground: '#e1e1e1' },
+    { id: 24, title: 'Morse - Bill Splits', category: 'work', preview: '/images/morse-bill-splits-screen.png', previewBackground: '#e1e1e1' },
+    { id: 32, title: 'Morse - Bill Pay', category: 'work', preview: '/images/morse-bill-pay-screen.png', previewBackground: '#e1e1e1' },
+    { id: 31, title: 'Morse - Growth', category: 'work', href: '/work/morse-growth', preview: '/images/morse-growth-screen.png', previewBackground: '#e1e1e1' },
   ] : [{
     id: card.id,
     title: [7, 8, 15].includes(card.id) ? `Monzo - ${card.title}`
@@ -446,13 +447,13 @@ export const projectTitles: ProjectListItem[] = [
       ?? (card.cells ? '/posters/cells-heat-map.jpg' : undefined)
       ?? (card.showGlyph ? '/icons/glyph-reference.png' : undefined),
   }, ...(card.id === 5 ? [
-    { id: 17, title: 'Spotify - Global privacy controls', category: 'work', preview: '/images/spotify-privacy-screen.png', previewBackgroundColor: '#1ed760' },
-    { id: 18, title: 'Spotify - Local file upload and offline listening', category: 'work', preview: '/images/spotify-local-files-screen.png', previewBackgroundColor: '#1ed760' },
-    { id: 33, title: 'Spotify - Music discover using short form video', category: 'work', preview: '/images/spotify-short-form-screen.png', previewBackgroundColor: '#1ed760' },
+    { id: 17, title: 'Spotify - Global privacy controls', category: 'work', preview: '/images/spotify-privacy-screen.png', previewBackground: '#1ed760' },
+    { id: 18, title: 'Spotify - Local file upload and offline listening', category: 'work', preview: '/images/spotify-local-files-screen.png', previewBackground: '#1ed760' },
+    { id: 33, title: 'Spotify - Music discover using short form video', category: 'work', preview: '/images/spotify-short-form-screen.png', previewBackground: '#1ed760' },
   ] : [])]),
   { id: 19, title: 'Monzo - Get paid early', category: 'work', preview: '/images/monzo-get-paid-early.png' },
-  { id: 20, title: 'Monzo - Bills Pots', category: 'work', preview: '/images/monzo-bills-pots-screen.png', previewBackgroundColor: '#bbcce8' },
-  { id: 34, title: 'Monzo - Premium paid account', category: 'work', preview: '/images/monzo-premium-paid-account.png' },
+  { id: 20, title: 'Monzo - Bills Pots', category: 'work', preview: '/images/monzo-bills-pots-screen.png', previewBackground: '#bbcce8' },
+  { id: 34, title: 'Monzo - Premium paid account', category: 'work', preview: '/images/monzo-premium-screen.png', previewBackground: 'linear-gradient(135deg, #b8e7e7 0%, #e3edcc 52%, #e2e4df 100%)' },
   { id: 26, title: 'Google - Ticketing system for Google IO', category: 'work', preview: '/images/google-io-ticketing.jpg', blurPreview: true, previewAspectRatio: '2041 / 2160' },
   { id: 27, title: 'Google - Grow with Google', category: 'work', preview: '/images/google-grow-with-google.jpg', blurPreview: true, previewAspectRatio: '2181 / 2160' },
   { id: 28, title: 'Android - Developer portal', category: 'work', preview: '/images/android-developer-portal.jpg', blurPreview: true, previewAspectRatio: '2367 / 2160' },
@@ -473,9 +474,9 @@ export const portfolioCards: Card[] = projectTitles.map(project => cardsById.get
   poster: project.previewVideo ? project.preview : undefined,
   href: project.href,
   blurPreview: project.blurPreview,
-  backgroundColor: project.previewBackgroundColor,
-  imageFit: project.previewBackgroundColor ? 'contain' : undefined,
-  imageScale: project.previewBackgroundColor ? 0.84 : undefined,
+  background: project.previewBackground,
+  imageFit: project.previewBackground ? 'contain' : undefined,
+  imageScale: project.previewBackground ? 0.84 : undefined,
   noOverlay: true,
 });
 
@@ -1089,6 +1090,7 @@ export default function CardSlider({ cards: sourceCards = portfolioCards, catego
               style={{
                 ...(!expanded && showWork ? { animationDelay: `${(index % cards.length) * GALLERY_MOTION.stagger / 1000}s` } : {}),
                 ...(card.backgroundColor ? { backgroundColor: card.backgroundColor } : {}),
+                ...(card.background ? { background: card.background } : {}),
               }}
               onMouseEnter={() => handleCardMouseEnter(expanded)}
               onMouseLeave={handleCardMouseLeave}
