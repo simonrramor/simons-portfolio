@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, useCallback, useMemo, useImperativeHandle, type Ref } from 'react';
 import Image from 'next/image';
 import styles from './CardSlider.module.css';
-import CardLogo from './CardLogo';
 import CardVideo from './CardVideo';
 import SynchronizedVideoGallery from './SynchronizedVideoGallery';
 import { GALLERY_MOTION } from './motion';
@@ -1190,9 +1189,6 @@ export default function CardSlider({ ref, cards: sourceCards = portfolioCards, c
                   )}
                   {card.showRotation && <RotationData dark={card.darkText} />}
                   {card.label && <span className={`${styles.cardLabel} ${card.darkText ? styles.cardLabelDark : ''}`}>{card.label}</span>}
-                  {card.logo && (
-                    <CardLogo src={card.logo} height={card.logoHeight} />
-                  )}
                 </>
               ) : card.image ? (
                 <>
@@ -1217,17 +1213,11 @@ export default function CardSlider({ ref, cards: sourceCards = portfolioCards, c
                     </span>
                   )}
                   {card.label && <span className={`${styles.cardLabel} ${card.darkText ? styles.cardLabelDark : ''}`} style={{ color: card.labelColor }}>{card.label}</span>}
-                  {card.logo && (
-                    <CardLogo src={card.logo} height={card.logoHeight} />
-                  )}
                 </>
               ) : (
                 <>
                   {card.showGlyph && <PixelGlyph />}
                   {card.label && <span className={`${styles.cardLabel} ${card.darkText ? styles.cardLabelDark : ''}`}>{card.label}</span>}
-                  {card.logo && (
-                    <CardLogo src={card.logo} height={card.logoHeight} />
-                  )}
                 </>
               )}
             </div>
