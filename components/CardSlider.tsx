@@ -470,20 +470,28 @@ export const projectTitles: ProjectListItem[] = [
 // Derive card view from the complete list so additions appear in both views.
 // Keep bespoke renderers and media settings for the existing animated cards.
 const cardsById = new Map(defaultCards.map(card => [card.id, card]));
-export const portfolioCards: Card[] = projectTitles.map(project => cardsById.get(project.id) ?? {
-  id: project.id,
-  category: project.category as ProjectCategory,
-  title: project.title,
-  label: project.title,
-  image: project.previewVideo ? undefined : project.preview,
-  video: project.previewVideo,
-  poster: project.previewVideo ? project.preview : undefined,
-  href: project.href,
-  blurPreview: project.blurPreview,
-  background: project.previewBackground,
-  imageFit: project.previewBackground ? 'contain' : undefined,
-  imageScale: project.previewBackground ? 0.84 : undefined,
-  noOverlay: true,
+export const portfolioCards: Card[] = projectTitles.map(project => {
+  const existingCard = cardsById.get(project.id);
+  if (existingCard) {
+    return project.title.startsWith('Monzo - ')
+      ? { ...existingCard, title: project.title, label: project.title }
+      : existingCard;
+  }
+  return {
+    id: project.id,
+    category: project.category as ProjectCategory,
+    title: project.title,
+    label: project.title,
+    image: project.previewVideo ? undefined : project.preview,
+    video: project.previewVideo,
+    poster: project.previewVideo ? project.preview : undefined,
+    href: project.href,
+    blurPreview: project.blurPreview,
+    background: project.previewBackground,
+    imageFit: project.previewBackground ? 'contain' : undefined,
+    imageScale: project.previewBackground ? 0.84 : undefined,
+    noOverlay: true,
+  };
 });
 
 export default function CardSlider({ ref, cards: sourceCards = portfolioCards, category, showWork = true, exiting = false, onExitComplete }: CardSliderProps) {
