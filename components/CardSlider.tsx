@@ -445,7 +445,7 @@ export const projectTitles: ProjectListItem[] = [
       : card.id === 2 ? 'Sling - International payments'
       : card.title ?? card.label ?? '',
     category: card.category ?? 'fun',
-    previewVideo: card.video ?? (card.cells ? '/videos/cells-styles-xray-sync.mp4' : undefined),
+    previewVideo: card.video ?? (card.cells ? '/videos/cells-styles-hd.mp4' : undefined),
     previewVideoAtlas: card.cells,
     preview: card.image ?? card.poster
       ?? (card.iphoneFold ? IPHONE_FOLD_VIEWS[0].src : undefined)

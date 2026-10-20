@@ -5,9 +5,9 @@ import { CELL_STYLES, cellBlendWeights, cellSourceRect } from './cellsStyles.ts'
 test('styles select the matching quadrant of the synchronized video', () => {
   assert.deepEqual(CELL_STYLES.map(style => style.name),
     ['Heat map', 'Infrared', 'X-ray film', 'Teal microscopy']);
-  assert.deepEqual(CELL_STYLES.map((_, index) => cellSourceRect(index, 1920, 1080)), [
-    [960, 0, 960, 540], [0, 540, 960, 540],
-    [960, 540, 960, 540], [0, 0, 960, 540],
+  assert.deepEqual(CELL_STYLES.map((_, index) => cellSourceRect(index, 2560, 1440)), [
+    [1280, 0, 1280, 720], [0, 720, 1280, 720],
+    [1280, 720, 1280, 720], [0, 0, 1280, 720],
   ]);
 });
 

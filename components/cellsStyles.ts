@@ -7,7 +7,7 @@ export const CELL_STYLES = [
 
 export const CELL_FADE_MS = 220;
 
-// Teal / heat map above infrared / X-ray in one 1920 × 1080 frame.
+// Teal / heat map above infrared / X-ray in one 2560 × 1440 frame.
 // Each style keeps its original tile when the display order changes.
 export function cellSourceRect(index: number, videoWidth: number, videoHeight: number) {
   const tile = CELL_STYLES[index].atlasIndex;

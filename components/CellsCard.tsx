@@ -112,7 +112,7 @@ export default function CellsCard({
         onToggle();
       }}
     >
-      <canvas ref={canvasRef} className={styles.canvas} width={960} height={540} aria-hidden="true" />
+      <canvas ref={canvasRef} className={styles.canvas} width={1280} height={720} aria-hidden="true" />
       {!expanded && <>
       <span className={styles.label}>Cells</span>
       </>}

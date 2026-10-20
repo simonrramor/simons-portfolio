@@ -67,7 +67,7 @@ export function CellsPlaybackProvider({ children }: { children: ReactNode }) {
       <video
         ref={videoRef}
         className={styles.source}
-        src={loaded ? '/videos/cells-styles-xray-sync.mp4' : undefined}
+        src={loaded ? '/videos/cells-styles-hd.mp4' : undefined}
         preload={loaded ? 'metadata' : 'none'}
         muted
         playsInline
