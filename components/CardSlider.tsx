@@ -504,7 +504,7 @@ export default function CardSlider({ ref, cards: sourceCards = portfolioCards, c
   const openingRectRef = useRef<DOMRect | null>(null);
   const pointerStartRef = useRef({ x: 0, y: 0 });
   const openCard = (card: Card, index: number) => {
-    const source = cardsRef.current?.children[index] as HTMLElement | undefined;
+    const source = cardsRef.current?.children[index]?.firstElementChild as HTMLElement | undefined;
     sourceCardRef.current = source ?? null;
     galleryStartTimeRef.current = source?.querySelector('video')?.currentTime ?? 0;
     closingRef.current = false;
@@ -859,7 +859,7 @@ export default function CardSlider({ ref, cards: sourceCards = portfolioCards, c
             const card = element as HTMLElement;
             const bounds = card.getBoundingClientRect();
             if (bounds.right <= 0 || bounds.left >= window.innerWidth) return [];
-            const animation = card.getAnimations().find(item =>
+            const animation = card.getAnimations({ subtree: true }).find(item =>
               item instanceof CSSAnimation && item.animationName.includes('slideInFromBottom'));
             if (!animation?.effect) return [];
             const timing = animation.effect.getTiming();
@@ -1012,7 +1012,7 @@ export default function CardSlider({ ref, cards: sourceCards = portfolioCards, c
       if (!current) return;
       event.preventDefault();
       const list = Array.from(track.children) as HTMLElement[];
-      let index = list.indexOf(current as HTMLElement);
+      let index = list.indexOf(current.parentElement as HTMLElement);
       index = event.key === 'Home' ? cards.length : event.key === 'End' ? cards.length * 2 - 1 : index + (event.key === 'ArrowRight' ? 1 : -1);
       const next = list[(index + list.length) % list.length];
       const bounds = next.getBoundingClientRect();
@@ -1022,7 +1022,7 @@ export default function CardSlider({ ref, cards: sourceCards = portfolioCards, c
       track.style.transform = `translate3d(-${targetXRef.current}px, 0, 0)`;
       next.inert = false;
       next.removeAttribute('aria-hidden');
-      next.focus({ preventScroll: true });
+      (next.firstElementChild as HTMLElement)?.focus({ preventScroll: true });
     };
     track.addEventListener('keydown', onKey);
     return () => { observer.disconnect(); track.removeEventListener('keydown', onKey); };
@@ -1246,7 +1246,12 @@ export default function CardSlider({ ref, cards: sourceCards = portfolioCards, c
           className={styles.cardsInner}
           ref={cardsRef}
         >
-          {duplicatedCards.map((card, index) => renderCard(card, index))}
+          {duplicatedCards.map((card, index) => (
+            <div className={styles.cardSlot} key={`${card.id}-${index}`}>
+              {renderCard(card, index)}
+              <span className={styles.hoverTitle} aria-hidden="true">{card.label || card.title}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>
