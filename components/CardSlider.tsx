@@ -492,6 +492,19 @@ export const portfolioCards: Card[] = projectTitles.map(project => {
   };
 });
 
+const titleLogos: Record<string, string> = {
+  Morse: '/icons/company/morse.svg',
+  Sling: '/icons/sling-logo.png',
+  Spotify: '/icons/company/spotify.svg',
+  Monzo: '/icons/company/monzo-symbol.png',
+  Google: '/icons/company/google.svg',
+  Android: '/icons/company/android-symbol.png',
+  NatWest: '/icons/company/natwest.svg',
+  Captr: '/icons/captr-icon.png',
+  'Glyph.ai': '/icons/glyph-icon.png',
+  Neome: '/icons/neome-icon.png',
+};
+
 export default function CardSlider({ ref, cards: sourceCards = portfolioCards, category, showWork = true, exiting = false, onExitComplete }: CardSliderProps) {
   const cards = useMemo(() => category ? sourceCards.filter(card => (card.category ?? 'fun') === category) : sourceCards, [sourceCards, category]);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
@@ -1255,7 +1268,18 @@ export default function CardSlider({ ref, cards: sourceCards = portfolioCards, c
           {duplicatedCards.map((card, index) => (
             <div className={styles.cardSlot} key={`${card.id}-${index}`}>
               {renderCard(card, index)}
-              <span className={styles.hoverTitle} aria-hidden="true">{card.label || card.title}</span>
+              <span className={styles.hoverTitle} aria-hidden="true">
+                {titleLogos[(card.title || '').split(' - ')[0]] && (
+                  <Image
+                    src={titleLogos[(card.title || '').split(' - ')[0]]}
+                    alt=""
+                    width={16}
+                    height={16}
+                    className={`${styles.titleLogo} ${card.title?.startsWith('Sling - ') ? styles.titleLogoDark : ''}`}
+                  />
+                )}
+                <span>{card.label || card.title}</span>
+              </span>
             </div>
           ))}
         </div>

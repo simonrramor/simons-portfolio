@@ -832,6 +832,9 @@ button.expandedCard:focus-visible {
   bottom: calc(100% + 20px);
   left: 0;
   width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: var(--color-text-muted);
   font: 400 0.75rem/1.3 "SF Mono", SFMono-Regular, ui-monospace, monospace;
   text-transform: uppercase;
@@ -851,4 +854,15 @@ button.expandedCard:focus-visible {
 .cardSlot:has(:focus-visible) .hoverTitle {
   opacity: 1;
   transform: none;
+}
+
+.titleLogo {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.titleLogoDark {
+  filter: brightness(0);
 }
