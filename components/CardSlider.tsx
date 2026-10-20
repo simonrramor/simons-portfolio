@@ -473,9 +473,7 @@ const cardsById = new Map(defaultCards.map(card => [card.id, card]));
 export const portfolioCards: Card[] = projectTitles.map(project => {
   const existingCard = cardsById.get(project.id);
   if (existingCard) {
-    return project.title.startsWith('Monzo - ')
-      ? { ...existingCard, title: project.title, label: project.title }
-      : existingCard;
+    return { ...existingCard, title: project.title, label: project.title };
   }
   return {
     id: project.id,
