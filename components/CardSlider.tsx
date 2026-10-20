@@ -434,7 +434,7 @@ export const projectTitles: ProjectListItem[] = [
     { id: card.id, title: 'Morse - Card', category: 'work', preview: card.poster, previewVideo: card.video },
     { id: 22, title: 'Morse - Investments', category: 'work', preview: '/images/morse-investments-screen-3x.png', previewBackground: '#e1e1e1' },
     { id: 23, title: 'Morse - Savings', category: 'work', preview: '/images/morse-savings-screen.png', previewBackground: '#e1e1e1' },
-    { id: 35, title: 'Morse - P2P', category: 'work', preview: '/images/morse-p2p-screen-3x.png', previewBackground: '#e1e1e1' },
+    { id: 35, title: 'Morse - P2P', category: 'work', preview: '/images/morse-p2p-screen-v2.png', previewBackground: '#e1e1e1' },
     { id: 24, title: 'Morse - Bill Splits', category: 'work', preview: '/images/morse-bill-splits-screen-v2.png', previewBackground: '#e1e1e1' },
     { id: 32, title: 'Morse - Bill Pay', category: 'work', preview: '/images/morse-bill-pay-screen.png', previewBackground: '#e1e1e1' },
     { id: 31, title: 'Morse - Growth', category: 'work', href: '/work/morse-growth', preview: '/images/morse-growth-screen.png', previewBackground: '#e1e1e1' },
