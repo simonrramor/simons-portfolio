@@ -452,7 +452,7 @@ export const projectTitles: ProjectListItem[] = [
       ?? (card.cells ? '/posters/cells-heat-map.jpg' : undefined)
       ?? (card.showGlyph ? '/icons/glyph-reference.png' : undefined),
   }, ...(card.id === 5 ? [
-    { id: 17, title: 'Spotify - Global privacy controls', category: 'work', preview: '/images/spotify-privacy-screen.png', previewBackground: '#1ed760' },
+    { id: 17, title: 'Spotify - Global privacy controls', category: 'work', preview: '/images/spotify-privacy-screen-v2.png', previewBackground: '#1ed760' },
     { id: 18, title: 'Spotify - Local file upload and offline listening', category: 'work', preview: '/images/spotify-local-files-screen.png', previewBackground: '#1ed760' },
     { id: 33, title: 'Spotify - Music discovery using short form video', category: 'work', preview: '/posters/spotify-short-form-video.jpg', previewVideo: '/videos/spotify-short-form-video.mp4' },
   ] : [])]),
