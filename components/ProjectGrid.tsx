@@ -41,7 +41,7 @@ const tileRatios: Record<number, string> = {
   36: '1 / 1',  // Christine: square speaker artwork.
 };
 
-export default function ProjectGrid({ onOpenProject }: { onOpenProject: (id: number) => void }) {
+export default function ProjectGrid({ onOpenProject }: { onOpenProject: (id: number, source: HTMLElement) => void }) {
   return (
     <section className={styles.grid} aria-label="Work and fun project grid">
       <div className={styles.columns}>
@@ -68,7 +68,7 @@ export default function ProjectGrid({ onOpenProject }: { onOpenProject: (id: num
         return project.href ? (
           <Link key={project.id} href={project.href} className={styles.tile} aria-label={`${project.title}, password protected case study`}>{media}</Link>
         ) : (
-          <button key={project.id} type="button" className={styles.tile} aria-label={`Expand ${project.title}${project.blurPreview ? ', locked' : ''}`} aria-haspopup="dialog" onClick={() => onOpenProject(project.id)}>{media}</button>
+          <button key={project.id} type="button" className={styles.tile} aria-label={`Expand ${project.title}${project.blurPreview ? ', locked' : ''}`} aria-haspopup="dialog" onClick={event => onOpenProject(project.id, event.currentTarget)}>{media}</button>
         );
       })}
       </div>

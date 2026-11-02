@@ -315,7 +315,7 @@ export type ProjectView = 'list' | 'card' | 'grid';
 export type ProjectCategory = 'work' | 'fun';
 
 export interface CardSliderHandle {
-  openProject: (projectId: number) => void;
+  openProject: (projectId: number, source?: HTMLElement) => void;
 }
 
 interface CardSliderProps {
@@ -538,13 +538,14 @@ export default function CardSlider({ ref, cards: sourceCards = portfolioCards, c
   };
 
   useImperativeHandle(ref, () => ({
-    openProject(projectId) {
+    openProject(projectId, source) {
       const card = cards.find(item => item.id === projectId);
       if (!card) return;
-      // List rows open the same dialog without morphing from a hidden card.
-      sourceCardRef.current = null;
-      openingRectRef.current = null;
-      galleryStartTimeRef.current = 0;
+      // Grid tiles share the card expansion; list rows open without a source.
+      sourceCardRef.current = source ?? null;
+      openingRectRef.current = source?.getBoundingClientRect() ?? null;
+      galleryStartTimeRef.current = source?.querySelector('video')?.currentTime ?? 0;
+      source?.focus({ preventScroll: true });
       closingRef.current = false;
       setMediaView(0);
       setSelectedCard(card);

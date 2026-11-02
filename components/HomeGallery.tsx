@@ -30,7 +30,7 @@ export default function HomeGallery({ background = 'white' }: { background?: 'wh
         <ProjectList category={category} onOpenProject={id => galleryRef.current?.openProject(id)} />
       )}
       {showWork && view === 'grid' && (
-        <ProjectGrid onOpenProject={id => galleryRef.current?.openProject(id)} />
+        <ProjectGrid onOpenProject={(id, source) => galleryRef.current?.openProject(id, source)} />
       )}
       <CardSlider ref={galleryRef} key={view === 'grid' ? 'grid' : category} category={view === 'grid' ? undefined : category} showWork={showWork && view === 'card'} exiting={exiting && view === 'card'} onExitComplete={finishExit} />
     </main>
