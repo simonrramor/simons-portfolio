@@ -295,6 +295,7 @@ interface Card {
   grainOnly?: boolean;
   noOverlay?: boolean;
   videoScale?: number;
+  videoInsetInline?: number;
   nativeLoop?: boolean;
   showControls?: boolean;
   hasBorder?: boolean;
@@ -387,7 +388,7 @@ const defaultCards: Card[] = [
     id: 36, title: 'Mostly working - Christine Røde', label: 'Mostly working - Christine Røde',
     video: '/videos/mostly-working-christine-rode.mp4',
     poster: '/posters/mostly-working-christine-rode.webp',
-    noOverlay: true, videoScale: 1, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true,
+    noOverlay: true, videoScale: 1, videoInsetInline: 24, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true,
     description: 'Speaker artwork for Christine Røde at Mostly working, a meetup for London designers exploring AI tools and how they’re changing design.',
     speakers: [{ name: 'Christine Røde', company: 'The Browser Company' }],
   },
@@ -1161,6 +1162,7 @@ export default function CardSlider({ ref, cards: sourceCards = portfolioCards, c
                     style={{
                       ...(card.showControls ? videoFilterStyle : {}),
                       ...(card.videoScale ? { width: `${card.videoScale * 100}%`, height: `${card.videoScale * 100}%`, objectFit: 'contain' as const, margin: 'auto' } : {}),
+                      ...(card.videoInsetInline ? { width: `calc(100% - ${card.videoInsetInline * 2}px)` } : {}),
                     }}
                     onLoadedMetadata={(e) => {
                       if (expanded) {
