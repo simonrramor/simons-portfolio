@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import CardVideo from './CardVideo';
+import ProjectFooter from './ProjectFooter';
 import { projectTitles, type ProjectCategory, type ProjectListItem } from './CardSlider';
 import styles from './ProjectList.module.css';
 
@@ -128,6 +129,9 @@ export default function ProjectList({ category, onOpenProject }: { category: Pro
           </div>
         </div>
       )}
+      <div onMouseEnter={() => setActive(null)} onFocusCapture={() => setActive(null)}>
+        <ProjectFooter />
+      </div>
     </section>
   );
 }

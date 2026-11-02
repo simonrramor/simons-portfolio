@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import CardVideo from './CardVideo';
 import GridCaption from './GridCaption';
+import ProjectFooter from './ProjectFooter';
 import { projectTitles, portfolioCards, PixelGlyph } from './CardSlider';
 import styles from './ProjectGrid.module.css';
 
@@ -71,6 +72,7 @@ export default function ProjectGrid({ onOpenProject }: { onOpenProject: (id: num
         );
       })}
       </div>
+      <ProjectFooter inset />
     </section>
   );
 }
