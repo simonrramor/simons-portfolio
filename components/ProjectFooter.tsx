@@ -5,7 +5,7 @@ export default function ProjectFooter({ inset = false }: { inset?: boolean }) {
     <footer className={`${styles.footer} ${inset ? styles.inset : ''}`} aria-label="Contact">
       <div>
         <p className={styles.invitation}>Reach out to connect<br />or collaborate</p>
-        <a className={styles.email} href="mailto:simonrramor@gmail.com">simonrramor@gmail.com</a>
+        <a className={styles.email} href="mailto:hello@simonamor.design">hello@simonamor.design</a>
       </div>
       <nav className={styles.socials} aria-label="Social links">
         <a href="https://twitter.com/simonramor" target="_blank" rel="noopener noreferrer">Twitter</a>
