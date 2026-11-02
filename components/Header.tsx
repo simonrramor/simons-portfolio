@@ -56,7 +56,7 @@ export default function Header({ view, onViewChange, category, onCategoryChange,
             ))}
           </div>
           <div className={styles.projectToggle} role="group" aria-label="Project view">
-            {(['list', 'card'] as const).map((option) => (
+            {(['list', 'card', 'grid'] as const).map((option) => (
               <button
                 key={option}
                 type="button"

@@ -310,7 +310,7 @@ interface Card {
   speakers?: { name: string; company: string }[];
 }
 
-export type ProjectView = 'list' | 'card';
+export type ProjectView = 'list' | 'card' | 'grid';
 
 export type ProjectCategory = 'work' | 'fun';
 
