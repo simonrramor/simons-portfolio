@@ -12,7 +12,7 @@ export default function GridCaption({ title }: { title: string }) {
     const text = label.current;
     const tile = text?.closest('button, a');
     const media = tile?.querySelector<HTMLElement>(`.${styles.media}`);
-    const asset = media?.querySelector<HTMLImageElement | HTMLVideoElement>('img, video');
+    const asset = media?.querySelector<HTMLVideoElement>('video') || media?.querySelector<HTMLImageElement>('img');
     if (!text || !media) return;
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
@@ -47,7 +47,10 @@ export default function GridCaption({ title }: { title: string }) {
         const [px, py] = style.objectPosition.split(' ').map(value => parseFloat(value) / 100);
         const x = parseFloat(style.paddingLeft) + (boxWidth - width * ratio) * (px || 0);
         const y = parseFloat(style.paddingTop) + (boxHeight - height * ratio) * (py || 0);
-        try { ctx.drawImage(asset, x, y, width * ratio, height * ratio); } catch { return; }
+        try {
+          if (asset.dataset.atlas === 'heat-map') ctx.drawImage(asset, width / 2, 0, width / 2, height / 2, 0, 0, bounds.width, bounds.height);
+          else ctx.drawImage(asset, x, y, width * ratio, height * ratio);
+        } catch { return; }
       }
       const area = text.getBoundingClientRect();
       const x = Math.max(0, Math.floor((area.left - bounds.left) * scale));

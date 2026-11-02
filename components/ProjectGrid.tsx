@@ -26,7 +26,7 @@ const tileRatios: Record<number, string> = {
   8: '2 / 3',   // Golden Tickets: full arm and phone.
   9: '1 / 1',   // Mostly working head study.
   10: '1 / 1',  // Glyph identity.
-  11: '16 / 10', // Cells: wider view of the particle field.
+  11: '16 / 9', // Cells: wider view of the particle field.
   12: '4 / 5',  // Fold concept.
   13: '1 / 1',  // Morse card: square source and centred rotation.
   14: '4 / 5',  // Flower still life: vase and flower heads together.
@@ -48,7 +48,12 @@ export default function ProjectGrid({ onOpenProject }: { onOpenProject: (id: num
         const card = portfolioCards.find(card => card.id === project.id);
         const media = <>
           <div className={`${styles.media} ${project.blurPreview ? styles.blurred : ''}`} style={{ background: project.previewBackground || card?.backgroundColor, aspectRatio: tileRatios[project.id] || '1 / 1' }}>
-            {project.previewVideo && !project.previewVideoAtlas ? (
+            {project.previewVideoAtlas && project.previewVideo ? (
+              <div className={styles.atlasViewport}>
+                {project.preview && <Image src={project.preview} alt="" fill sizes="(max-width: 600px) 100vw, 33vw" />}
+                <CardVideo enabled src={project.previewVideo} data-atlas="heat-map" autoPlay muted loop playsInline className={styles.atlasVideo} />
+              </div>
+            ) : project.previewVideo ? (
               <CardVideo enabled src={project.previewVideo} poster={project.preview} autoPlay muted loop playsInline className={`${styles.video} ${project.id === 13 ? styles.centeredMorseVideo : ''}`} style={{ objectFit: project.previewBackground || card?.videoScale ? 'contain' : 'cover' }} />
             ) : project.preview ? (
               <Image src={project.preview} alt="" fill sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 33vw" style={{ objectFit: project.previewBackground || card?.showGlyph ? 'contain' : 'cover', padding: project.previewBackground ? '8%' : undefined, objectPosition: card?.imagePosition }} />

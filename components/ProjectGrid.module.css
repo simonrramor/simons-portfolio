@@ -47,3 +47,6 @@
 
 /* The Morse animation rotates around y=300 in its 720px square. */
 .centeredMorseVideo { transform: translateY(8.333333%); }
+
+.atlasViewport { position: absolute; inset: 0; overflow: hidden; }
+.atlasVideo { position: absolute; top: 0; left: -100%; width: 200%; height: 200%; max-width: none; object-fit: fill; }
