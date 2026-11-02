@@ -45,3 +45,6 @@
   .columns { columns: 1; }
   .tile { border-radius: 18px; }
 }
+
+/* The Morse animation rotates around y=300 in its 720px square. */
+.centeredMorseVideo { transform: translateY(8.333333%); }

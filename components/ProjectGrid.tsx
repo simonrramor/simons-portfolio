@@ -15,7 +15,7 @@ export default function ProjectGrid({ category, onOpenProject }: { category: Pro
         const media = <>
           <div className={`${styles.media} ${project.blurPreview ? styles.blurred : ''}`} style={{ background: project.previewBackground || card?.backgroundColor, aspectRatio: index % 3 === 1 ? '4 / 3' : index % 3 === 2 ? '1 / 1.08' : '1' }}>
             {project.previewVideo && !project.previewVideoAtlas ? (
-              <CardVideo enabled src={project.previewVideo} poster={project.preview} autoPlay muted loop playsInline className={styles.video} style={{ objectFit: project.previewBackground || card?.videoScale ? 'contain' : 'cover' }} />
+              <CardVideo enabled src={project.previewVideo} poster={project.preview} autoPlay muted loop playsInline className={`${styles.video} ${project.id === 13 ? styles.centeredMorseVideo : ''}`} style={{ objectFit: project.previewBackground || card?.videoScale ? 'contain' : 'cover' }} />
             ) : project.preview ? (
               <Image src={project.preview} alt="" fill sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 33vw" style={{ objectFit: project.previewBackground || card?.showGlyph ? 'contain' : 'cover', padding: project.previewBackground ? '8%' : undefined, objectPosition: card?.imagePosition }} />
             ) : <span className={styles.placeholder}>{project.title}</span>}
