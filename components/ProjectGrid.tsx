@@ -15,7 +15,7 @@ const mixedProjects = [work, fun].flatMap(projects => projects.map((project, ind
 // Choose proportions for the composition, rather than repeating sizes by position.
 // Phone UIs get taller frames; landscape photography gets room across the tile.
 const tileRatios: Record<number, string> = {
-  0: '4 / 3',   // Captr: the toolbar sits along the bottom of the composition.
+  0: '4 / 3',   // Captr: centre the toolbar in the transparent source canvas.
   1: '9 / 16',  // Blooming sculpture: preserve its vertical growth.
   2: '3 / 4',   // Sling phone photography.
   3: '1 / 2',   // Face tracking portrait video.
@@ -56,7 +56,7 @@ export default function ProjectGrid({ onOpenProject }: { onOpenProject: (id: num
             ) : project.previewVideo ? (
               <CardVideo enabled src={project.previewVideo} poster={project.preview} autoPlay muted loop playsInline className={`${styles.video} ${project.id === 13 ? styles.centeredMorseVideo : ''}`} style={{ objectFit: project.previewBackground || card?.videoScale ? 'contain' : 'cover', transform: project.id === 9 ? 'scale(0.8)' : undefined }} />
             ) : project.preview ? (
-              <Image src={project.preview} alt="" fill sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 33vw" style={{ objectFit: project.previewBackground || card?.showGlyph ? 'contain' : 'cover', padding: project.previewBackground ? '8%' : undefined, objectPosition: card?.imagePosition }} />
+              <Image src={project.preview} alt="" fill sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 33vw" style={{ objectFit: project.previewBackground || card?.showGlyph ? 'contain' : 'cover', padding: project.previewBackground ? '8%' : undefined, objectPosition: project.id === 0 ? 'center' : card?.imagePosition }} />
             ) : <span className={styles.placeholder}>{project.title}</span>}
           </div>
           {project.blurPreview && <span className={styles.lock} aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="11" rx="2" stroke="currentColor" strokeWidth="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" strokeWidth="2" /></svg></span>}
