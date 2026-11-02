@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import { siteUrl, description } from "@/lib/portfolio";
@@ -35,6 +36,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} ${robotoMono.variable}`}>
         {children}
+        <Analytics />
       </body>
     </html>
   );
