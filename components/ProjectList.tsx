@@ -105,6 +105,10 @@ export default function ProjectList({ category, onOpenProject }: { category: Pro
               <div className={styles.videoAtlasFrame}>
                 <CardVideo enabled forceLoad src={active.previewVideo} poster={active.preview} autoPlay muted loop playsInline aria-label={active.title} className={styles.videoAtlas} />
               </div>
+            ) : active.id === 13 ? (
+              <div className={styles.morseCardFrame}>
+                <CardVideo enabled forceLoad src={active.previewVideo} poster={active.preview} autoPlay muted loop playsInline aria-label={active.title} className={`${styles.previewVideo} ${styles.centeredMorseVideo}`} />
+              </div>
             ) : (
               <CardVideo enabled forceLoad src={active.previewVideo} poster={active.preview} autoPlay muted loop playsInline aria-label={active.title} className={styles.previewVideo} />
             )

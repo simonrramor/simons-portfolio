@@ -213,3 +213,18 @@
   object-fit: contain;
   padding: 8%;
 }
+
+.morseCardFrame {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #000;
+}
+
+/* The source animation rotates around (360, 300) in its 720px square. */
+.centeredMorseVideo {
+  transform: translateY(8.333333%);
+}
