@@ -49,4 +49,6 @@
 .centeredMorseVideo { transform: translateY(8.333333%); }
 
 .atlasViewport { position: absolute; inset: 0; overflow: hidden; }
-.atlasVideo { position: absolute; top: 0; left: -100%; width: 200%; height: 200%; max-width: none; object-fit: fill; }
+/* Inset the heat-map quadrant slightly so video interpolation cannot sample
+   the dark neighbouring quadrants along its left and bottom edges. */
+.atlasVideo { position: absolute; top: 0; left: -100%; width: 200%; height: 200%; max-width: none; object-fit: fill; transform: scale(1.006); transform-origin: 75% 25%; }
