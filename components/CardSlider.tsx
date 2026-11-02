@@ -371,11 +371,6 @@ const defaultCards: Card[] = [
   {
     id: 9, title: 'Mostly working', video: '/videos/card_9_video.mp4', poster: '/posters/card_9_poster.webp', label: 'Mostly working', noOverlay: true, videoScale: 0.7, showRotation: true, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true,
     description: 'A monthly(ish) meetup for London designers to try AI tools and talk about how they’re changing design. When I have time, I make fun artwork for the events.',
-    gallery: [{
-      video: '/videos/mostly-working-christine-rode.mp4',
-      poster: '/posters/mostly-working-christine-rode.webp',
-      title: 'Christine Røde speaker animation',
-    }],
     speakers: [
       { name: 'Domingo Widen', company: 'Intercom' },
       { name: 'ÌníOlúwa Abíódún', company: 'Intercom' },
@@ -387,6 +382,14 @@ const defaultCards: Card[] = [
       { name: 'Kate Pincott', company: 'Multiverse' },
       { name: 'Christine Røde', company: 'The Browser Company' },
     ],
+  },
+  {
+    id: 36, title: 'Mostly working - Christine Røde', label: 'Mostly working - Christine Røde',
+    video: '/videos/mostly-working-christine-rode.mp4',
+    poster: '/posters/mostly-working-christine-rode.webp',
+    noOverlay: true, videoScale: 1, backgroundColor: '#FBFAFC', hasBorder: true, darkText: true,
+    description: 'Speaker artwork for Christine Røde at Mostly working, a meetup for London designers exploring AI tools and how they’re changing design.',
+    speakers: [{ name: 'Christine Røde', company: 'The Browser Company' }],
   },
   { id: 0, title: 'Captr', image: '/images/captr-detail.webp', label: 'Captr', logo: '/icons/captr-icon.png', backgroundColor: '#313131', imageFit: 'contain', imagePosition: 'bottom', description: 'A screen capture tool for grabbing, annotating and sharing what’s on your screen.' },
   { id: 10, title: 'Glyph.ai', label: 'Glyph.ai', backgroundColor: '#F5F5F3', darkText: true, showGlyph: true, logo: '/icons/glyph-icon.png', logoHeight: 28, description: 'A visual identity built from pixel patterns that grow and change over time.' },
