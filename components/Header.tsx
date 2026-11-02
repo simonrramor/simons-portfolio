@@ -32,7 +32,7 @@ function CompanyLink({ href, label, logo }: CompanyLinkProps) {
 
 export default function Header({ view, onViewChange, category, onCategoryChange, showWork, exiting = false, onViewWork, onReset }: HeaderProps) {
   return (
-    <header className={`${styles.header} ${showWork ? styles.headerWithViews : ''} ${showWork && !exiting ? styles.headerTop : styles.headerCentered} ${exiting ? styles.headerExiting : ''}`}>
+    <header className={`${styles.header} ${showWork ? styles.headerWithViews : ''} ${showWork && !exiting ? styles.headerTop : styles.headerCentered} ${exiting ? styles.headerExiting : ''} ${showWork && view === 'grid' ? styles.gridHeader : ''}`}>
       <div className={styles.headerContent}>
         <div className={styles.logo}>
           <Link href="/about" className={styles.nameAction}>Simon</Link>{' '}

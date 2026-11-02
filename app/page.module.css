@@ -15,3 +15,5 @@
 .softGrey {
   background: radial-gradient(ellipse 60% 200% at bottom left, #efefef 0%, #f7f7f7 45%, #ffffff 80%);
 }
+
+.gridScroll { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; }

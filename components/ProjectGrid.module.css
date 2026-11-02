@@ -1,10 +1,8 @@
 .grid {
-  position: absolute;
-  inset: 160px 12px 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding-bottom: 12px;
+  position: relative;
+  padding: 0 12px 12px;
 }
+
 .columns { columns: 3; column-gap: 8px; }
 .tile {
   position: relative;
@@ -38,9 +36,8 @@
 .lock { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
 .placeholder { display: grid; place-items: center; height: 100%; padding: 24px; }
 @media (max-width: 1000px) { .columns { columns: 2; } }
-@media (max-width: 768px) { .grid { top: 220px; } }
 @media (max-width: 600px) {
-  .grid { inset: 220px 8px 0; }
+  .grid { padding-inline: 8px; }
   .columns { columns: 1; }
   .tile { border-radius: 18px; }
 }

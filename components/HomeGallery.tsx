@@ -23,14 +23,18 @@ export default function HomeGallery({ background = 'white' }: { background?: 'wh
     setShowWork(true);
   };
 
+  const header = (<Header view={view} onViewChange={setView} category={category} onCategoryChange={setCategory} showWork={showWork} exiting={exiting} onViewWork={handleViewWork} onReset={() => { if (showWork) { if (view !== 'card') finishExit(); else setExiting(true); } }} />);
+
   return (
     <main className={`${styles.main} ${background === 'soft-grey' ? styles.softGrey : ''}`} style={{ '--gallery-duration': `${GALLERY_MOTION.duration}ms`, '--header-delay': `${GALLERY_MOTION.headerDelay}ms`, '--gallery-enter': GALLERY_MOTION.enterEase, '--gallery-exit': GALLERY_MOTION.exitEase } as CSSProperties}>
-      <Header view={view} onViewChange={setView} category={category} onCategoryChange={setCategory} showWork={showWork} exiting={exiting} onViewWork={handleViewWork} onReset={() => { if (showWork) { if (view !== 'card') finishExit(); else setExiting(true); } }} />
+      {showWork && view === 'grid' ? (
+        <div className={styles.gridScroll}>
+          {header}
+          <ProjectGrid onOpenProject={(id, source) => galleryRef.current?.openProject(id, source)} />
+        </div>
+      ) : header}
       {showWork && view === 'list' && (
         <ProjectList category={category} onOpenProject={id => galleryRef.current?.openProject(id)} />
-      )}
-      {showWork && view === 'grid' && (
-        <ProjectGrid onOpenProject={(id, source) => galleryRef.current?.openProject(id, source)} />
       )}
       <CardSlider ref={galleryRef} key={view === 'grid' ? 'grid' : category} category={view === 'grid' ? undefined : category} showWork={showWork && view === 'card'} exiting={exiting && view === 'card'} onExitComplete={finishExit} />
     </main>

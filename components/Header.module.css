@@ -265,3 +265,6 @@
 }
 
 .bioLead { display: inline; font: inherit; }
+
+.gridHeader { position: relative; top: auto; transform: none; min-height: 160px; }
+@media (max-width: 768px) { .gridHeader { min-height: 220px; } }
