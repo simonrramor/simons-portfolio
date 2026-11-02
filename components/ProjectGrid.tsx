@@ -54,7 +54,7 @@ export default function ProjectGrid({ onOpenProject }: { onOpenProject: (id: num
                 <CardVideo enabled src={project.previewVideo} data-atlas="heat-map" autoPlay muted loop playsInline className={styles.atlasVideo} />
               </div>
             ) : project.previewVideo ? (
-              <CardVideo enabled src={project.previewVideo} poster={project.preview} autoPlay muted loop playsInline className={`${styles.video} ${project.id === 13 ? styles.centeredMorseVideo : ''}`} style={{ objectFit: project.previewBackground || card?.videoScale ? 'contain' : 'cover' }} />
+              <CardVideo enabled src={project.previewVideo} poster={project.preview} autoPlay muted loop playsInline className={`${styles.video} ${project.id === 13 ? styles.centeredMorseVideo : ''}`} style={{ objectFit: project.previewBackground || card?.videoScale ? 'contain' : 'cover', transform: project.id === 9 ? 'scale(0.8)' : undefined }} />
             ) : project.preview ? (
               <Image src={project.preview} alt="" fill sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 33vw" style={{ objectFit: project.previewBackground || card?.showGlyph ? 'contain' : 'cover', padding: project.previewBackground ? '8%' : undefined, objectPosition: card?.imagePosition }} />
             ) : <span className={styles.placeholder}>{project.title}</span>}
