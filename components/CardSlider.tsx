@@ -42,7 +42,7 @@ function generateRandomGrid(): number[] {
   return Array(256).fill(0).map(() => Math.random() > 0.6 ? 1 : 0);
 }
 
-function PixelGlyph() {
+export function PixelGlyph() {
   const [grid, setGrid] = useState<number[]>(() => generateRandomGrid());
 
   useEffect(() => {

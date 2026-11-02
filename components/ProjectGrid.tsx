@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import CardVideo from './CardVideo';
 import GridCaption from './GridCaption';
-import { projectTitles, portfolioCards } from './CardSlider';
+import { projectTitles, portfolioCards, PixelGlyph } from './CardSlider';
 import styles from './ProjectGrid.module.css';
 
 const work = projectTitles.filter(project => project.category === 'work');
@@ -48,7 +48,9 @@ export default function ProjectGrid({ onOpenProject }: { onOpenProject: (id: num
         const card = portfolioCards.find(card => card.id === project.id);
         const media = <>
           <div className={`${styles.media} ${project.blurPreview ? styles.blurred : ''}`} style={{ background: project.previewBackground || card?.backgroundColor, aspectRatio: tileRatios[project.id] || '1 / 1' }}>
-            {project.previewVideoAtlas && project.previewVideo ? (
+            {card?.showGlyph ? (
+              <PixelGlyph />
+            ) : project.previewVideoAtlas && project.previewVideo ? (
               <div className={styles.atlasViewport}>
                 {project.preview && <Image src={project.preview} alt="" fill sizes="(max-width: 600px) 100vw, 33vw" />}
                 <CardVideo enabled src={project.previewVideo} data-atlas="heat-map" autoPlay muted loop playsInline className={styles.atlasVideo} />
