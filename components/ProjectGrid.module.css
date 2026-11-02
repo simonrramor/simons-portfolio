@@ -16,14 +16,14 @@
   overflow: hidden;
   border: 0;
   border-radius: 22px;
-  background: #111;
+  background: transparent;
   color: white;
   cursor: pointer;
   text-align: left;
   isolation: isolate;
 }
 .tile:focus-visible { outline: 3px solid #4da6ff; outline-offset: -3px; }
-.media { position: relative; width: 100%; background: #111; }
+.media { position: relative; width: 100%; background: #fff; }
 .video { position: absolute; width: 100%; height: 100%; inset: 0; }
 .caption {
   position: absolute;
