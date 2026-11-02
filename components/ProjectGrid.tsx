@@ -4,14 +4,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 import CardVideo from './CardVideo';
 import GridCaption from './GridCaption';
-import { projectTitles, portfolioCards, type ProjectCategory } from './CardSlider';
+import { projectTitles, portfolioCards } from './CardSlider';
 import styles from './ProjectGrid.module.css';
 
-export default function ProjectGrid({ category, onOpenProject }: { category: ProjectCategory; onOpenProject: (id: number) => void }) {
+const work = projectTitles.filter(project => project.category === 'work');
+const fun = projectTitles.filter(project => project.category === 'fun');
+// Spread both collections through the full grid while retaining their own order.
+const mixedProjects = [work, fun].flatMap(projects => projects.map((project, index) => ({ project, position: (index + 0.5) / projects.length }))).sort((a, b) => a.position - b.position).map(item => item.project);
+
+export default function ProjectGrid({ onOpenProject }: { onOpenProject: (id: number) => void }) {
   return (
-    <section className={styles.grid} aria-label={`${category} project grid`} key={category}>
+    <section className={styles.grid} aria-label="Work and fun project grid">
       <div className={styles.columns}>
-      {projectTitles.filter(project => project.category === category).map((project, index) => {
+      {mixedProjects.map((project, index) => {
         const card = portfolioCards.find(card => card.id === project.id);
         const media = <>
           <div className={`${styles.media} ${project.blurPreview ? styles.blurred : ''}`} style={{ background: project.previewBackground || card?.backgroundColor, aspectRatio: index % 3 === 1 ? '4 / 3' : index % 3 === 2 ? '1 / 1.08' : '1' }}>

@@ -41,7 +41,7 @@ export default function Header({ view, onViewChange, category, onCategoryChange,
 
         {showWork ? (
           <div className={styles.projectControls}>
-          <div className={styles.projectToggle} role="group" aria-label="Project category">
+          {view !== 'grid' && <div className={styles.projectToggle} role="group" aria-label="Project category">
             {(['work', 'fun'] as const).map((option) => (
               <button
                 key={option}
@@ -54,7 +54,7 @@ export default function Header({ view, onViewChange, category, onCategoryChange,
                 {option}
               </button>
             ))}
-          </div>
+          </div>}
           <div className={styles.projectToggle} role="group" aria-label="Project view">
             {(['list', 'card', 'grid'] as const).map((option) => (
               <button
