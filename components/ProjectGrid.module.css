@@ -36,7 +36,7 @@
   pointer-events: none;
 }
 .blurred { filter: blur(28px); transform: scale(1.1); }
-.lock { position: absolute; inset: 45% 0 auto; text-align: center; font-size: 32px; }
+.lock { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
 .placeholder { display: grid; place-items: center; height: 100%; padding: 24px; }
 @media (max-width: 1000px) { .columns { columns: 2; } }
 @media (max-width: 768px) { .grid { top: 220px; } }
