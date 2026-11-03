@@ -7,7 +7,7 @@ const sections: Record<number, { command: string; title: string; text: string }>
   5: { command: 'ls work/monzo', title: 'Monzo', text: 'Shared Tabs, Golden Tickets, Salary Sorter, Get paid early, Bills Pots and premium paid accounts.' },
   6: { command: 'ls work/clients', title: 'Client projects', text: 'Google IO ticketing, Grow with Google, Android developer portal, NatWest cyber security education and AI particle tracking for researchers.' },
   7: { command: 'ls fun/', title: 'Personal experiments', text: 'Interactive visuals, music, wine, face tracking and interface concepts. This terminal is one of them.' },
-  8: { command: 'help portfolio', title: 'Explore the work', text: 'Work / Fun. List / Card. Hover a list item to see an image, video or prototype. Locked previews stay blurred; missing previews show Coming soon.' },
+  8: { command: 'help portfolio', title: 'Explore the work', text: 'List / Card / Grid. Hover a list item to see an image, video or prototype. Locked previews stay blurred; missing previews show Coming soon.' },
 };
 
 export default function PortfolioOverview({ id }: { id: number }) {

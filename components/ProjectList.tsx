@@ -6,7 +6,7 @@ import Link from 'next/link';
 import CardVideo from './CardVideo';
 import WipBadge from './WipBadge';
 import ProjectFooter from './ProjectFooter';
-import { projectTitles, type ProjectCategory, type ProjectListItem } from './CardSlider';
+import { projectTitles, type ProjectListItem } from './CardSlider';
 import styles from './ProjectList.module.css';
 
 function PrototypePreview({ project, active }: { project: ProjectListItem; active: boolean }) {
@@ -39,20 +39,13 @@ function PrototypePreview({ project, active }: { project: ProjectListItem; activ
   );
 }
 
-export default function ProjectList({ category, onOpenProject }: { category: ProjectCategory; onOpenProject: (id: number) => void }) {
-  const [hovered, setActive] = useState<ProjectListItem | null>(null);
-  const [previousCategory, setPreviousCategory] = useState(category);
-  const active = hovered?.category === category ? hovered : null;
-
-  if (previousCategory !== category) {
-    setPreviousCategory(category);
-    setActive(null);
-  }
+export default function ProjectList({ onOpenProject }: { onOpenProject: (id: number) => void }) {
+  const [active, setActive] = useState<ProjectListItem | null>(null);
 
   return (
-    <section className={styles.projectList} aria-label={`${category} projects`}>
+    <section className={styles.projectList} aria-label="All projects">
       <ul>
-        {projectTitles.filter(project => project.category === category).map(project => (
+        {projectTitles.map(project => (
           <li key={project.id}>
             {project.href ? (
               <Link href={project.href} className={styles.row} data-active={active?.id === project.id} onMouseEnter={() => setActive(project)} onMouseLeave={() => setActive(null)} onFocus={() => setActive(project)} onBlur={() => setActive(null)} aria-label={`${project.title}, password protected case study`}>

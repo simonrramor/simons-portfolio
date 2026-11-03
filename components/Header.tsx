@@ -3,13 +3,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './Header.module.css';
-import type { ProjectCategory, ProjectView } from './CardSlider';
+import type { ProjectView } from './CardSlider';
 
 interface HeaderProps {
   view: ProjectView;
   onViewChange: (view: ProjectView) => void;
-  category: ProjectCategory;
-  onCategoryChange: (category: ProjectCategory) => void;
   showWork: boolean;
   exiting?: boolean;
   onViewWork: () => void;
@@ -30,7 +28,7 @@ function CompanyLink({ href, label, logo }: CompanyLinkProps) {
   );
 }
 
-export default function Header({ view, onViewChange, category, onCategoryChange, showWork, exiting = false, onViewWork, onReset }: HeaderProps) {
+export default function Header({ view, onViewChange, showWork, exiting = false, onViewWork, onReset }: HeaderProps) {
   return (
     <header className={`${styles.header} ${showWork ? styles.headerWithViews : ''} ${showWork && !exiting ? styles.headerTop : styles.headerCentered} ${exiting ? styles.headerExiting : ''} ${showWork && view === 'grid' ? styles.gridHeader : ''}`}>
       <div className={styles.headerContent}>
@@ -41,20 +39,6 @@ export default function Header({ view, onViewChange, category, onCategoryChange,
 
         {showWork ? (
           <div className={styles.projectControls}>
-          {view !== 'grid' && <div className={styles.projectToggle} role="group" aria-label="Project category">
-            {(['work', 'fun'] as const).map((option) => (
-              <button
-                key={option}
-                type="button"
-                className={styles.categoryButton}
-                aria-pressed={category === option}
-                disabled={exiting}
-                onClick={() => onCategoryChange(option)}
-              >
-                {option}
-              </button>
-            ))}
-          </div>}
           <div className={styles.projectToggle} role="group" aria-label="Project view">
             {(['list', 'card', 'grid'] as const).map((option) => (
               <button
