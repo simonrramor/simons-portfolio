@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback, useMemo, useImperativeHandle,
 import Image from 'next/image';
 import styles from './CardSlider.module.css';
 import CardVideo from './CardVideo';
+import WipBadge from './WipBadge';
 import SynchronizedVideoGallery from './SynchronizedVideoGallery';
 import { GALLERY_MOTION } from './motion';
 import CellsCard from './CellsCard';
@@ -1209,6 +1210,7 @@ export default function CardSlider({ ref, cards: sourceCards = portfolioCards, c
                     scale={expanded && card.background && card.imageFit === 'contain' ? 0.94 : card.imageScale}
                     priority={expanded || index === 0 || card.id <= 4}
                   />
+                  {card.id === 20 && <WipBadge />}
                   {card.blurPreview && (
                     <span className={styles.previewLock} role="img" aria-label="Locked project">
                       <svg width="24" height="24" viewBox="0 0 16 16" fill="none" aria-hidden="true">

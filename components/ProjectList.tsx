@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import CardVideo from './CardVideo';
+import WipBadge from './WipBadge';
 import ProjectFooter from './ProjectFooter';
 import { projectTitles, type ProjectCategory, type ProjectListItem } from './CardSlider';
 import styles from './ProjectList.module.css';
@@ -90,6 +91,7 @@ export default function ProjectList({ category, onOpenProject }: { category: Pro
       ))}
       {active?.preview && !active.previewEmbed && (
         <div className={styles.preview} key={active.id}>
+          {active.id === 20 && <WipBadge />}
           {active.blurPreview ? (
             <div className={styles.blurredFrame} style={{ aspectRatio: active.previewAspectRatio }}>
               <Image src={active.preview} alt={active.title} fill sizes="(max-width: 768px) 28vw, 36vw" className={styles.blurredPreview} />
