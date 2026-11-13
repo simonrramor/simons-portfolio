@@ -63,7 +63,7 @@ export default function Header({ view, onViewChange, showWork, exiting = false, 
         <div className={styles.bio}>
           <div className={styles.bioText}>
             <h1 className={styles.bioLead}>
-              I’m a designer and co-founder of{' '}
+              Co-founder and Head of Design at{' '}
               <CompanyLink href="https://morsemoney.com" label="Morse" logo="/icons/company/morse.svg" />
             </h1>
             {' '}Previously, I worked at{' '}
