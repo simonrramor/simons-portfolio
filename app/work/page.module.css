@@ -7,4 +7,6 @@
 .page nav { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 48px; }
 .page section { margin-bottom: 48px; scroll-margin-top: 32px; }
 .page li { padding: 4px 0; }
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 48px; }
+.gallery img { width: 100%; height: auto; border-radius: 8px; background: #e1e1e1; }
 @media(max-width:768px) { .page { padding: 24px; } .back { margin-bottom: 48px; } }

@@ -6,11 +6,19 @@
 
 - [Interactive portfolio](https://www.simonamor.design/): Work and Fun collections, with List and Card views. List rows show image, video or prototype previews on hover.
 - [Product design project index](https://www.simonamor.design/work): Public project titles grouped by Morse, Sling, Spotify, Monzo and client projects.
-- [Morse projects](https://www.simonamor.design/work#morse): Card, Investments, Savings, Bill Splits, Bill Pay and Growth.
-- [Spotify projects](https://www.simonamor.design/work#spotify): Group Sessions, Enhance, privacy controls, local files and offline listening, and short form video music discovery.
-- [Monzo projects](https://www.simonamor.design/work#monzo): Shared Tabs, Golden Tickets, Salary Sorter, Get paid early, Bills Pots and Premium paid account.
+- [Morse projects](https://www.simonamor.design/work/morse): Card, Investments, Savings, P2P, Bill Splits, Bill Pay and Growth.
+- [Sling Money projects](https://www.simonamor.design/work/sling): International payments. Sling Money was renamed Morse in 2026.
+- [Spotify projects](https://www.simonamor.design/work/spotify): Group Sessions, Enhance, privacy controls, local files and offline listening, and short form video music discovery.
+- [Monzo projects](https://www.simonamor.design/work/monzo): Shared Tabs, Golden Tickets, Salary Sorter, Get paid early, Bills Pots and Premium paid account.
 - [About Simon Amor](https://www.simonamor.design/about): Designer background and project context presented inside an interactive terminal animation experiment.
 
 ## Context
 
-Simon has built products for clients including Google, Android, YouTube and NatWest. Selected client projects also include AI particle tracking for researchers. Locked client previews are blurred; this portfolio does not publish their private case study details. Items awaiting media say Coming soon.
+Simon is a co-founder of Avian Labs, the company behind Morse (formerly Sling Money). He has built products for clients including Google, Android, YouTube and NatWest. Selected client projects also include AI particle tracking for researchers. Locked client previews are blurred; this portfolio does not publish their private case study details. Items awaiting media say Coming soon.
+
+## Elsewhere
+
+- [LinkedIn](https://www.linkedin.com/in/simon-amor-6b649895/)
+- [Twitter](https://twitter.com/simonramor)
+- [Instagram](https://www.instagram.com/simonramor/)
+- [GitHub](https://github.com/simonrramor)

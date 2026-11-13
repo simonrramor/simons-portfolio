@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import StructuredData from '@/components/StructuredData';
+import ProfileLinks from '@/components/ProfileLinks';
 import { workGroups, siteUrl, person, portfolioUpdated } from '@/lib/portfolio';
 import styles from './page.module.css';
 
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
 export default function WorkIndex() {
   const projects = workGroups.flatMap(group => group.projects.map(project => ({
     '@type': 'CreativeWork', name: group.id === 'client-projects' ? project : `${group.name} — ${project}`,
-    url: `${siteUrl}/work#${group.id}`, about: { '@type': 'Thing', name: group.name },
+    url: group.page ? `${siteUrl}/work/${group.id}` : `${siteUrl}/work#${group.id}`, about: { '@type': 'Thing', name: group.name },
   })));
   const schemas = [
     person,
@@ -45,7 +46,8 @@ export default function WorkIndex() {
     <h1>Product design projects by Simon Amor</h1>
     <p>Simon Amor is a designer and co-founder of Morse, previously at Spotify and Monzo. This index lists the public project titles in his Work collection. For images, videos and prototypes, explore the <Link href="/">interactive portfolio</Link> in List or Card view.</p>
     <nav aria-label="Project companies">{workGroups.map(group => <a key={group.id} href={`#${group.id}`}>{group.name}</a>)}</nav>
-    {workGroups.map(group => <section key={group.id} id={group.id}><h2>{group.name}</h2><p>{group.description}</p><ul>{group.projects.map(project => <li key={project}>{group.id === 'client-projects' ? project : `${group.name} — ${project}`}</li>)}</ul></section>)}
+    {workGroups.map(group => <section key={group.id} id={group.id}><h2>{group.name}</h2><p>{group.description}</p>{group.page && <p><Link href={`/work/${group.id}`}>{group.page.title} by Simon Amor ↗</Link></p>}<ul>{group.projects.map(project => <li key={project}>{group.id === 'client-projects' ? project : `${group.name} — ${project}`}</li>)}</ul></section>)}
     <section><h2>What can I see in the interactive portfolio?</h2><p>The gallery offers company work and personal experiments, with separate Work and Fun collections. Use List to browse project titles and hover for a preview, or switch to Card to browse visually. Projects awaiting preview assets are marked Coming soon. Locked client previews remain blurred, so the public index does not disclose private project details.</p><p><Link href="/">Return to the portfolio</Link> to explore the previews.</p></section>
+    <section><h2>Simon Amor elsewhere</h2><ProfileLinks /></section>
   </main>;
 }

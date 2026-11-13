@@ -8,9 +8,9 @@ export default function ProjectFooter({ inset = false }: { inset?: boolean }) {
         <a className={styles.email} href="mailto:hello@simonamor.design">hello@simonamor.design</a>
       </div>
       <nav className={styles.socials} aria-label="Social links">
-        <a href="https://twitter.com/simonramor" target="_blank" rel="noopener noreferrer">Twitter</a>
-        <a href="https://www.instagram.com/simonramor/" target="_blank" rel="noopener noreferrer">Instagram</a>
-        <a href="https://www.linkedin.com/in/simon-amor-6b649895/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="https://twitter.com/simonramor" target="_blank" rel="me noopener noreferrer">Twitter</a>
+        <a href="https://www.instagram.com/simonramor/" target="_blank" rel="me noopener noreferrer">Instagram</a>
+        <a href="https://www.linkedin.com/in/simon-amor-6b649895/" target="_blank" rel="me noopener noreferrer">LinkedIn</a>
       </nav>
     </footer>
   );
