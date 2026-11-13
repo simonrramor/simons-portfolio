@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { portfolioUpdated, siteUrl } from '@/lib/portfolio';
+import { companyPages, portfolioUpdated, siteUrl } from '@/lib/portfolio';
 
 export const dynamic = 'force-static';
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -7,5 +7,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteUrl}/`, lastModified: portfolioUpdated },
     { url: `${siteUrl}/work`, lastModified: portfolioUpdated },
     { url: `${siteUrl}/about`, lastModified: portfolioUpdated },
+    ...companyPages.map(group => ({ url: `${siteUrl}/work/${group.id}`, lastModified: portfolioUpdated })),
   ];
 }
