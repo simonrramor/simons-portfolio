@@ -5,7 +5,7 @@ export const description = 'Simon Amor is a designer and co-founder of Morse, pr
 // Public profiles. Keep these in sync with the footer links and Person.sameAs so
 // search engines can connect every profile to the same Simon Amor.
 export const profiles = [
-  { name: 'LinkedIn', url: 'https://www.linkedin.com/in/simon-amor-6b649895/' },
+  { name: 'LinkedIn', url: 'https://www.linkedin.com/in/simon-amor/' },
   { name: 'Twitter', url: 'https://twitter.com/simonramor' },
   { name: 'Instagram', url: 'https://www.instagram.com/simonramor/' },
   { name: 'GitHub', url: 'https://github.com/simonrramor' },
@@ -88,7 +88,8 @@ export const morse = {
 
 export const person = {
   '@type': 'Person', '@id': `${siteUrl}/#simon-amor`, name: 'Simon Amor', url: siteUrl,
-  jobTitle: 'Co-founder & Head of Design', description,
+  jobTitle: 'Co-Founder & Designer', description,
+  image: `${siteUrl}/images/simon-amor.jpg`,
   worksFor: morse,
   alumniOf: [
     { '@type': 'Organization', name: 'Spotify', url: 'https://www.spotify.com' },
