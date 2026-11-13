@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: { default: "Simon Amor — Product designer & co-founder of Morse", template: "%s | Simon Amor" },
   description,
+  verification: { google: "1kTJuSpi1oh4AlocO9oSacD5I-iCt_ehaL_gL_QRMiI" },
   alternates: { canonical: "/" },
   openGraph: {
     type: "website", url: "/", siteName: "Simon Amor", title: "Simon Amor — Product designer & co-founder of Morse", description,
