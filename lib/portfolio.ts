@@ -88,7 +88,7 @@ export const morse = {
 
 export const person = {
   '@type': 'Person', '@id': `${siteUrl}/#simon-amor`, name: 'Simon Amor', url: siteUrl,
-  jobTitle: 'Co-Founder & Designer', description,
+  jobTitle: 'Co-founder and Head of Design', description,
   image: `${siteUrl}/images/simon-amor.jpg`,
   worksFor: morse,
   alumniOf: [
