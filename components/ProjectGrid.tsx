@@ -22,7 +22,7 @@ const tileRatios: Record<number, string> = {
   2: '3 / 4',   // Sling phone photography.
   3: '1 / 2',   // Face tracking portrait video.
   4: '3 / 4',   // Group Sessions close-up phone.
-  5: '4 / 3',   // Enhance landscape photography.
+  5: '1 / 1',   // Enhance: room around the phone.
   6: '3 / 4',   // Neome floating speaker.
   7: '1 / 1',   // Shared tabs: retain the hand and surrounding space.
   8: '2 / 3',   // Golden Tickets: full arm and phone.
@@ -61,7 +61,7 @@ export default function ProjectGrid({ onOpenProject }: { onOpenProject: (id: num
             ) : project.previewVideo ? (
               <CardVideo enabled src={project.previewVideo} poster={project.preview} autoPlay muted loop playsInline className={`${styles.video} ${project.id === 13 ? styles.centeredMorseVideo : ''}`} style={{ objectFit: project.previewBackground || card?.videoScale ? 'contain' : 'cover', transform: project.id === 9 ? 'scale(0.8)' : undefined }} />
             ) : project.preview ? (
-              <Image src={project.preview} alt="" fill sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 33vw" style={{ objectFit: project.previewBackground || card?.showGlyph ? 'contain' : 'cover', padding: project.previewBackground ? '8%' : undefined, objectPosition: project.id === 0 ? 'center' : card?.imagePosition, transform: project.id === 5 ? 'translateY(-12%) scale(1.3)' : undefined }} />
+              <Image src={project.preview} alt="" fill sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 33vw" style={{ objectFit: project.previewBackground || card?.showGlyph ? 'contain' : 'cover', padding: project.previewBackground ? '8%' : undefined, objectPosition: project.id === 0 ? 'center' : card?.imagePosition, transform: project.id === 5 ? 'translateY(-6%) scale(1.15)' : undefined }} />
             ) : <span className={styles.placeholder}>{project.title}</span>}
           </div>
           {project.id === 20 && <WipBadge />}
