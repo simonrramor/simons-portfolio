@@ -332,10 +332,10 @@ const defaultCards: Card[] = [
   {
     id: 37,
     category: 'fun',
-    title: 'Corner shop convenience everywhere in the world',
+    title: 'Morse - Corner shop convenience everywhere in the world',
     image: '/images/corner-shop-merch-bag.webp',
     imageAlt: 'A reflective Morse corner shop convenience bag carried by a person dressed in black.',
-    label: 'Corner shop convenience everywhere in the world',
+    label: 'Morse - Corner shop convenience everywhere in the world',
     darkText: true,
   },
   {
