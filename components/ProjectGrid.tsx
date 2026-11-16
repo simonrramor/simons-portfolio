@@ -61,7 +61,7 @@ export default function ProjectGrid({ onOpenProject }: { onOpenProject: (id: num
             ) : project.previewVideo ? (
               <CardVideo enabled src={project.previewVideo} poster={project.preview} autoPlay muted loop playsInline className={`${styles.video} ${project.id === 13 ? styles.centeredMorseVideo : ''}`} style={{ objectFit: project.previewBackground || card?.videoScale ? 'contain' : 'cover', transform: project.id === 9 ? 'scale(0.8)' : undefined }} />
             ) : project.preview ? (
-              <Image src={project.preview} alt="" fill sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 33vw" style={{ objectFit: project.previewBackground || card?.showGlyph ? 'contain' : 'cover', padding: project.previewBackground ? '8%' : undefined, objectPosition: project.id === 0 ? 'center' : card?.imagePosition }} />
+              <Image src={project.preview} alt="" fill sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 33vw" style={{ objectFit: project.previewBackground || card?.showGlyph ? 'contain' : 'cover', padding: project.previewBackground ? '8%' : undefined, objectPosition: project.id === 0 ? 'center' : card?.imagePosition, transform: project.id === 5 ? 'translateY(-5%) scale(1.16)' : undefined }} />
             ) : <span className={styles.placeholder}>{project.title}</span>}
           </div>
           {project.id === 20 && <WipBadge />}
