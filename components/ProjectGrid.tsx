@@ -40,6 +40,7 @@ const tileRatios: Record<number, string> = {
   26: '1 / 1', 27: '1 / 1', 28: '1 / 1', 29: '1 / 1', 30: '1 / 1',
   31: '3 / 4', 32: '3 / 4', 33: '1 / 1', 34: '3 / 4', 35: '3 / 4',
   36: '1 / 1',  // Christine: square speaker artwork.
+  37: '3 / 4',  // Corner shop bag: portrait composition.
 };
 
 export default function ProjectGrid({ onOpenProject }: { onOpenProject: (id: number, source: HTMLElement) => void }) {
