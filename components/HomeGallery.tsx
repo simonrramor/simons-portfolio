@@ -12,12 +12,12 @@ import type { CSSProperties } from 'react';
 export default function HomeGallery({ background = 'white' }: { background?: 'white' | 'soft-grey' }) {
   const galleryRef = useRef<CardSliderHandle>(null);
   const [showWork, setShowWork] = useState(false);
-  const [view, setView] = useState<ProjectView>('card');
+  const [view, setView] = useState<ProjectView>('grid');
   const [exiting, setExiting] = useState(false);
   const finishExit = useCallback(() => { setShowWork(false); setExiting(false); }, []);
 
   const handleViewWork = () => {
-    setView('card');
+    setView('grid');
     setShowWork(true);
   };
 
