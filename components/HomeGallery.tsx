@@ -31,7 +31,7 @@ export default function HomeGallery({ background = 'white' }: { background?: 'wh
         <div className={styles.gridScroll}>
           {header}
           <div className={gridEntering ? styles.gridEntrance : undefined}>
-            <ProjectGrid onOpenProject={(id, source) => galleryRef.current?.openProject(id, source)} />
+            <ProjectGrid animateEntrance={gridEntering} onOpenProject={(id, source) => galleryRef.current?.openProject(id, source)} />
           </div>
         </div>
       ) : header}

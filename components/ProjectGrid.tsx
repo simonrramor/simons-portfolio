@@ -2,11 +2,13 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useLayoutEffect, useRef } from 'react';
 import CardVideo from './CardVideo';
 import WipBadge from './WipBadge';
 import GridCaption from './GridCaption';
 import ProjectFooter from './ProjectFooter';
 import { projectTitles, portfolioCards, PixelGlyph } from './CardSlider';
+import { GALLERY_MOTION } from './motion';
 import styles from './ProjectGrid.module.css';
 
 const work = projectTitles.filter(project => project.category === 'work');
@@ -43,10 +45,22 @@ const tileRatios: Record<number, string> = {
   37: '3 / 4',  // Corner shop bag: portrait composition.
 };
 
-export default function ProjectGrid({ onOpenProject }: { onOpenProject: (id: number, source: HTMLElement) => void }) {
+export default function ProjectGrid({ onOpenProject, animateEntrance = false }: { onOpenProject: (id: number, source: HTMLElement) => void; animateEntrance?: boolean }) {
+  const columnsRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (!animateEntrance || !columnsRef.current) return;
+    const tiles = Array.from(columnsRef.current.children) as HTMLElement[];
+    const positions = [...new Set(tiles.map(tile => Math.round(tile.getBoundingClientRect().left)))].sort((a, b) => a - b);
+    tiles.forEach(tile => {
+      const column = positions.indexOf(Math.round(tile.getBoundingClientRect().left));
+      tile.style.animationDelay = `${column * GALLERY_MOTION.stagger}ms`;
+    });
+  }, [animateEntrance]);
+
   return (
     <section className={styles.grid} aria-label="Work and fun project grid">
-      <div className={styles.columns}>
+      <div ref={columnsRef} className={`${styles.columns} ${animateEntrance ? styles.entering : ''}`}>
       {mixedProjects.map((project) => {
         const card = portfolioCards.find(card => card.id === project.id);
         const media = <>
