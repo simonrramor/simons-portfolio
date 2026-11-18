@@ -17,3 +17,9 @@
 }
 
 .gridScroll { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; }
+.gridEntrance { animation: gridEnter var(--gallery-duration) var(--gallery-enter) both; }
+@keyframes gridEnter {
+  from { opacity: 0; transform: translateY(70vh); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) { .gridEntrance { animation: none; } }

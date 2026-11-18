@@ -267,4 +267,10 @@
 .bioLead { display: inline; font: inherit; }
 
 .gridHeader { position: relative; top: auto; transform: none; min-height: 160px; }
+.gridHeaderEntrance { animation: gridHeaderEnter var(--gallery-duration) var(--gallery-enter) both; }
+@keyframes gridHeaderEnter {
+  from { transform: translateY(calc(50vh - 50%)); }
+  to { transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) { .gridHeaderEntrance { animation: none; } }
 @media (max-width: 768px) { .gridHeader { min-height: 220px; } }

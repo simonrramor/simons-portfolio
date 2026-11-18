@@ -10,6 +10,7 @@ interface HeaderProps {
   onViewChange: (view: ProjectView) => void;
   showWork: boolean;
   exiting?: boolean;
+  animateGridEntrance?: boolean;
   onViewWork: () => void;
   onReset: () => void;
 }
@@ -28,9 +29,9 @@ function CompanyLink({ href, label, logo }: CompanyLinkProps) {
   );
 }
 
-export default function Header({ view, onViewChange, showWork, exiting = false, onViewWork, onReset }: HeaderProps) {
+export default function Header({ view, onViewChange, showWork, exiting = false, animateGridEntrance = false, onViewWork, onReset }: HeaderProps) {
   return (
-    <header className={`${styles.header} ${showWork ? styles.headerWithViews : ''} ${showWork && !exiting ? styles.headerTop : styles.headerCentered} ${exiting ? styles.headerExiting : ''} ${showWork && view === 'grid' ? styles.gridHeader : ''}`}>
+    <header className={`${styles.header} ${showWork ? styles.headerWithViews : ''} ${showWork && !exiting ? styles.headerTop : styles.headerCentered} ${exiting ? styles.headerExiting : ''} ${showWork && view === 'grid' ? styles.gridHeader : ''} ${showWork && view === 'grid' && animateGridEntrance ? styles.gridHeaderEntrance : ''}`}>
       <div className={styles.headerContent}>
         <div className={styles.logo}>
           <Link href="/about" className={styles.nameAction}>Simon</Link>{' '}
